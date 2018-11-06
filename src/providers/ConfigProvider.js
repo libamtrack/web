@@ -7,6 +7,6 @@ async function parseJSON(jsonFile) {
 }
 
 export default async function getConfigurationFromJSON(jsonPath) {
-    return parseJSON((window.location.href.includes("localhost") ? "/" : "/LibamtrackWeb/") + jsonPath)
+    return parseJSON((window.location.href.includes("localhost") ? "/" : "/web/") + jsonPath)
         .catch(e => e.console.error(e));
 }
