@@ -1,0 +1,31 @@
+{
+  "visibleName": "Energy From Beta",
+  "name": "AT_E_from_beta",
+  "description": "Returns energy per nucleon of particle with relativistic speed beta",
+  "xTitle": "beta",
+  "yTitle": "Energy",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "startholder": "0.1",
+      "endholder": "0.9",
+      "validations": {
+        "type": "float",
+        "min": "0.0000001",
+        "max": "0.9999999"
+      }
+    },
+    {
+      "type": "plot_type",
+      "default": "markers"
+    }
+  ],
+  "moreOptions": true,
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}

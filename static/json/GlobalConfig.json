@@ -1,0 +1,179 @@
+{
+  "applicationTile": "Libamtrack",
+  "introText": "libamtrack provides computational routines for the prediction of detector response and radiobiological efficiency in heavy charged particle beams.",
+  "footerText": "LibatrackWeb ©2018",
+  "categories": [
+    {
+      "name": "Physics Routines",
+      "style": {
+        "background": "red",
+        "border": "red",
+        "color": "black",
+        "font-size": "20px"
+      },
+      "functionsStyle": {
+        "color": "red"
+      },
+      "functions": [
+        {
+          "name": "Beta From Energy Single",
+          "jsonConfigPath": "/PhysicsRoutines/AT_beta_from_E_single.json"
+        },
+        {
+          "name": "Energy From Beta",
+          "jsonConfigPath": "/PhysicsRoutines/AT_E_from_beta.json"
+        },
+        {
+          "name": "Energy From Beta Single",
+          "jsonConfigPath": "/PhysicsRoutines/AT_E_from_beta_single.json"
+        },
+        {
+          "name": "gamma from energy3TRAVIS",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma4TEST2",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        }
+      ]
+    },
+    {
+      "name": "StoppingPower",
+      "functions": [
+        {
+          "name": "Stopping power with no",
+          "jsonConfigPath": "/StoppingPower/StoppingPowerWithNo.json"
+        },
+        {
+          "name": "energy from beta6",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
+        },
+        {
+          "name": "gamma from energy7",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma8",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        },
+        {
+          "name": "energy from beta9",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
+        },
+        {
+          "name": "gamma from energy10",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma11",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        }
+      ]
+    },
+    {
+      "name": "Physics Routines3",
+      "functions": [
+        {
+          "name": "beta from energy12",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+        },
+        {
+          "name": "energy from beta13",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
+        },
+        {
+          "name": "gamma from energy14",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma15",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        }
+      ]
+    },
+    {
+      "name": "Physics Routines4",
+      "functions": [
+        {
+          "name": "beta from energy16",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+        },
+        {
+          "name": "energy from bet17a",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
+        },
+        {
+          "name": "gamma from energy18",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma19",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        }
+      ]
+    },
+    {
+      "name": "Physics Routines5",
+      "functions": [
+        {
+          "name": "beta from energy20",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+        },
+        {
+          "name": "energy from beta21",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
+        },
+        {
+          "name": "gamma from energy22",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma23",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        }
+      ]
+    },
+    {
+      "name": "Physics Routines6",
+      "functions": [
+        {
+          "name": "beta from energy24",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+        },
+        {
+          "name": "energy from beta25",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
+        },
+        {
+          "name": "gamma from energy26",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma27",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        }
+      ]
+    },
+    {
+      "name": "Physics Routines7",
+      "functions": [
+        {
+          "name": "beta from energy28",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+        },
+        {
+          "name": "energy from beta29",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
+        },
+        {
+          "name": "gamma from energy30",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
+        },
+        {
+          "name": "energy from gamma31",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+        }
+      ]
+    }
+  ]
+}
