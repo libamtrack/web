@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "node"
+
+after_success:
+  - git config --global user.name "marwin1991"
+  - git config --global user.email "peter.zmilczak@gmail.com"
+  - git remote rm origin
+  - git remote add origin https://marwin1991:${GH_TOKEN}@github.com/libamtrack/web.git
+  - npm run deploy

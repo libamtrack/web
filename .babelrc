@@ -1,0 +1,12 @@
+{
+  "presets": ["env", "react", "stage-3"],
+  "plugins": [
+    "transform-class-properties",
+    [
+      "wildcard",
+      {
+        "noModifyCase": true
+      }
+    ]
+  ]
+}
