@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
-import {Col, Row} from 'antd';
+import React, { Component } from 'react';
+import { Col, Row } from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import {preparePoints} from './utils/helpers';
+import { preparePoints, prepareDataToCalculate } from './utils/helpers';
 
 export default class FunctionsController extends Component {
     state = {
         json: {},
+        entryName: "",
         entry: {
             intervalType: "step"
         },
@@ -26,7 +27,8 @@ export default class FunctionsController extends Component {
             xType: "linear",
             yType: "linear"
         },
-        singleResult: 0
+        singleResult: 0,
+        parametersRules: {}
     };
 
     componentDidMount() {
@@ -35,6 +37,24 @@ export default class FunctionsController extends Component {
                 this.setState({
                     json: confData
                 });
+            })
+            .then(() => {
+                for (let i = 0; i < this.state.json.formItems.length; i++) {
+                    const formItem = this.state.json.formItems[i];
+
+                    if (formItem.type === "entry_module") {
+                        this.setState({ entryName: formItem.name });
+                    }
+
+                    if (formItem.asManyAsPoints) {
+                        let newData = this.state.parametersRules;
+                        newData[formItem.name] = true;
+
+                        this.setState({
+                            parametersRules: newData
+                        });
+                    }
+                }
             })
             .then(this.generateContent)
     }
@@ -54,6 +74,7 @@ export default class FunctionsController extends Component {
                     <GenericForm
                         setFormData={this.setFormData}
                         formItems={this.state.json.formItems}
+                        dictionaryData={this.props.dictionaryData}
                         handlePlotTypeChange={this.handlePlotTypeChange}
                     />
                 </Row>
@@ -153,9 +174,8 @@ export default class FunctionsController extends Component {
     };
 
     calculateSingleResult = () => {
-        console.log(FunctionsFromC);
         const fun = FunctionsFromC[this.state.json.name];
-        console.log(fun);
+        console.log(this.state.formData);
         this.setState({ singleResult: fun(this.state.formData) });
     };
 
@@ -178,11 +198,11 @@ export default class FunctionsController extends Component {
         let dataPower = this.state.dataPower;
         dataPower.push(dataP);
 
-        let res = fun(data, this.state.formData);
+        let res = fun(prepareDataToCalculate(this.state.entryName, data, this.state.formData, this.state.parametersRules));
         let resLinear = this.state.resultLinear;
         resLinear.push(res);
 
-        let resP = fun(dataP, this.state.formData);
+        let resP = fun(prepareDataToCalculate(this.state.entryName, dataP, this.state.formData, this.state.parametersRules));
         let resPower = this.state.resultPower;
         resPower.push(resP);
 
@@ -222,7 +242,7 @@ export default class FunctionsController extends Component {
         ) : (
                 <div>
                     {this.state.toRender}
-                    <div style={{fontSize: 24}}>
+                    <div style={{ fontSize: 24 }}>
                         Result: {this.state.singleResult} {unit}
                     </div>
                 </div>

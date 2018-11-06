@@ -1,6 +1,5 @@
 import React from 'react';
 import { Col, Tooltip, Button, Form, Input, Radio, Select } from 'antd';
-import DataImporter from "../../../providers/domain/DataImporter";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -179,10 +178,9 @@ class FormGenerator extends React.Component {
 
     createSelectItem = (item) => {
         const { getFieldDecorator } = this.props.form;
-        const Importer = new DataImporter();
-        const values = typeof item.values !== 'undefined' ? Importer[item.values]() : [{ name: "m1", number: 1 }, { name: "m2", number: 2 }]
+        const list = typeof this.props.dictionaryData[item.values] !== 'undefined' ? this.props.dictionaryData[item.values] : [{ name: "m1", number: 1 }, { name: "m2", number: 2 }]
         const tip = typeof item.desc !== 'undefined' ? item.desc : "Select option";
-
+        
         return (
             <Tooltip title={tip} placement={"right"}>
                 {getFieldDecorator(item.label, {
@@ -190,10 +188,10 @@ class FormGenerator extends React.Component {
                         required: true, message: "Please, select a value!"
                     }]
                 })(
-                    <Select onChange={(value) => this.handleSelectChange(item.label.toLowerCase(), value)}>
-                        {values.map(value => (
-                            <Option key={value.number + value.name} value={value.name}>
-                                {value.name}
+                    <Select onChange={(value) => this.handleSelectChange(item.name, value)}>
+                        {list.map(listElem => (
+                            <Option key={listElem.name + listElem.value} value={listElem.value}>
+                                {listElem.name}
                             </Option>
                         ))}
                     </Select>

@@ -14,7 +14,7 @@ const FunctionsView = (props) => {
                 </Sider>
                 <Layout style={{ padding: '0 2px 2px' }}>
                     <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-                        <FunctionsController jsonPath={props.jsonPath}/>
+                        <FunctionsController jsonPath={props.jsonPath} dictionaryData={props.dictionaryData}/>
                     </Content>
                 </Layout>
             </Layout>

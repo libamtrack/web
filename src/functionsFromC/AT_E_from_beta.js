@@ -1,30 +1,38 @@
-/**
- *  Returns energy per nucleon of particle with relativistic speed beta
- *
- * @param[in]  n                        number of particles
- * @param[in]  beta                     vector of relative particle speed beta = v/c (array of size n)
- * @param[out] E_MeV_u                  vector of energies of particle per nucleon [MeV] (array of size n)
- * @return     status code
- *
- * C declaration: int AT_E_from_beta( const long n, const double beta[], double E_MeV_u[]);
- *
- * JS:
- * in: beta   --   array of numbers
- */
-export default function AT_E_from_beta(beta) {
-    let at_e_from_beta_wrap = Module.cwrap('AT_E_from_beta', 'number', ['number', 'array', 'number']);
+export default function AT_E_from_beta(parameters) {
+    console.log(parameters);
+	let at_e_from_beta = Module.cwrap('AT_E_from_beta', 'number', ['number', 'array', 'number']);
 
-    let data = new Float64Array(beta);
-    let nDataBytes = data.length * data.BYTES_PER_ELEMENT;
+	/*********************STANDARD PARAMETER*************************/
+	if(!parameters.n){
+		 alert("MESSAGE TO DEVELOPER: NO PARAMETER n IN OBJECT PASSED TO THIS FUNCTIONS");
+		 return "error";
+	}
+	let n = parameters.n;
 
-    let dataPtr = Module._malloc(nDataBytes);
+	/*********************INPUT ARRAY********************************/
+	if(!parameters.beta){
+		 alert("MESSAGE TO DEVELOPER: NO PARAMETER beta IN OBJECT PASSED TO THIS FUNCTIONS");
+		 return "error";
+	}
+	let beta = parameters.beta;
+	let betaData = new Float64Array(beta);
+	let betaDataBytesNumber = betaData.length * betaData.BYTES_PER_ELEMENT;
+	let betaDataPointer = Module._malloc(betaDataBytesNumber);
+	let betaHeap = new Uint8Array(Module.HEAPF64.buffer, betaDataPointer, betaDataBytesNumber);
+	betaHeap.set(new Uint8Array(betaData.buffer));
 
-    let dataHeap = new Uint8Array(Module.HEAPF64.buffer, dataPtr, nDataBytes);
-    dataHeap.set(new Uint8Array(data.buffer));
+	/*********************OUTPUT ARRAY*******************************/
+	let E_MeV_uReturnData = new Float64Array(new Array(n));
+	let E_MeV_uReturnDataBytesNumber = E_MeV_uReturnData.length * E_MeV_uReturnData.BYTES_PER_ELEMENT;
+	let E_MeV_uReturnDataPointer = Module._malloc(E_MeV_uReturnDataBytesNumber);
+	let E_MeV_uReturnHeap = new Uint8Array(Module.HEAPF64.buffer, E_MeV_uReturnDataPointer, E_MeV_uReturnDataBytesNumber);
 
-    at_e_from_beta_wrap(data.length, new Uint8Array(data.buffer), dataHeap.byteOffset);
-    let result = new Float64Array(dataHeap.buffer, dataHeap.byteOffset, data.length);
+	/*********************CALL FUNCTION******************************/
+	let result = at_e_from_beta(n, betaHeap, E_MeV_uReturnHeap.byteOffset);
+	let resultFromArray = new Float64Array(E_MeV_uReturnHeap.buffer, E_MeV_uReturnHeap.byteOffset, E_MeV_uReturnData.length);
 
-    Module._free(dataHeap.byteOffset);
-    return result;
+	Module._free(betaHeap.byteOffset);
+	Module._free(E_MeV_uReturnHeap.byteOffset);
+
+	return [].slice.call(resultFromArray);
 }

@@ -1,0 +1,98 @@
+[
+    {
+        "name" : "Liquid water",
+        "value": 1 
+    },
+    {
+        "name" : "Aluminium oxide",
+        "value": 2 
+    },
+    {
+        "name" : "Aluminium",
+        "value": 3 
+    },
+    {
+        "name" : "PMMA",
+        "value": 4 
+    },
+    {
+        "name" : "Alanine",
+        "value": 5 
+    },
+    {
+        "name" : "Lithium Fluoride",
+        "value": 6 
+    },
+    {
+        "name" : "Air dry (at sea level)",
+        "value": 7 
+    },
+    {
+        "name" : "Silicon",
+        "value": 8 
+    },
+    {
+        "name" : "Copper",
+        "value": 9 
+    },
+    {
+        "name" : "Tungsten",
+        "value": 10 
+    },
+    {
+        "name" : "Gammex tissue surrogate Lung (LN450)",
+        "value": 11 
+    },
+    {
+        "name" : "Gammex tissue surrogate AP6 Adipose RMI 453",
+        "value": 12 
+    },
+    {
+        "name" : "Gammex tissue surrogate BR12 Breast RMI454",
+        "value": 13 
+    },
+    {
+        "name" : "Gammex tissue surrogate CT Solid Water RMI451",
+        "value": 14 
+    },
+    {
+        "name" : "Gammex tissue surrogate Gammex Water",
+        "value": 15 
+    },
+    {
+        "name" : "Gammex tissue surrogate Muscle RMI452",
+        "value": 16 
+    },
+    {
+        "name" : "Gammex tissue surrogate LV1 Liver RMI",
+        "value": 17 
+    },
+    {
+        "name" : "Gammex tissue surrogate SR2 Brain",
+        "value": 18 
+    },
+    {
+        "name" : "Gammex tissue surrogate IB3 Inner Bone RMI 456",
+        "value": 19 
+    },
+    {
+        "name" : "Gammex tissue surrogate B200 Bone Mineral",
+        "value": 20 
+    },
+    {
+        "name" : "Gammex tissue surrogate CB2 30%  CaCO3",
+        "value": 21 
+    },
+    {
+        "name" : "Gammex tissue surrogate CB2 50%  CaCO3",
+        "value": 22 
+    },
+    {
+        "name" : "Gammex tissue surrogate SB3 Cortical Bone RMI 450",
+        "value": 23 
+    },
+    {
+        "name" : "Lead",
+        "value": 24 
+    }
+]
