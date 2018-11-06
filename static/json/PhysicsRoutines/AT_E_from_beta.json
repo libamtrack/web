@@ -8,6 +8,7 @@
   "formItems": [
     {
       "type": "entry_module",
+      "name": "beta",
       "startholder": "0.1",
       "endholder": "0.9",
       "validations": {

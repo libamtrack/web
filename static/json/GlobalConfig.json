@@ -175,5 +175,19 @@
         }
       ]
     }
+  ],
+  "dictionaries": [
+    {
+      "name": "particles",
+      "jsonPath": "/dictionaries/Particles.json" 
+    },
+    {
+      "name": "materials",
+      "jsonPath": "/dictionaries/Materials.json"
+    },
+    {
+      "name": "stopping_power_source_no",
+      "jsonPath": "/dictionaries/StPowerSourceNo.json"
+    }
   ]
 }
