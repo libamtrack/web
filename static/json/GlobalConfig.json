@@ -17,15 +17,15 @@
       "functions": [
         {
           "name": "Beta From Energy Single",
-          "jsonConfigPath": "/PhysicsRoutines/AT_beta_from_E_single.json"
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
         },
         {
           "name": "Energy From Beta",
-          "jsonConfigPath": "/PhysicsRoutines/AT_E_from_beta.json"
+          "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
         },
         {
           "name": "Energy From Beta Single",
-          "jsonConfigPath": "/PhysicsRoutines/AT_E_from_beta_single.json"
+          "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
         },
         {
           "name": "gamma from energy3TRAVIS",
