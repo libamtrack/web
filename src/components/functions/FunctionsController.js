@@ -12,9 +12,6 @@ export default class FunctionsController extends Component {
     state = {
         json: {},
         entryName: "",
-        entry: {
-            intervalType: "step"
-        },
         toRender: "",
         dataSeries: [],
         dataLinear: [],
@@ -44,6 +41,11 @@ export default class FunctionsController extends Component {
 
                     if (formItem.type === "entry_module") {
                         this.setState({ entryName: formItem.parameterName });
+                    }
+
+                    if (formItem.type === "plot_type") {
+                        const value = formItem.defaultValue ? formItem.defaultValue : "markers";
+                        this.state.plot["plotType"] = value === "points" ? "markers" : "lines";
                     }
 
                     if (formItem.asManyAsPoints) {
@@ -179,6 +181,7 @@ export default class FunctionsController extends Component {
     };
 
     calculate = () => {
+        console.log(this.state.formData);
         const fun = FunctionsFromC[this.state.json.functionName];
         let newDataSeries = this.state.dataSeries;
 
@@ -224,7 +227,7 @@ export default class FunctionsController extends Component {
 
     render() {
         const size = this.state.json.plot && this.state.json.plot === true ? 8 : 24;
-        const unit = this.state.json.unit ? this.state.json.unit : "units";
+        const unit = this.state.json.unit ? this.state.json.unit : "";
         const resultComp = this.state.json.plot && this.state.json.plot === true ? (
             <div>
                 <Col span={size}>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
+import logo from "../../static/img/logo.png";
 
 const { SubMenu } = Menu;
 
@@ -36,13 +37,18 @@ class SideMenu extends React.Component {
 
     render() {
         return (
-            <Menu
-                mode="inline"
-                defaultSelectedKeys={[this.props.selectedKey]}
-                defaultOpenKeys={[this.props.openKey]}
-                style={{ height: '100%', borderRight: 0 }}>
-                {this.state.subMenus}
-            </Menu>
+            <div>
+                <Link to={"/"}>
+                    <img style={{width: 185, height: 185}} src={logo} align="center" className="App-logo" alt="logo" />
+                </Link>
+                <Menu
+                    mode="inline"
+                    defaultSelectedKeys={[this.props.selectedKey]}
+                    defaultOpenKeys={[this.props.openKey]}
+                    style={{ height: '100%', borderRight: 0 }}>
+                    {this.state.subMenus}
+                </Menu>
+            </div>
         );
     }
 }
