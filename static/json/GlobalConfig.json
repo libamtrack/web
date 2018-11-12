@@ -16,7 +16,7 @@
       },
       "functions": [
         {
-          "name": "Calculate Beta From Energy",
+          "name": "Beta From Energy Single",
           "jsonConfigPath": "/PhysicsRoutines/AT_beta_from_E_single.json"
         },
         {
