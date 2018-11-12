@@ -141,7 +141,7 @@ class FormGenerator extends React.Component {
         );
     }
 
-    createPlotTypeItem = (item) => {
+    createPlotTypeItem = () => {
         return (
             <FormItem style={{ margin: 6 }} label={'Plot as'} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
                 <Tooltip title={"Choose plot type"} placement={"right"}>

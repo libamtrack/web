@@ -41,7 +41,7 @@ class MainPage extends React.Component {
     getDictionaries = () => {
         for (let i = 0; i < this.state.dictionariesPaths.length; i++) {
             const name = this.state.dictionariesPaths[i].name;
-            const path = this.state.dictionariesPaths[i].jsonPath;
+            const path = this.state.dictionariesPaths[i].jsonConfigPath;
 
             getConfigurationFromJSON('static/json/' + path).then(
                 conf => {
