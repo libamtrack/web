@@ -1,10 +1,386 @@
 [
     {
-        "name" : "H",
-        "value": 1001 
+        "name": "H",
+        "value": 1001
     },
     {
-        "name" : "He",
-        "value": 2004 
+        "name": "He",
+        "value": 2004
+    },
+    {
+        "name": "Li",
+        "value": 3007
+    },
+    {
+        "name": "Be",
+        "value": 4009
+    },
+    {
+        "name": "B",
+        "value": 5011
+    },
+    {
+        "name": "C",
+        "value": 6012
+    },
+    {
+        "name": "N",
+        "value": 7014
+    },
+    {
+        "name": "O",
+        "value": 8016
+    },
+    {
+        "name": "F",
+        "value": 9019
+    },
+    {
+        "name": "Ne",
+        "value": 10020,
+    },
+    {
+        "name": "Na",
+        "value": 11023
+    },
+    {
+        "name": "Mg",
+        "value": 12024
+    },
+    {
+        "name": "Al",
+        "value": 13027
+    },
+    {
+        "name": "Si",
+        "value": 14028
+    },
+    {
+        "name": "P",
+        "value": 15031
+    },
+    {
+        "name": "S",
+        "value": 16032
+    },
+    {
+        "name": "Cl",
+        "value": 17035
+    },
+    {
+        "name": "Ar",
+        "value": 18040
+    },
+    {
+        "name": "K",
+        "value": 19039
+    },
+    {
+        "name": "Ca",
+        "value": 20040
+    },
+    {
+        "name": "Sc",
+        "value": 21045
+    },
+    {
+        "name": "Ti",
+        "value": 22048
+    },
+    {
+        "name": "V",
+        "value": 23051
+    },
+    {
+        "name": "Cr",
+        "value": 24052
+    },
+    {
+        "name": "Mn",
+        "value": 25055
+    },
+    {
+        "name": "Fe",
+        "value": 26056
+    },
+    {
+        "name": "Co",
+        "value": 27059
+    },
+    {
+        "name": "Ni",
+        "value": 28058
+    },
+    {
+        "name": "Cu",
+        "value": 29063
+    },
+    {
+        "name": "Zn",
+        "value": 30064
+    },
+    {
+        "name": "Ga",
+        "value": 31069
+    },
+    {
+        "name": "Ge",
+        "value": 32074
+    },
+    {
+        "name": "As",
+        "value": 33075
+    },
+    {
+        "name": "Se",
+        "value": 34080
+    },
+    {
+        "name": "Br",
+        "value": 35019
+    },
+    {
+        "name": "Kr",
+        "value": 36084
+    },
+    {
+        "name": "Rb",
+        "value": 37085
+    },
+    {
+        "name": "Sr",
+        "value": 38088
+    },
+    {
+        "name": "Y",
+        "value": 39089
+    },
+    {
+        "name": "Zr",
+        "value": 40090
+    },
+    {
+        "name": "Nb",
+        "value": 41093
+    },
+    {
+        "name": "Mo",
+        "value": 42098
+    },
+    {
+        "name": "Tc",
+        "value": 43099
+    },
+    {
+        "name": "Ru",
+        "value": 44102
+    },
+    {
+        "name": "Rh",
+        "value": 45103
+    },
+    {
+        "name": "Pd",
+        "value": 46106
+    },
+    {
+        "name": "Ag",
+        "value": 47107
+    },
+    {
+        "name": "Cd",
+        "value": 48114
+    },
+    {
+        "name": "In",
+        "value": 49115
+    },
+    {
+        "name": "Sn",
+        "value": 50120
+    },
+    {
+        "name": "Sb",
+        "value": 51121
+    },
+    {
+        "name": "Te",
+        "value": 52130
+    },
+    {
+        "name": "I",
+        "value": 53127
+    },
+    {
+        "name": "Xe",
+        "value": 54132
+    },
+    {
+        "name": "Cs",
+        "value": 55133
+    },
+    {
+        "name": "Ba",
+        "value": 56138
+    },
+    {
+        "name": "La",
+        "value": 57139
+    },
+    {
+        "name": "Ce",
+        "value": 58140
+    },
+    {
+        "name": "Pr",
+        "value": 59141
+    },
+    {
+        "name": "Nd",
+        "value": 60142
+    },
+    {
+        "name": "Pm",
+        "value": 61145
+    },
+    {
+        "name": "Sm",
+        "value": 62152
+    },
+    {
+        "name": "Eu",
+        "value": 63153
+    },
+    {
+        "name": "Gd",
+        "value": 64158
+    },
+    {
+        "name": "Tb",
+        "value": 65159
+    },
+    {
+        "name": "Dy",
+        "value": 66164
+    },
+    {
+        "name": "Ho",
+        "value": 67165
+    },
+    {
+        "name": "Er",
+        "value": 68166
+    },
+    {
+        "name": "Tm",
+        "value": 69169
+    },
+    {
+        "name": "Yb",
+        "value": 70174
+    },
+    {
+        "name": "Lu",
+        "value": 71175
+    },
+    {
+        "name": "Hf",
+        "value": 72180
+    },
+    {
+        "name": "Ta",
+        "value": 73181
+    },
+    {
+        "name": "W",
+        "value": 74184
+    },
+    {
+        "name": "Re",
+        "value": 75187
+    },
+    {
+        "name": "Os",
+        "value": 76192
+    },
+    {
+        "name": "Ir",
+        "value": 77193
+    },
+    {
+        "name": "Pt",
+        "value": 78195
+    },
+    {
+        "name": "Au",
+        "value": 79197
+    },
+    {
+        "name": "Hg",
+        "value": 80202
+    },
+    {
+        "name": "Tl",
+        "value": 81205
+    },
+    {
+        "name": "Pb",
+        "value": 82208
+    },
+    {
+        "name": "Bi",
+        "value": 83209
+    },
+    {
+        "name": "Po",
+        "value": 84209
+    },
+    {
+        "name": "Rn",
+        "value": 86222
+    },
+    {
+        "name": "Ra",
+        "value": 88226
+    },
+    {
+        "name": "Ac",
+        "value": 89227
+    },
+    {
+        "name": "Th",
+        "value": 90232
+    },
+    {
+        "name": "Pa",
+        "value": 91231
+    },
+    {
+        "name": "U",
+        "value": 92238
+    },
+    {
+        "name": "Np",
+        "value": 93237
+    },
+    {
+        "name": "Pu",
+        "value": 94244
+    },
+    {
+        "name": "Am",
+        "value": 95243
+    },
+    {
+        "name": "Cm",
+        "value": 96247
+    },
+    {
+        "name": "Bk",
+        "value": 97247
+    },
+    {
+        "name": "Cf",
+        "value": 98251
     }
 ]
