@@ -9,8 +9,9 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "0.1",
-      "endholder": "10000",
+      "startholder": "1",
+      "endholder": "1000",
+      "intervalType": "step",
       "validations": {
         "type": "float",
         "min": "0.0001",
@@ -19,13 +20,15 @@
     },
     {
       "type": "plot_type",
-      "defaultValue": "markers"
+      "visible": true,
+      "defaultValue": "points"
     },
     {
       "type": "select",
       "parameterName": "material_no",
       "label": "Material",
       "values": "materials",
+      "defaultValue": 1,
       "description": "Choose material type"
     },
     {
@@ -34,6 +37,7 @@
       "label": "Particle",
       "values": "particles",
       "asManyAsPoints": true,
+      "defaultValue": 1001,
       "description": "Choose particle type"
     },
     {
@@ -41,6 +45,7 @@
       "parameterName": "stopping_power_source_no",
       "label": "Source",
       "values": "stopping_power_source_no",
+      "defaultValue": 1,
       "description": "Choose source type"
     }
   ],

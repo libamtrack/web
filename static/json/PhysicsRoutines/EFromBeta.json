@@ -19,7 +19,8 @@
     },
     {
       "type": "plot_type",
-      "default": "markers"
+      "visible": true,
+      "defaultValue": "lines"
     }
   ],
   "moreOptions": true,

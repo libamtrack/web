@@ -10,6 +10,7 @@
       "parameterName": "beta",
       "label": "Beta",
       "placeholder": "0.1",
+      "defaultValue": 0.1,
       "validations": {
         "type": "float",
         "min": "0.000001",
