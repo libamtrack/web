@@ -1,6 +1,6 @@
 {
   "visibleName": "Energy From Beta",
-  "name": "AT_E_from_beta",
+  "functionName": "AT_E_from_beta",
   "description": "Returns energy per nucleon of particle with relativistic speed beta",
   "xTitle": "beta",
   "yTitle": "Energy",
@@ -8,7 +8,7 @@
   "formItems": [
     {
       "type": "entry_module",
-      "name": "beta",
+      "parameterName": "beta",
       "startholder": "0.1",
       "endholder": "0.9",
       "validations": {

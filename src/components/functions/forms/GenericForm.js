@@ -121,7 +121,7 @@ class FormGenerator extends React.Component {
                             <Option value="step">Step</Option>
                             <Option value="points">Points</Option>
                         </Select>
-                        <Tooltip title={"Insert interval value or poinst number"} placement={"right"}>
+                        <Tooltip title={"Insert interval value or points number"} placement={"right"}>
                             {getFieldDecorator('pointsNo', {
                                 rules: [{
                                     pattern: this.state.formData.intervalType === "step" ? floatPattern : intPattern, message: "Incorrect value!"
@@ -158,8 +158,8 @@ class FormGenerator extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
-                <Tooltip title={typeof item.desc !== 'undefined' ? item.desc : "Insert value"}>
-                    {getFieldDecorator(item.name, {
+                <Tooltip title={typeof item.description !== 'undefined' ? item.description : "Insert value"}>
+                    {getFieldDecorator(item.parameterName, {
                         rules: [{
                             required: true, message: "Please, insert a value!"
                         }, {
@@ -167,7 +167,7 @@ class FormGenerator extends React.Component {
                         }]
                     })(
                         <Input style={{ width: 175, textAlign: 'center' }}
-                            name={item.name}
+                            name={item.parameterName}
                             placeholder={item.placeholder}
                             onChange={this.handleEntryInputChange} />
                     )}
@@ -179,7 +179,7 @@ class FormGenerator extends React.Component {
     createSelectItem = (item) => {
         const { getFieldDecorator } = this.props.form;
         const list = typeof this.props.dictionaryData[item.values] !== 'undefined' ? this.props.dictionaryData[item.values] : [{ name: "m1", number: 1 }, { name: "m2", number: 2 }]
-        const tip = typeof item.desc !== 'undefined' ? item.desc : "Select option";
+        const tip = typeof item.description !== 'undefined' ? item.description : "Select option";
         
         return (
             <Tooltip title={tip} placement={"right"}>
@@ -188,7 +188,7 @@ class FormGenerator extends React.Component {
                         required: true, message: "Please, select a value!"
                     }]
                 })(
-                    <Select onChange={(value) => this.handleSelectChange(item.name, value)}>
+                    <Select onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
                         {list.map(listElem => (
                             <Option key={listElem.name + listElem.value} value={listElem.value}>
                                 {listElem.name}

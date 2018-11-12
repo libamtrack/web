@@ -43,12 +43,12 @@ export default class FunctionsController extends Component {
                     const formItem = this.state.json.formItems[i];
 
                     if (formItem.type === "entry_module") {
-                        this.setState({ entryName: formItem.name });
+                        this.setState({ entryName: formItem.parameterName });
                     }
 
                     if (formItem.asManyAsPoints) {
                         let newData = this.state.parametersRules;
-                        newData[formItem.name] = true;
+                        newData[formItem.parameterName] = true;
 
                         this.setState({
                             parametersRules: newData
@@ -174,13 +174,12 @@ export default class FunctionsController extends Component {
     };
 
     calculateSingleResult = () => {
-        const fun = FunctionsFromC[this.state.json.name];
-        console.log(this.state.formData);
+        const fun = FunctionsFromC[this.state.json.functionName];
         this.setState({ singleResult: fun(this.state.formData) });
     };
 
     calculate = () => {
-        const fun = FunctionsFromC[this.state.json.name];
+        const fun = FunctionsFromC[this.state.json.functionName];
         let newDataSeries = this.state.dataSeries;
 
         let generatedPoints = preparePoints(

@@ -1,5 +1,4 @@
 export default function AT_E_from_beta(parameters) {
-    console.log(parameters);
 	let at_e_from_beta = Module.cwrap('AT_E_from_beta', 'number', ['number', 'array', 'number']);
 
 	/*********************STANDARD PARAMETER*************************/
