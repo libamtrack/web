@@ -41,8 +41,8 @@
       "name": "StoppingPower",
       "functions": [
         {
-          "name": "Stopping power with no",
-          "jsonConfigPath": "/StoppingPower/StoppingPowerWithNo.json"
+          "name": "Mass stopping power with no",
+          "jsonConfigPath": "/StoppingPower/MassStoppingPowerWithNo.json"
         },
         {
           "name": "energy from beta6",
@@ -179,15 +179,15 @@
   "dictionaries": [
     {
       "name": "particles",
-      "jsonPath": "/dictionaries/Particles.json" 
+      "jsonConfigPath": "/dictionaries/Particles.json" 
     },
     {
       "name": "materials",
-      "jsonPath": "/dictionaries/Materials.json"
+      "jsonConfigPath": "/dictionaries/Materials.json"
     },
     {
       "name": "stopping_power_source_no",
-      "jsonPath": "/dictionaries/StPowerSourceNo.json"
+      "jsonConfigPath": "/dictionaries/StPowerSourceNo.json"
     }
   ]
 }
