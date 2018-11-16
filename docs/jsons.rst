@@ -19,11 +19,11 @@ Global configuration JSON file looks like below
         "dictionaries": [],
     }
 
-* **applicationTitle** - title of web application
+* **applicationTitle** (*string*) - title of web application
 
-* **introText** - short application description displayed in main page
+* **introText** (*string*) - short application description displayed in main page
 
-* **footerText** - footer - text displayed on end section
+* **footerText** (*string*) - footer - text displayed on end section
 
 Categories
 ----------
@@ -55,20 +55,20 @@ Categories is an array that contains functions grouped in theme categories and o
         ]
     }
 
-* **name** - category name which will be displayed in application
+* **name** (*string*) - category name which will be displayed in application
 
-* **style** - customizable CSS for displayed category column on the main page
+* **style** (*string*) - customizable CSS for displayed category column on the main page
 
-* **functionsStyle** - customizable CSS for each function in category column
+* **functionsStyle** (*string*) - customizable CSS for each function in category column
 
 Functions
 ~~~~~~~~~
  
 An array which contains all functions in given category:
 
-* **name** - displayed name for function
+* **name** (*string*) - displayed name for function
 
-* **jsonConfigPath** - path for JSON file which contains function's details. Format: /<category_name>/<function_name>.json
+* **jsonConfigPath** (*string*) - path for JSON file which contains function's details. Format: /<category_name>/<function_name>.json
 
 
 Dictionaries
@@ -87,19 +87,19 @@ An array which contains all dictionary JSONs used by web application
         ]
     }
 
-* **name** - dictionary name which is used in functions JSON
+* **name** (*string*) - dictionary name which is used in functions JSON
 
 .. note:: This name must be equal with the name used in functions configuration JSONs.
 
-* **jsonConfigPath** - path to JSON which contains dictionary values: Format: /dictionaries/<dictionary_name>.json
+* **jsonConfigPath** (*string*) - path to JSON which contains dictionary values: Format: /dictionaries/<dictionary_name>.json
 
 
 .. _funjson:
 
-Function description JSON
-=========================
+Function configuration JSON
+===========================
 
-In this file you can describe all parameters which are needed to generate form for your function.
+In this file user can describe all parameters which are needed to generate form for the function.
 
 .. code-block:: json
 
@@ -121,33 +121,168 @@ In this file you can describe all parameters which are needed to generate form f
     }
 
 
-* **visibleName** - name which will be displayed on function page
+* **visibleName** (*string*) - name which will be displayed on function page
 
-* **functionName** - C/wrapper function name which you will have to generate
+* **functionName** (*string*) - C/wrapper function name which user will have to generate
 
-.. warning:: This value MUST BE equal with JavaScript function name you put in src/functionsFromC
+.. warning:: This value MUST BE equal with JavaScript function name user put in src/functionsFromC
 
-* **description** - short description what function does, it appears on function page
+* **description** (*string*) - short description what function does, it appears on function page
 
-* **xTitle**/**yTitle** - x/y axis labels
+* **xTitle**/**yTitle** (*string*) - x/y axis labels
 
-* **plot** - flag that descrbes whether function return results on plot (true) or as single value (false)
+* **plot** (*boolean*) - flag that descrbes whether function returns results on plot (true) or as single value (false)
 
-* **unit** - units for function that return single results
+* **unit** (*string*) - units for functions that return single results
 
-* **formItems** - items for for described in :ref:`formitems`
+* **formItems** (*array*) - form fields described in :ref:`formitems`
 
-* **moreOptions** - flag that describes whether to display buttons for changing axis type (linear/logarithmic)
+* **moreOptions** (*boolean*) - flag that describes whether to display buttons for changing axis type (linear/logarithmic)
 
-* **modals** - contains flags describing which modal will be displayed on function page
+* **modals** (*array*) - contains flags describing which elements will be displayed on function page in "Data Series options" section
 
-Modals
-------
+    * **dataSeries** (*boolean*) - modal window when user can see details about series of data from plot
+
+    * **download** (*boolean*) - modal window for downloading all calculation results
+    
+    * **deleteAll** (*boolean*) - button for deleting all calculation results from plot
+    
+.. note:: Parameters "xTitle", "yTitle", "moreOptions", "modals" are ignored when "plot" is set to false    
+
 
 .. _formitems:
 
 Form Items
 ----------
+
+An array that contains all inputs, fields etc. needed by function to make calculations. Below, there are described all currently supported
+types of items.
+
+Common elements:
+
+* **type** (*string*) - specifies form item type
+
+* **parameterName** (*string*) - name of C function parameter that is provided by this item
+
+.. warning:: "parameterName" MUST BE equal with the name of function argument in C. For example: 
+    ::
+
+        int test(int a); => "parameterName": "a"
+
+* **description** (*string*) - hint that will be displayed when user move cursor on the form item - default: "Insert value"       
+
+
+Entry module
+~~~~~~~~~~~~
+
+It is a collection of simple form fields that allows to generate a serie of numbers.
+
+.. code-block:: json
+    
+    {
+      "type": "entry_module",
+      "parameterName": "E_MeV_u",
+      "startholder": "1",
+      "endholder": "1000",
+      "intervalType": "step",
+      "validations": {
+            "type": "float",
+            "min": "0.0001",
+            "max": "10000"
+      }
+    }
+
+* **startholder** (*float/string*) - initial value for "Start" input
+
+* **endholder** (*float/string*) - initial value for "End" input
+
+* **intervalType** (*string*, ["step", "pointsNo"]) - default value for "Generate" block - default: "step"
+
+* **validations** (*array*) - array with validation rules for "Start" and "End" inputs
+        
+    * **type** (*string*, ["float", "int"]) - number format value - default: "float"
+    
+    * **min** (*float/int/string*) - minimal value for inputs
+    
+    * **max** (*float/int/string*) - maximum value for inputs
+
+
+Input 
+~~~~~
+
+Single input item that allows insert single number.
+
+.. code-block:: json
+
+    {
+      "type": "input",
+      "parameterName": "beta",
+      "label": "Beta",
+      "placeholder": "0.1",
+      "defaultValue": 0.1,
+      "validations": {
+            "type": "float",
+            "min": "0.000001",
+            "max": "0.999999"
+      }
+    }
+
+* **label** (*string*) - name of field visible for user
+
+* **placeholder** (*string*) - value visible when field is empty
+
+* **defaultValue** (*float/int*) - field initial value
+
+* **validations** (*array*) - field validation rules
+    
+    * **type** (*string*, ["float", "int"]) - number format value - default: "float"
+    
+    * **min** (*float/int/string*) - input minimal value
+    
+    * **max** (*float/int/string*) - input value
+
+
+Plot type
+~~~~~~~~~
+
+Radio button that allows to determine if plot will be display as point or line. It doesn't have "parameterName" property and
+will be ignored when function doesn't return result as plot.
+
+.. code-block:: json
+
+    {
+      "type": "plot_type",
+      "visible": true,
+      "defaultValue": "points"
+    }
+
+* **visible** (*boolean*) - determines whether this item is visible or not
+
+* **defaultValue** (*string*, ["lines", "points"]) - initial plot type - default: "points"
+
+
+Select
+~~~~~~
+
+Item that allows user to choose some values from list. Lists are provided as :ref:`dictjson`.
+
+.. code-block:: json
+
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "defaultValue": 1,
+      "description": "Choose material type"
+    }
+
+* **label** (*string*) - name of field visible for user   
+
+* **values** (*string*) - dictionary name from :ref:`gcjson`
+
+* **defaultValue** (*float/int*) - initial value from dictionary object (from property "value")
+
 
 .. _dictjson:
 

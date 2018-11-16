@@ -174,5 +174,5 @@ epub_exclude_files = ['search.html']
 
 rst_epilog = """
 .. _node.js: https://nodejs.org/en/
-.. _WrapperFunctionGenerator: https://marwin1991.github.io/cToJsFunctionsGenerator/
+.. _JSFunctionGenerator: https://marwin1991.github.io/cToJsFunctionsGenerator/
 """
