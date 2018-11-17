@@ -15,4 +15,4 @@ deploy:
   local-dir: ./dist
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ master|^feature #depoly when commit to branch master or starting with feature
+    condition: $TRAVIS_BRANCH =~ master|^feature #deploy when commit to branch master or starting with feature
