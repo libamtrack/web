@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Plot from 'react-plotly.js/react-plotly';
 
 const PlotComponent = (props) => {

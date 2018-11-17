@@ -1,15 +1,16 @@
 {
   "visibleName": "Energy From Beta Single",
-  "name": "AT_E_from_beta_single",
+  "functionName": "AT_E_from_beta_single",
   "description": "Returns energy per nucleon of particle with relative speed beta",
   "unit": "MeV",
   "plot": false,
   "formItems": [
     {
       "type": "input",
-      "name": "beta",
+      "parameterName": "beta",
       "label": "Beta",
       "placeholder": "0.1",
+      "defaultValue": 0.1,
       "validations": {
         "type": "float",
         "min": "0.000001",

@@ -1,15 +1,15 @@
 {
   "visibleName": "Beta From Energy Single",
-  "name": "AT_beta_from_E_single",
+  "functionName": "AT_beta_from_E_single",
   "description": "Returns relativistic speed for single value of energy",
-  "unit": " ",
   "plot": false,
   "formItems": [
     {
       "type": "input",
-      "name": "E_MeV_u",
+      "parameterName": "E_MeV_u",
       "label": "Energy",
       "placeholder": "10",
+      "defaultValue": 10,
       "validations": {
         "type": "float",
         "min": "0.000001",

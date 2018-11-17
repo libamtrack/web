@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Row } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
@@ -10,11 +10,9 @@ import { preparePoints, prepareDataToCalculate } from './utils/helpers';
 
 export default class FunctionsController extends Component {
     state = {
+        loading: true,
         json: {},
         entryName: "",
-        entry: {
-            intervalType: "step"
-        },
         toRender: "",
         dataSeries: [],
         dataLinear: [],
@@ -43,12 +41,17 @@ export default class FunctionsController extends Component {
                     const formItem = this.state.json.formItems[i];
 
                     if (formItem.type === "entry_module") {
-                        this.setState({ entryName: formItem.name });
+                        this.setState({ entryName: formItem.parameterName });
+                    }
+
+                    if (formItem.type === "plot_type") {
+                        const value = formItem.defaultValue ? formItem.defaultValue : "markers";
+                        this.state.plot["plotType"] = value === "points" ? "markers" : "lines";
                     }
 
                     if (formItem.asManyAsPoints) {
                         let newData = this.state.parametersRules;
-                        newData[formItem.name] = true;
+                        newData[formItem.parameterName] = true;
 
                         this.setState({
                             parametersRules: newData
@@ -91,7 +94,7 @@ export default class FunctionsController extends Component {
             </div>
         );
 
-        this.setState({ toRender: componentToRender });
+        this.setState({ toRender: componentToRender, loading: false });
     };
 
     handleXChange = (event) => {
@@ -174,13 +177,12 @@ export default class FunctionsController extends Component {
     };
 
     calculateSingleResult = () => {
-        const fun = FunctionsFromC[this.state.json.name];
-        console.log(this.state.formData);
+        const fun = FunctionsFromC[this.state.json.functionName];
         this.setState({ singleResult: fun(this.state.formData) });
     };
 
     calculate = () => {
-        const fun = FunctionsFromC[this.state.json.name];
+        const fun = FunctionsFromC[this.state.json.functionName];
         let newDataSeries = this.state.dataSeries;
 
         let generatedPoints = preparePoints(
@@ -225,7 +227,7 @@ export default class FunctionsController extends Component {
 
     render() {
         const size = this.state.json.plot && this.state.json.plot === true ? 8 : 24;
-        const unit = this.state.json.unit ? this.state.json.unit : "units";
+        const unit = this.state.json.unit ? this.state.json.unit : "";
         const resultComp = this.state.json.plot && this.state.json.plot === true ? (
             <div>
                 <Col span={size}>
@@ -249,7 +251,7 @@ export default class FunctionsController extends Component {
             );
         return (
             <Row type='flex' gutter={8} align='top'>
-                {resultComp}
+                {this.state.loading ? <Spin spinning={this.state.loading} /> : resultComp}
             </Row>
         );
     }
