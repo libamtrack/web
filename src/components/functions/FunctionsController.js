@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Row } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
@@ -10,6 +10,7 @@ import { preparePoints, prepareDataToCalculate } from './utils/helpers';
 
 export default class FunctionsController extends Component {
     state = {
+        loading: true,
         json: {},
         entryName: "",
         toRender: "",
@@ -93,7 +94,7 @@ export default class FunctionsController extends Component {
             </div>
         );
 
-        this.setState({ toRender: componentToRender });
+        this.setState({ toRender: componentToRender, loading: false });
     };
 
     handleXChange = (event) => {
@@ -181,7 +182,6 @@ export default class FunctionsController extends Component {
     };
 
     calculate = () => {
-        console.log(this.state.formData);
         const fun = FunctionsFromC[this.state.json.functionName];
         let newDataSeries = this.state.dataSeries;
 
@@ -251,7 +251,7 @@ export default class FunctionsController extends Component {
             );
         return (
             <Row type='flex' gutter={8} align='top'>
-                {resultComp}
+                {this.state.loading ? <Spin spinning={this.state.loading} /> : resultComp}
             </Row>
         );
     }

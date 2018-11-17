@@ -180,8 +180,6 @@ class FormGenerator extends React.Component {
     createSingleInputItem = (item) => {
         const { getFieldDecorator } = this.props.form;
 
-        console.log(this.state.formItemsCounters)
-
         if (!this.state.formItemsCounters.has(item.parameterName)) {
             this.state.formData[item.parameterName] = item.defaultValue ? item.defaultValue : 0.5;
             this.state.formItemsCounters.add(item.parameterName);
@@ -253,7 +251,6 @@ class FormGenerator extends React.Component {
     handleEntryInputChange = (event) => {
         let newFormData = this.state.formData;
         newFormData[event.target.name] = parseFloat(event.target.value);
-        console.log(newFormData);
         this.setState({
             formData: newFormData
         });
