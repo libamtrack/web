@@ -15,4 +15,4 @@ deploy:
   local-dir: ./dist
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ master|^feature$
+    condition: $TRAVIS_BRANCH =~ master|^feature
