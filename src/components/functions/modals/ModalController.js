@@ -3,6 +3,7 @@ import { Modal, Button, Collapse } from 'antd';
 import DataSeriesModal from './DataSeriesModal.js';
 import ShowDataSeriesModal from './ShowDataModal.js';
 import DownloadDataModal from './DownloadDataModal.js';
+import ChangeSeriesNameModal from './ChangeSeriesNameModal.js';
 import { prepareDataToSave, prepareSingleDataToSave } from '../utils/helpers.js';
 
 const Panel = Collapse.Panel;
@@ -19,10 +20,12 @@ const customPanelStyle = {
 export default class ModalController extends React.Component {
     state = {
         dataSeriesNameToShow: "",
+        dataSeriesNameToChange: "",
         dataSeries: this.props.dataSeries,
         dataSeriesModalVisible: false,
         showDataSeriesModalVisible: false,
         downloadModalVisible: false,
+        changeNameModalVisible: false,
         dataToSave: "empty",
         xToShow: [],
         yToShow: []
@@ -33,7 +36,9 @@ export default class ModalController extends React.Component {
     };
 
     deleteSingleDataSeries = (name) => {
+        this.setModalVisible("dataSeriesModalVisible", false);
         this.props.deleteDataSeries(name);
+        this.setModalVisible("dataSeriesModalVisible", true);
     };
 
     showDataSeries = (name) => {
@@ -59,6 +64,17 @@ export default class ModalController extends React.Component {
             }
         }
     };
+
+    showRenameModal = (name) => {
+        this.setState({dataSeriesNameToChange: name});
+        this.setModalVisible("changeNameModalVisible", true);
+    }
+
+    renameDataSeries = (oldName, newName) => {
+        this.setModalVisible("dataSeriesModalVisible", false);
+        this.props.renameDataSeries(oldName, newName);
+        this.setModalVisible("dataSeriesModalVisible", true);
+    }
 
     downloadAll = () => {
         this.setState({ dataToSave: prepareDataToSave(this.state.dataSeries, "haha") });
@@ -90,18 +106,27 @@ export default class ModalController extends React.Component {
                                             setModalVisible={this.setModalVisible}
                                             dataSeries={this.props.dataSeries}
                                             showDataSeries={this.showDataSeries}
+                                            showRenameModal={this.showRenameModal}
                                             deleteDataSeries={this.deleteSingleDataSeries}
                                             downloadDataSeries={this.downloadSingleDataSeries}
                                             name={"dataSeriesModalVisible"}
                                         />
                                         <ShowDataSeriesModal modalVisible={this.state.showDataSeriesModalVisible}
                                             setModalVisible={this.setModalVisible}
+                                            showRenameModal={this.showRenameModal}
                                             deleteDataSeries={this.deleteSingleDataSeries}
                                             downloadDataSeries={this.downloadSingleDataSeriesByName}
                                             xList={this.state.xToShow}
                                             yList={this.state.yToShow}
                                             dataSeriesName={this.state.dataSeriesNameToShow}
                                             name={"showDataSeriesModalVisible"}
+                                        />
+                                        <ChangeSeriesNameModal modalVisible={this.state.changeNameModalVisible}
+                                            setModalVisible={this.setModalVisible}
+                                            currentDataName={this.state.dataSeriesNameToChange}
+                                            renameDataSeries={(oldName, newName) => 
+                                                this.setState({ dataSeriesNameToChange: oldName }, () => this.renameDataSeries(oldName, newName))}
+                                            name={"changeNameModalVisible"}
                                         />
                                     </b>
                                 ) : (null)

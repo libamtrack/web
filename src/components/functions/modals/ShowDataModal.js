@@ -1,11 +1,23 @@
 import React from "react";
-import { Row, Col, Modal, Button } from 'antd';
+import { Row, Col, Modal, Button, Icon, Tooltip } from 'antd';
 
 const ShowDataSeriesModal = (props) => {
     let i = 0;
     return (
         <Modal
-            title="Show data series"
+            title={
+                <div>
+                    {props.dataSeriesName + "   "}
+                    <a onClick={() => {
+                        props.setModalVisible(props.name, false);
+                        props.showRenameModal(props.dataSeriesName);
+                    }}>
+                        <Tooltip title={"Edit name"}>
+                            <Icon type="edit" />
+                        </Tooltip>
+                    </a>
+                </div>
+            }
             wrapClassName="vertical-center-modal"
             visible={props.modalVisible}
             onCancel={() => props.setModalVisible(props.name, false)}

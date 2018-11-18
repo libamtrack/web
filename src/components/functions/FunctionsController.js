@@ -91,6 +91,7 @@ export default class FunctionsController extends Component {
                     dataSeries={this.state.dataSeries}
                     deleteDataSeries={this.deleteDataSeries}
                     deleteAll={this.deleteAll}
+                    renameDataSeries={this.renameDataSeries}
                 />}
             </div>
         );
@@ -141,6 +142,19 @@ export default class FunctionsController extends Component {
             () => this.state.json.plot === true ? this.calculate() : this.calculateSingleResult());
     };
 
+    renameDataSeries = (oldName, newName) => {
+        let newDataSeries = [];
+        for (let i = 0; i < this.state.dataSeries.length; i++) {
+            let newDataSerie = this.state.dataSeries[i];
+            if (this.state.dataSeries[i].name === oldName) {
+                newDataSerie.name = newName;
+            }
+            newDataSeries.push(newDataSerie);
+        }
+
+        this.setState({ dataSeries: newDataSeries });
+    }
+
     deleteDataSeries = (name) => {
         let newDataSeries = this.state.dataSeries;
         let newDataLinear = this.state.dataLinear;
@@ -178,7 +192,7 @@ export default class FunctionsController extends Component {
     deleteAll = () => {
         let nDataSeries = this.state.dataSeries;
         let nDataSeriesNames = this.state.dataSeriesNames;
-        
+
         nDataSeries.length = 0;
         nDataSeriesNames.length = 0;
 
