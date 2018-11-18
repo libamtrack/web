@@ -20,7 +20,7 @@ const copyWasm = new CopyWebpackPlugin([
 ]);
 
 module.exports = {
-    entry: ['babel-polyfill', './src/index.js'],
+    entry: ['@babel/polyfill', './src/index.js'],
     node: {
         fs: 'empty'
     },
