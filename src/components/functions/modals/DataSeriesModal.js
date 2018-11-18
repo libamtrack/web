@@ -4,6 +4,26 @@ import { Modal, List, Button } from 'antd';
 const confirm = Modal.confirm;
 
 export default class DataSeriesModal extends React.Component {
+    state = {
+        dataSeries: this.props.dataSeries
+    }
+
+    removeDataSeries = (name) => {
+        let newDataSeries = this.state.dataSeries;
+
+        for (let i = 0; i < this.state.dataSeries.length; i++) {
+            if (this.state.dataSeries[i].name === name) {
+                console.log(this.state.dataSeries[i], name);
+                newDataSeries.splice(i, 1);
+                break;
+            }
+        }
+
+        this.setState({
+            dataSeries: newDataSeries
+        }, () => this.props.deleteDataSeries(name));
+    }
+
     showConfirm = (delMethod) => {
         confirm({
             title: 'Are you sure delete these data series?',
@@ -35,10 +55,10 @@ export default class DataSeriesModal extends React.Component {
                     renderItem={series => (
                         <List.Item actions={
                             [
-                                <a onClick={() => this.props.showDataSeries(series.uid)}>Show</a>,
+                                <a onClick={() => this.props.showDataSeries(series.name)}>Show</a>,
                                 <a onClick={() => this.props.downloadDataSeries(series)}>Download</a>,
                                 <a onClick={() => this.showConfirm(
-                                    () => this.props.deleteDataSeries(series.uid)
+                                    () => this.removeDataSeries(series.name)
                                 )}>Delete</a>
                             ]}>
                             <List.Item.Meta title={series.name} />

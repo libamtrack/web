@@ -65,3 +65,11 @@ export function prepareDataToCalculate(entryName, data, formItems, parametersRul
 
     return dataToCalculate;
 }
+
+export function getDataSeriesName(dataSeriesNames, parameterName) {
+    const name = parameterName;
+
+    let counter = dataSeriesNames.length;
+
+    return counter === 0 ? name : name + "_" + counter;
+}

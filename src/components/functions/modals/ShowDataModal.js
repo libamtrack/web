@@ -10,9 +10,20 @@ const ShowDataSeriesModal = (props) => {
             visible={props.modalVisible}
             onCancel={() => props.setModalVisible(props.name, false)}
             footer={
-                <Button type='primary' onClick={() => props.setModalVisible(props.name, false)}>
-                    Ok
+                <div>
+                    <Button type='primary' onClick={() => props.setModalVisible(props.name, false)}>
+                        Ok
                     </Button>
+                    <Button onClick={() => props.downloadDataSeries(props.dataSeriesName)}>
+                        Download
+                    </Button>
+                    <Button onClick={() => {
+                        props.deleteDataSeries(props.dataSeriesName);
+                        props.setModalVisible(props.name, false);
+                    }}>
+                        Delete
+                    </Button>
+                </div>
             }
         >
             <Row type='flex' gutter={20} align="center">

@@ -18,6 +18,7 @@ const customPanelStyle = {
 
 export default class ModalController extends React.Component {
     state = {
+        dataSeriesNameToShow: "",
         dataSeries: this.props.dataSeries,
         dataSeriesModalVisible: false,
         showDataSeriesModalVisible: false,
@@ -31,23 +32,32 @@ export default class ModalController extends React.Component {
         this.setState({ [modal]: visible });
     };
 
-    deleteSingleDataSeries = (uid) => {
-        this.props.deleteDataSeries(uid);
+    deleteSingleDataSeries = (name) => {
+        this.props.deleteDataSeries(name);
     };
 
-    showDataSeries = (uid) => {
+    showDataSeries = (name) => {
         for (let i = 0; i < this.state.dataSeries.length; i++) {
-            if (this.state.dataSeries[i].uid === uid) {
+            if (this.state.dataSeries[i].name === name) {
                 this.setState({ xToShow: this.state.dataSeries[i].x, yToShow: this.state.dataSeries[i].y });
                 break;
             }
         }
-        this.setModalVisible("showDataSeriesModalVisible", true);
+        this.setState({ dataSeriesNameToShow: name }, () => this.setModalVisible("showDataSeriesModalVisible", true));
     };
 
     downloadSingleDataSeries = (dataSeries) => {
         this.setState({ dataToSave: prepareSingleDataToSave(dataSeries) });
         this.setModalVisible("downloadModalVisible", true);
+    };
+
+    downloadSingleDataSeriesByName = (name) => {
+        for (let i = 0; i < this.state.dataSeries.length; i++) {
+            if (this.state.dataSeries[i].name === name) {
+                this.downloadSingleDataSeries(this.state.dataSeries[i]);
+                break;
+            }
+        }
     };
 
     downloadAll = () => {
@@ -78,7 +88,7 @@ export default class ModalController extends React.Component {
                                         <Button onClick={() => this.setModalVisible("dataSeriesModalVisible", true)}>Data series</Button>
                                         <DataSeriesModal modalVisible={this.state.dataSeriesModalVisible}
                                             setModalVisible={this.setModalVisible}
-                                            dataSeries={this.state.dataSeries}
+                                            dataSeries={this.props.dataSeries}
                                             showDataSeries={this.showDataSeries}
                                             deleteDataSeries={this.deleteSingleDataSeries}
                                             downloadDataSeries={this.downloadSingleDataSeries}
@@ -86,8 +96,11 @@ export default class ModalController extends React.Component {
                                         />
                                         <ShowDataSeriesModal modalVisible={this.state.showDataSeriesModalVisible}
                                             setModalVisible={this.setModalVisible}
+                                            deleteDataSeries={this.deleteSingleDataSeries}
+                                            downloadDataSeries={this.downloadSingleDataSeriesByName}
                                             xList={this.state.xToShow}
                                             yList={this.state.yToShow}
+                                            dataSeriesName={this.state.dataSeriesNameToShow}
                                             name={"showDataSeriesModalVisible"}
                                         />
                                     </b>
