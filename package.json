@@ -12,16 +12,37 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "keywords": ["libamtrack","library", "web", "interface","plot","computational", "routines", "prediction", "detector",
-    "response","radiobiological","efficiency", "heavy", "charged", "particle", "beams",
-    "research", "proton", "ion", "dosimetry", "radiotherapy",
-    "provides","auxiliary"],
+  "keywords": [
+    "libamtrack",
+    "library",
+    "web",
+    "interface",
+    "plot",
+    "computational",
+    "routines",
+    "prediction",
+    "detector",
+    "response",
+    "radiobiological",
+    "efficiency",
+    "heavy",
+    "charged",
+    "particle",
+    "beams",
+    "research",
+    "proton",
+    "ion",
+    "dosimetry",
+    "radiotherapy",
+    "provides",
+    "auxiliary"
+  ],
   "author": "Arkadiusz Dudzik & Piotr Zmilczak",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-core": "6.26.3",
-    "babel-loader": "8.0.4",
+    "babel-loader": "7.1.5",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
@@ -53,5 +74,10 @@
     "react-dom": "16.6.3",
     "react-router": "4.3.1",
     "react-router-dom": "4.3.1"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "babel-loader"
+    ]
   }
 }
