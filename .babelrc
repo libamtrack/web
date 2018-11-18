@@ -1,7 +1,7 @@
 {
-  "presets": ["env", "react", "stage-3"],
+  "presets": ["@babel/env", "@babel/react"],
   "plugins": [
-    "transform-class-properties",
+    "@babel/plugin-proposal-class-properties",
     [
       "wildcard",
       {
