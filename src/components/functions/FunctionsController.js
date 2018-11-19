@@ -143,13 +143,11 @@ export default class FunctionsController extends Component {
     };
 
     renameDataSeries = (oldName, newName) => {
-        let newDataSeries = [];
+        let newDataSeries = this.state.dataSeries;
         for (let i = 0; i < this.state.dataSeries.length; i++) {
-            let newDataSerie = this.state.dataSeries[i];
             if (this.state.dataSeries[i].name === oldName) {
-                newDataSerie.name = newName;
+                newDataSeries[i].name = newName;
             }
-            newDataSeries.push(newDataSerie);
         }
 
         this.setState({ dataSeries: newDataSeries });
