@@ -6,7 +6,7 @@ import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import { preparePoints, prepareDataToCalculate } from './utils/helpers';
+import { preparePoints, prepareDataToCalculate, getDataSeriesName } from './utils/helpers';
 
 export default class FunctionsController extends Component {
     state = {
@@ -14,6 +14,7 @@ export default class FunctionsController extends Component {
         json: {},
         entryName: "",
         toRender: "",
+        dataSeriesNames: [],
         dataSeries: [],
         dataLinear: [],
         dataPower: [],
@@ -90,6 +91,7 @@ export default class FunctionsController extends Component {
                     dataSeries={this.state.dataSeries}
                     deleteDataSeries={this.deleteDataSeries}
                     deleteAll={this.deleteAll}
+                    renameDataSeries={this.renameDataSeries}
                 />}
             </div>
         );
@@ -140,7 +142,20 @@ export default class FunctionsController extends Component {
             () => this.state.json.plot === true ? this.calculate() : this.calculateSingleResult());
     };
 
-    deleteDataSeries = (uid) => {
+    renameDataSeries = (oldName, newName) => {
+        let newDataSeries = [];
+        for (let i = 0; i < this.state.dataSeries.length; i++) {
+            let newDataSerie = this.state.dataSeries[i];
+            if (this.state.dataSeries[i].name === oldName) {
+                newDataSerie.name = newName;
+            }
+            newDataSeries.push(newDataSerie);
+        }
+
+        this.setState({ dataSeries: newDataSeries });
+    }
+
+    deleteDataSeries = (name) => {
         let newDataSeries = this.state.dataSeries;
         let newDataLinear = this.state.dataLinear;
         let newResLinear = this.state.resultLinear;
@@ -148,7 +163,7 @@ export default class FunctionsController extends Component {
         let newResPower = this.state.resultPower;
 
         for (let i = 0; i < this.state.dataSeries.length; i++) {
-            if (this.state.dataSeries[i].uid === uid) {
+            if (this.state.dataSeries[i].name === name) {
                 newDataSeries.splice(i, 1);
                 newDataLinear.splice(i, 1);
                 newDataPower.splice(i, 1);
@@ -159,9 +174,13 @@ export default class FunctionsController extends Component {
             }
         }
 
-        console.log(newDataSeries);
+        let newDataSeriesNames = this.state.dataSeriesNames;
+        if (newDataSeries.length === 0) {
+            newDataSeriesNames.length = 0;
+        }
 
         this.setState({
+            dataSeriesNames: newDataSeriesNames,
             dataSeries: newDataSeries,
             dataLinear: newDataLinear,
             resultLinear: newResLinear,
@@ -172,8 +191,12 @@ export default class FunctionsController extends Component {
 
     deleteAll = () => {
         let nDataSeries = this.state.dataSeries;
+        let nDataSeriesNames = this.state.dataSeriesNames;
+
         nDataSeries.length = 0;
-        this.setState({ dataSeries: nDataSeries });
+        nDataSeriesNames.length = 0;
+
+        this.setState({ dataSeries: nDataSeries, dataSeriesNames: nDataSeriesNames });
     };
 
     calculateSingleResult = () => {
@@ -208,10 +231,13 @@ export default class FunctionsController extends Component {
         let resPower = this.state.resultPower;
         resPower.push(resP);
 
+        const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
+        this.state.dataSeriesNames.push(dataSeriesName);
+
         newDataSeries.push({
             x: data,
             y: res,
-            name: data.uid,
+            name: dataSeriesName,
             type: 'scatter',
             mode: this.state.plot.plotType
         });
