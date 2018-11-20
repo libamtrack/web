@@ -71,11 +71,11 @@
       ]
     },
     {
-      "name": "Physics Routines3",
+      "name": "Track Structure",
       "functions": [
         {
-          "name": "beta from energy12",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+          "name": "Radial Dose Distribution",
+          "jsonConfigPath": "/RDD/RDD.json"
         },
         {
           "name": "energy from beta13",
@@ -188,6 +188,15 @@
     {
       "name": "stopping_power_source_no",
       "jsonConfigPath": "/dictionaries/StPowerSourceNo.json"
+    },
+    {
+      "name": "rdd_models",
+      "jsonConfigPath": "/dictionaries/RDDModels.json"
+    },
+    {
+      "name": "er_models",
+      "jsonConfigPath": "/dictionaries/ERModels.json"
     }
+
   ]
 }
