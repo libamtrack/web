@@ -29,6 +29,14 @@
         {
           "name": "Energy From Beta",
           "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
+        },
+        {
+          "name": "Energy From Gamma Single",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
+        },
+        {
+          "name": "Energy From Gamma",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
         }
       ]
     },
