@@ -61,6 +61,14 @@
         {
           "name": "Effective Charge From Beta Barkas-Bethe",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
+        },
+        {
+          "name": "Effective Charge From Energy Barkas-Bethe Single",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
+        },
+        {
+          "name": "Effective Charge From Energy Barkas-Bethe",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
         }
       ]
     },

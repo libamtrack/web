@@ -1,0 +1,42 @@
+{
+  "visibleName": "Effective Charge From Beta Barkas-Bethe",
+  "functionName": "AT_effective_charge_from_E_MeV_u",
+  "description": "Effective charge according to Barkas-Bethe-approximation for particles with given kinetic energy per nucleon",
+  "xTitle": "Energy[MeV]",
+  "yTitle": "Effective Charge [C]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "E_MeV_u",
+      "startholder": "0.1",
+      "endholder": "1",
+      "validations": {
+        "type": "float",
+        "min": "0.0000001",
+        "max": "1000000000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": true,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    },
+    {
+      "type": "plot_type",
+      "visible": true,
+      "defaultValue": "lines"
+    }
+  ],
+  "moreOptions": true,
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
