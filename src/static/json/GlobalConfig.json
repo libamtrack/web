@@ -37,6 +37,14 @@
         {
           "name": "Energy From Gamma",
           "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
+        },
+        {
+          "name": "Energy Of Particle With Given Momentum Single",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
+        },
+        {
+          "name": "Energy Of Particle With Given Momentum",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
         }
       ]
     },
