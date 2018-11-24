@@ -1,0 +1,93 @@
+{
+  "visibleName": "Radial dose distribution",
+  "functionName": "AT_D_RDD_Gy",
+  "description": "TODO",
+  "xTitle": "Distance [m]",
+  "yTitle": "Dose [Gy]",
+  "plot": true,
+  "unit": null,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "r_m",
+      "startholder": "0.0000000001",
+      "endholder": "0.001",
+      "intervalType": "points",
+      "validations": {
+        "type": "float",
+        "min": "0.000000000000000.1",
+        "max": "1000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy [MeV]",
+      "placeholder": "150",
+      "defaultValue": 150,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": false,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "defaultValue": 1,
+      "description": "Choose material type"
+    },
+    {
+      "type": "select",
+      "parameterName": "rdd_model",
+      "label": "RDD model",
+      "values": "rdd_models",
+      "asManyAsPoints": false,
+      "defaultValue": 2,
+      "description": "Choose RDD model"
+    },
+    {
+      "type": "select",
+      "parameterName": "rdd_parameter",
+      "label": "RDD model parameters",
+      "values": "rddparameters",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose RDD model"
+    },
+    {
+      "type": "select",
+      "parameterName": "er_model",
+      "label": "ER model",
+      "values": "er_models",
+      "asManyAsPoints": false,
+      "defaultValue": 7,
+      "description": "Choose ER model"
+    },
+    {
+      "type": "select",
+      "parameterName": "stopping_power_source_no",
+      "label": "Source",
+      "values": "stopping_power_source_no",
+      "defaultValue": 1,
+      "description": "Choose source type"
+    }
+  ],
+  "moreOptions": true,
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "deleteAll": true
+  }
+}

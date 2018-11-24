@@ -55,11 +55,11 @@ Categories is an array that contains functions grouped in theme categories and o
         ]
     }
 
-* **name** (*string*) - category name which will be displayed in application
+* **name** (*string*) - category name which will be displayed in application, (try to use only letters and digits when choosing name, others characters may produce problem during generating route paths)
 
 * **style** (*string*) - customizable CSS for displayed category column on the main page
 
-* **functionsStyle** (*string*) - customizable CSS for each function in category column
+* **functionsStyle** (*string*) - customizable CSS for each function row in category column
 
 Functions
 ~~~~~~~~~
