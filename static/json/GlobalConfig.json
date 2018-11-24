@@ -6,13 +6,12 @@
     {
       "name": "Physics Routines",
       "style": {
-        "background": "red",
-        "border": "red",
-        "color": "black",
-        "font-size": "20px"
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
       },
       "functionsStyle": {
-        "color": "red"
+        "color": "black"
       },
       "functions": [
         {
@@ -20,25 +19,29 @@
           "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
         },
         {
-          "name": "Energy From Beta",
-          "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
+          "name": "Beta From Energy",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromE.json"
         },
         {
           "name": "Energy From Beta Single",
           "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
         },
         {
-          "name": "gamma from energy3TRAVIS",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma4TEST2",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+          "name": "Energy From Beta",
+          "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
         }
       ]
     },
     {
       "name": "StoppingPower",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
       "functions": [
         {
           "name": "Mass stopping power with no",
@@ -71,11 +74,19 @@
       ]
     },
     {
-      "name": "Physics Routines3",
+      "name": "Track Structure",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
       "functions": [
         {
-          "name": "beta from energy12",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+          "name": "Radial Dose Distribution",
+          "jsonConfigPath": "/RDD/RDD.json"
         },
         {
           "name": "energy from beta13",
@@ -92,28 +103,36 @@
       ]
     },
     {
-      "name": "Physics Routines4",
+      "name": "Electron Range",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
       "functions": [
         {
-          "name": "beta from energy16",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
+          "name": "Maximum Electron Ranges",
+          "jsonConfigPath": "/ElectronRange/MaxElectronRangesM.json"
         },
         {
-          "name": "energy from bet17a",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
-        },
-        {
-          "name": "gamma from energy18",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma19",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
+          "name": "Maximum Electron Range Single",
+          "jsonConfigPath": "/ElectronRange/MaxElectronRangeM.json"
         }
       ]
     },
     {
       "name": "Physics Routines5",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
       "functions": [
         {
           "name": "beta from energy20",
@@ -135,6 +154,14 @@
     },
     {
       "name": "Physics Routines6",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
       "functions": [
         {
           "name": "beta from energy24",
@@ -156,6 +183,14 @@
     },
     {
       "name": "Physics Routines7",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
       "functions": [
         {
           "name": "beta from energy28",
@@ -188,6 +223,15 @@
     {
       "name": "stopping_power_source_no",
       "jsonConfigPath": "/dictionaries/StPowerSourceNo.json"
+    },
+    {
+      "name": "rdd_models",
+      "jsonConfigPath": "/dictionaries/RDDModels.json"
+    },
+    {
+      "name": "er_models",
+      "jsonConfigPath": "/dictionaries/ERModels.json"
     }
+
   ]
 }
