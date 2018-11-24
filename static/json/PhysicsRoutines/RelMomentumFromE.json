@@ -1,0 +1,33 @@
+{
+  "visibleName": "Relativistic Momentum Per Nucleon Of Particle",
+  "functionName": "AT_momentum_MeV_c_u_from_E_MeV_u",
+  "description": "Returns relativistic momenta per nucleon for particles with given kinetic energy",
+  "xTitle": "Energy[MeV]",
+  "yTitle": "Momentum [MeV/c]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "E_MeV_u",
+      "startholder": "0.1",
+      "endholder": "200",
+      "validations": {
+        "type": "float",
+        "min": "0.0000001",
+        "max": "1000000000"
+      }
+    },
+    {
+      "type": "plot_type",
+      "visible": true,
+      "defaultValue": "lines"
+    }
+  ],
+  "moreOptions": true,
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
