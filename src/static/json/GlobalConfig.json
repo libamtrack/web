@@ -63,12 +63,16 @@
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
         },
         {
+          "name": "Increase Of Energy Straggling",
+          "jsonConfigPath": "/PhysicsRoutines/IncreaseEnergyStraggling.json"
+        },
+        {
           "name": "Effective Charge From Energy Barkas-Bethe Single",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
         },
         {
           "name": "Effective Charge From Energy Barkas-Bethe",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json
         },
         {
           "name": "Relativistic Momentum Per Nucleon Of Particle Single",

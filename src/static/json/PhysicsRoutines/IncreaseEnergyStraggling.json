@@ -1,0 +1,55 @@
+{
+  "visibleName": "Increase Of Energy Straggling",
+  "functionName": "AT_energy_straggling_MeV2_cm2_g",
+  "description": ["Get energy spread with depth according to Bohr's classical theory Bohr,",
+  "N. (1915), Phil. Mag. 30, 581ff, see also Evans, R.D. (1955), The atomic nucleus, McGraw Hill, New York, p. 661 ",
+  "In the literature dsE2dz is often given in units ergs2/cm. Here we report it mass-normalized MeV2*cm2/g",
+  "Since the effective charge of the particle enters the equation, particle types and energies have to be given. ",
+  "The equation is however limited to energies > 10 MeV/u and not too heavy ions"],
+  "xTitle": "Energy [MeV]",
+  "yTitle": "Increase of energy [MeV*cm2/g]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "E_MeV_u",
+      "startholder": "1",
+      "endholder": "20",
+      "intervalType": "step",
+      "validations": {
+        "type": "float",
+        "min": "0.0001",
+        "max": "10000"
+      }
+    },
+    {
+      "type": "plot_type",
+      "visible": true,
+      "defaultValue": "points"
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "defaultValue": 1,
+      "description": "Choose material type"
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": true,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    }
+  ],
+  "moreOptions": true,
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
