@@ -69,6 +69,14 @@
         {
           "name": "Effective Charge From Energy Barkas-Bethe",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
+        },
+        {
+          "name": "Relativistic Momentum Per Nucleon Of Particle Single",
+          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
+        },
+        {
+          "name": "Relativistic Momentum Per Nucleon Of Particle",
+          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
         }
       ]
     },
