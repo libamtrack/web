@@ -39,12 +39,28 @@
           "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
         },
         {
+          "name": "Gamma From Energy Single",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
+        },
+        {
+          "name": "Gamma From Energy",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
+        },
+        {
           "name": "Energy Of Particle With Given Momentum Single",
           "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
         },
         {
           "name": "Energy Of Particle With Given Momentum",
           "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
+        },
+        {
+          "name": "Effective Charge From Beta Barkas-Bethe Single",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBetaSingle.json"
+        },
+        {
+          "name": "Effective Charge From Beta Barkas-Bethe",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
         }
       ]
     },
@@ -231,6 +247,10 @@
     {
       "name": "particles",
       "jsonConfigPath": "/dictionaries/Particles.json" 
+    },
+    {
+      "name": "atomicNumbers",
+      "jsonConfigPath": "/dictionaries/AtomicNumbers.json"
     },
     {
       "name": "materials",
