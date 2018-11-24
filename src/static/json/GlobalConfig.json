@@ -63,6 +63,10 @@
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
         },
         {
+          "name": "Increase Of Energy Straggling",
+          "jsonConfigPath": "/PhysicsRoutines/IncreaseEnergyStraggling.json"
+        },
+        {
           "name": "Effective Charge From Energy Barkas-Bethe Single",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
         },
