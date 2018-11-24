@@ -1,33 +1,28 @@
 {
-  "visibleName": "Maximum electron range",
-  "functionName": "AT_max_electron_ranges_m",
-  "description": "Returns the maximum electron range (track radius) in m for a given parametrization",
-  "xTitle": "Energy [MeV]",
-  "yTitle": "electron range (track radius) [m]",
-  "plot": true,
+  "visibleName": "Maximum Electron Range",
+  "functionName": "AT_max_electron_range_m",
+  "description": "Returns the maximum electron range (track diameter) in m for given energy",
+  "plot": false,
+  "unit": "MeV",
   "formItems": [
     {
-      "type": "entry_module",
+      "type": "input",
       "parameterName": "E_MeV_u",
-      "startholder": "1",
-      "endholder": "1000",
-      "intervalType": "step",
+      "label": "Energy",
+      "placeholder": "10",
+      "defaultValue": 10,
       "validations": {
         "type": "float",
-        "min": "0.0001",
-        "max": "10000"
+        "min": "0.000001",
+        "max": "10000000000000"
       }
-    },
-    {
-      "type": "plot_type",
-      "visible": true,
-      "defaultValue": "points"
     },
     {
       "type": "select",
       "parameterName": "material_no",
       "label": "Material",
       "values": "materials",
+      "asManyAsPoints": false,
       "defaultValue": 1,
       "description": "Choose material type"
     },{
@@ -39,12 +34,5 @@
       "defaultValue": 7,
       "description": "Choose ER model"
     }
-  ],
-  "moreOptions": true,
-  "modals": {
-    "dataSeries": true,
-    "download": true,
-    "showDataSeries": true,
-    "deleteAll": true
-  }
+  ]
 }

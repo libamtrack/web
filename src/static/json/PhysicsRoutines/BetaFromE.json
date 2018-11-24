@@ -1,0 +1,33 @@
+{
+  "visibleName": "Beta From Energy",
+  "functionName": "AT_beta_from_E",
+  "description": "Returns relativistic speed for many particles",
+  "xTitle": "Energy[MeV]",
+  "yTitle": "Beta",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "E_MeV_u",
+      "startholder": "0.1",
+      "endholder": "200",
+      "validations": {
+        "type": "float",
+        "min": "0.0000001",
+        "max": "1000000000"
+      }
+    },
+    {
+      "type": "plot_type",
+      "visible": true,
+      "defaultValue": "lines"
+    }
+  ],
+  "moreOptions": true,
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
