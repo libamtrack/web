@@ -29,6 +29,54 @@
         {
           "name": "Energy From Beta",
           "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
+        },
+        {
+          "name": "Energy From Gamma Single",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
+        },
+        {
+          "name": "Energy From Gamma",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
+        },
+        {
+          "name": "Gamma From Energy Single",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
+        },
+        {
+          "name": "Gamma From Energy",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
+        },
+        {
+          "name": "Energy Of Particle With Given Momentum Single",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
+        },
+        {
+          "name": "Energy Of Particle With Given Momentum",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
+        },
+        {
+          "name": "Effective Charge From Beta Barkas-Bethe Single",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBetaSingle.json"
+        },
+        {
+          "name": "Effective Charge From Beta Barkas-Bethe",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
+        },
+        {
+          "name": "Effective Charge From Energy Barkas-Bethe Single",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
+        },
+        {
+          "name": "Effective Charge From Energy Barkas-Bethe",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
+        },
+        {
+          "name": "Relativistic Momentum Per Nucleon Of Particle Single",
+          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
+        },
+        {
+          "name": "Relativistic Momentum Per Nucleon Of Particle",
+          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
         }
       ]
     },
@@ -215,6 +263,10 @@
     {
       "name": "particles",
       "jsonConfigPath": "/dictionaries/Particles.json" 
+    },
+    {
+      "name": "atomicNumbers",
+      "jsonConfigPath": "/dictionaries/AtomicNumbers.json"
     },
     {
       "name": "materials",

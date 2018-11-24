@@ -1,0 +1,33 @@
+{
+  "visibleName": "Energy From Gamma",
+  "functionName": "AT_E_from_gamma",
+  "description": "Returns energy from relativistic gamma",
+  "xTitle": "Gamma",
+  "yTitle": "Energy [MeV]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "gamma",
+      "startholder": "1.01",
+      "endholder": "10",
+      "validations": {
+        "type": "float",
+        "min": "1.0000001",
+        "max": "100000000"
+      }
+    },
+    {
+      "type": "plot_type",
+      "visible": true,
+      "defaultValue": "lines"
+    }
+  ],
+  "moreOptions": true,
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
