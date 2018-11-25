@@ -76,8 +76,8 @@ class FormGenerator extends React.Component {
         const endHolder = typeof item.endholder !== 'undefined' ? item.endholder : "0.9";
 
         const stepValue = "step";
-        const stepDefault = 0.1;
-        const pointsDefault = 50;
+        const stepDefault = typeof item.stepDefaultValue !== undefined ? item.stepDefaultValue : 0.1;
+        const pointsDefault = typeof item.pointsDefaultNumber !== undefined ? item.pointsDefaultNumber : 50;
         const startName = "start";
         const endName = "end";
         const pointNoName = "pointsNo";
@@ -134,7 +134,10 @@ class FormGenerator extends React.Component {
                 </InputGroup>
                 <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
                     <InputGroup compact>
-                        <Select style={{ width: 87.5 }} defaultValue="step" onChange={this.handleEntryIntervalTypeChange}>
+                        <Select style={{ width: 87.5 }}
+                            defaultValue={this.state.formData.intervalType === "points" ? "points" : "step"}
+                            onChange={this.handleEntryIntervalTypeChange}
+                        >
                             <Option value="step">Step</Option>
                             <Option value="points">Points</Option>
                         </Select>
@@ -308,7 +311,7 @@ class FormGenerator extends React.Component {
         let validationRules;
         const formItems = this.props.formItems;
         for (let i = 0; i < formItems.length; i++) {
-            if (formItems[i].name === rule.field) {
+            if (formItems[i].parameterName === rule.field) {
                 validationRules = formItems[i].validations;
                 break;
             }

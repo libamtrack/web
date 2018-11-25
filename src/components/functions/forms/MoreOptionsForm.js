@@ -14,18 +14,19 @@ const customPanelStyle = {
 };
 
 const MoreOptionsForm = (props) => {
+    const defValue = props.defaultValue === 'log' ? 'log' : 'linear';
     return (
         <Form layout='horizontal'>
             <Collapse bordered={false}>
                 <Panel header={<h6>More plot options</h6>} key="1" style={customPanelStyle}>
                     <FormItem style={{ margin: 6 }} label={'X-Axis'} labelCol={{ span: 5 }}>
-                        <RadioGroup onChange={props.handleXChange} defaultValue='linear'>
+                        <RadioGroup onChange={props.handleXChange} defaultValue={defValue}>
                             <RadioButton value='linear'>Linear</RadioButton>
                             <RadioButton value='log'>Logarithmic</RadioButton>
                         </RadioGroup>
                     </FormItem>
                     <FormItem style={{ margin: 6 }} label={'Y-Axis'} labelCol={{ span: 5 }}>
-                        <RadioGroup onChange={props.handleYChange} defaultValue='linear'>
+                        <RadioGroup onChange={props.handleYChange} defaultValue={defValue}>
                             <RadioButton value='linear'>Linear</RadioButton>
                             <RadioButton value='log'>Logarithmic</RadioButton>
                         </RadioGroup>

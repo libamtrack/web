@@ -40,7 +40,10 @@
       "description": "Choose ER model"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultAxisType": "linear"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,

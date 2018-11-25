@@ -9,9 +9,11 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "1",
-      "endholder": "1000",
-      "intervalType": "step",
+      "startholder": "0.1",
+      "endholder": "500",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
         "min": "0.0001",
@@ -45,11 +47,14 @@
       "parameterName": "stopping_power_source_no",
       "label": "Source",
       "values": "stopping_power_source_no",
-      "defaultValue": 1,
+      "defaultValue": 2,
       "description": "Choose source type"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultAxisType": "log"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,
