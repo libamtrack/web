@@ -1,10 +1,10 @@
 import React from "react";
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
-import { Link, Route } from 'react-router-dom';
-import { Col, Layout, Row } from 'antd';
+import {Link, Route} from 'react-router-dom';
+import {Col, Layout, Row} from 'antd';
 import logo from '../../static/img/logo.png'
 import FunctionsView from '../layouts/FunctionsView.js';
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import {ListGroup, ListGroupItem} from "react-bootstrap";
 
 const { Header, Content, Footer } = Layout;
 
@@ -89,7 +89,7 @@ class MainPage extends React.Component {
                                 {categoriesForColumns.map(colums => (
                                     <Col span={6}>
                                         {colums.map(category => (
-                                            <ListGroup align="center" style={{ paddingBottom: 25 }}>
+                                            <ListGroup align="center" style={{ paddingBottom: 50 }}>
                                                 <ListGroupItem active align="center"
                                                     style={category.style}>{category.name}</ListGroupItem>
                                                 {category.functions.map(fun => (
