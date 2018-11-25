@@ -42,9 +42,6 @@ class SideMenu extends React.Component {
                         <img style={{width: 185, height: 185, paddingLeft: 15}} src={logo} align="center"
                             className="App-logo" alt="logo"/>
                     </Link>
-                    <Link to={"/"}>
-                        <h4 style={{color: "black"}} align="center">Main Page</h4>
-                    </Link>
                 <Layout style={{padding: '2px 0px 2px'}}>
                     <Menu
                         mode="vertical"
