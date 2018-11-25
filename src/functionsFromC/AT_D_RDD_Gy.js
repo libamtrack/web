@@ -1,4 +1,5 @@
 export default function AT_D_RDD_Gy(parameters) {
+    console.log("Parameters: ", parameters);
     let at_d_rdd_gy = Module.cwrap('AT_D_RDD_Gy', 'number', ['number', 'array', 'number', 'number', 'number', 'number', 'array', 'number', 'number', 'number']);
 
     /*********************STANDARD PARAMETER*************************/
@@ -53,7 +54,8 @@ export default function AT_D_RDD_Gy(parameters) {
         alert("MESSAGE TO DEVELOPER: NO PARAMETER rdd_parameter IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let rdd_parameter = parameters.rdd_parameter;
+    let rdd_parameter = [];
+    rdd_parameter.push(parameters.rdd_parameter);
     let rdd_parameterData = new Float64Array(rdd_parameter);
     let rdd_parameterDataBytesNumber = rdd_parameterData.length * rdd_parameterData.BYTES_PER_ELEMENT;
     let rdd_parameterDataPointer = Module._malloc(rdd_parameterDataBytesNumber);
