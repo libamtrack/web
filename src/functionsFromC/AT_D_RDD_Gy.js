@@ -50,13 +50,16 @@ export default function AT_D_RDD_Gy(parameters) {
     let rdd_model = parameters.rdd_model;
 
     /*********************INPUT ARRAY********************************/
-    if(!parameters.rdd_parameter){
+    if(typeof parameters.rdd_parameter === "undefined"){
         alert("MESSAGE TO DEVELOPER: NO PARAMETER rdd_parameter IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
   
     let rdd_parameter = [];
     rdd_parameter.push(parameters.rdd_parameter);
+    rdd_parameter.push(0);
+    rdd_parameter.push(0);
+    rdd_parameter.push(0);
 
     let rdd_parameterData = new Float64Array(rdd_parameter);
     let rdd_parameterDataBytesNumber = rdd_parameterData.length * rdd_parameterData.BYTES_PER_ELEMENT;

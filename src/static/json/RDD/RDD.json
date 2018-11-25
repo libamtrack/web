@@ -11,7 +11,7 @@
       "type": "entry_module",
       "parameterName": "r_m",
       "startholder": "0.0000000001",
-      "endholder": "0.001",
+      "endholder": "0.00001",
       "intervalType": "points",
       "validations": {
         "type": "float",
@@ -54,15 +54,15 @@
       "label": "RDD model",
       "values": "rdd_models",
       "asManyAsPoints": false,
-      "defaultValue": 2,
+      "defaultValue": 3,
       "description": "Choose RDD model"
     },
     {
       "type": "input",
       "parameterName": "rdd_parameter",
-      "label": "model parameters",
+      "label": "Model parms:",
       "asManyAsPoints": false,
-      "defaultValue": 0.00000005,
+      "defaultValue": 0.00000001,
       "description": "Choose RDD model"
     },
     {
