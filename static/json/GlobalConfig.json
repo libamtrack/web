@@ -4,7 +4,57 @@
   "footerText": "LibatrackWeb ©2018",
   "categories": [
     {
-      "name": "Physics Routines",
+      "name": "StoppingPower",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
+      "functions": [
+        {
+          "name": "Mass stopping power with no",
+          "jsonConfigPath": "/StoppingPower/MassStoppingPowerWithNo.json"
+        }
+      ]
+    },
+    {
+      "name": "Physics",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
+      "functions": [
+        {
+          "name": "Effective Charge From Beta Barkas-Bethe Single",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBetaSingle.json"
+        },
+        {
+          "name": "Effective Charge From Beta Barkas-Bethe",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
+        },
+        {
+          "name": "Increase Of Energy Straggling",
+          "jsonConfigPath": "/PhysicsRoutines/IncreaseEnergyStraggling.json"
+        },
+        {
+          "name": "Effective Charge From Energy Barkas-Bethe Single",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
+        },
+        {
+          "name": "Effective Charge From Energy Barkas-Bethe",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
+        }
+      ]
+    },
+    {
+      "name": "Energy And Momentum",
       "style": {
         "background": "#3727AA",
         "border": "3727AA",
@@ -55,73 +105,12 @@
           "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
         },
         {
-          "name": "Effective Charge From Beta Barkas-Bethe Single",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBetaSingle.json"
-        },
-        {
-          "name": "Effective Charge From Beta Barkas-Bethe",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
-        },
-        {
-          "name": "Increase Of Energy Straggling",
-          "jsonConfigPath": "/PhysicsRoutines/IncreaseEnergyStraggling.json"
-        },
-        {
-          "name": "Effective Charge From Energy Barkas-Bethe Single",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
-        },
-        {
-          "name": "Effective Charge From Energy Barkas-Bethe",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
-        },
-        {
           "name": "Relativistic Momentum Per Nucleon Of Particle Single",
           "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
         },
         {
           "name": "Relativistic Momentum Per Nucleon Of Particle",
           "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
-        }
-      ]
-    },
-    {
-      "name": "StoppingPower",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "Mass stopping power with no",
-          "jsonConfigPath": "/StoppingPower/MassStoppingPowerWithNo.json"
-        },
-        {
-          "name": "energy from beta6",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
-        },
-        {
-          "name": "gamma from energy7",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma8",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
-        },
-        {
-          "name": "energy from beta9",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
-        },
-        {
-          "name": "gamma from energy10",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma11",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
         }
       ]
     },
@@ -139,18 +128,6 @@
         {
           "name": "Radial Dose Distribution",
           "jsonConfigPath": "/RDD/RDD.json"
-        },
-        {
-          "name": "energy from beta13",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
-        },
-        {
-          "name": "gamma from energy14",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma15",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
         }
       ]
     },
@@ -172,93 +149,6 @@
         {
           "name": "Maximum Electron Range Single",
           "jsonConfigPath": "/ElectronRange/MaxElectronRangeM.json"
-        }
-      ]
-    },
-    {
-      "name": "Physics Routines5",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "beta from energy20",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
-        },
-        {
-          "name": "energy from beta21",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
-        },
-        {
-          "name": "gamma from energy22",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma23",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
-        }
-      ]
-    },
-    {
-      "name": "Physics Routines6",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "beta from energy24",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
-        },
-        {
-          "name": "energy from beta25",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
-        },
-        {
-          "name": "gamma from energy26",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma27",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
-        }
-      ]
-    },
-    {
-      "name": "Physics Routines7",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "beta from energy28",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromEnergy.json"
-        },
-        {
-          "name": "energy from beta29",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromBeta.json"
-        },
-        {
-          "name": "gamma from energy30",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromEnergy.json"
-        },
-        {
-          "name": "energy from gamma31",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyFromGamma.json"
         }
       ]
     }
