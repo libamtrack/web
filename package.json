@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": false,
   "description": "Libamtrack Web Gui",
-  "homepage": "http://libamtrack.github.io/web",
+  "homepage": "https://libamtrack.github.io/web",
+  "repository": "https://github.com/libamtrack/web",
   "main": "dist/bundle.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open",

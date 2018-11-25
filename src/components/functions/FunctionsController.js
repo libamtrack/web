@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Breadcrumb, Col, Row, Spin} from 'antd';
+import {Breadcrumb, Col, Icon, Row, Spin, Tooltip} from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
@@ -7,6 +7,7 @@ import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
 import {getDataSeriesName, prepareDataToCalculate, preparePoints} from './utils/helpers';
+import packageJson from '../../../package.json';
 import {Link} from "react-router-dom";
 
 export default class FunctionsController extends Component {
@@ -73,7 +74,13 @@ export default class FunctionsController extends Component {
     generateContent = () => {
         let componentToRender = (
             <div>
-                <h3>{this.state.json.visibleName}</h3>
+                <h3>{this.state.json.visibleName.concat(" ")}
+                <a href={ packageJson.repository.concat("/edit/master/src/".concat(this.props.jsonPath))}>
+                    <Tooltip title="Edit this page on GitHub!">
+                        <Icon type="edit" style={{fontSize: 20, color: 'black'}} theme='twoTone'/>
+                    </Tooltip>
+                </a>
+                </h3>
                 {this.state.json.description}
                 <Row>
                     <GenericForm
