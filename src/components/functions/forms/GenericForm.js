@@ -37,7 +37,7 @@ class FormGenerator extends React.Component {
                 <div>
                     {generatedForm}
                 </div>
-                <div style={{ margin: 6, width: 340 }} align="center">
+                <div style={{ margin: 6, width: 450 }} align="center">
                     <Button style={{ width: 175 }} type='primary' htmlType='submit'>Submit</Button>
                 </div>
             </Form>
@@ -64,7 +64,7 @@ class FormGenerator extends React.Component {
         }
 
         return (
-            <FormItem style={{ margin: 6 }} label={item.label} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+            <FormItem style={{ margin: 6 }} label={item.label} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                 {generatedItem}
             </FormItem>
         );
@@ -76,8 +76,8 @@ class FormGenerator extends React.Component {
         const endHolder = typeof item.endholder !== 'undefined' ? item.endholder : "0.9";
 
         const stepValue = "step";
-        const stepDefault = 0.1;
-        const pointsDefault = 50;
+        const stepDefault = typeof item.stepDefaultValue !== undefined ? item.stepDefaultValue : 0.1;
+        const pointsDefault = typeof item.pointsDefaultNumber !== undefined ? item.pointsDefaultNumber : 50;
         const startName = "start";
         const endName = "end";
         const pointNoName = "pointsNo";
@@ -132,9 +132,12 @@ class FormGenerator extends React.Component {
                         </FormItem>
                     </Col>
                 </InputGroup>
-                <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+                <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                     <InputGroup compact>
-                        <Select style={{ width: 87.5 }} defaultValue="step" onChange={this.handleEntryIntervalTypeChange}>
+                        <Select style={{ width: 87.5 }}
+                            defaultValue={this.state.formData.intervalType === "points" ? "points" : "step"}
+                            onChange={this.handleEntryIntervalTypeChange}
+                        >
                             <Option value="step">Step</Option>
                             <Option value="points">Points</Option>
                         </Select>
@@ -165,7 +168,7 @@ class FormGenerator extends React.Component {
             defValue = defValue === "points" ? "markers" : "lines";
 
             return (
-                <FormItem style={{ margin: 6 }} label={'Plot as'} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+                <FormItem style={{ margin: 6 }} label={'Plot as'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                     <Tooltip title={"Choose plot type"} placement={"right"}>
                         <RadioGroup onChange={this.props.handlePlotTypeChange} defaultValue={defValue}>
                             <RadioButton style={{ width: 87.5 }} value='lines'>Line</RadioButton>
@@ -226,7 +229,7 @@ class FormGenerator extends React.Component {
                     }],
                     initialValue: defValue
                 })(
-                    <Select onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
+                    <Select style={{ width: 175 }} onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
                         {list.map(listElem => (
                             <Option key={listElem.name + listElem.value} value={listElem.value}>
                                 {listElem.name}
@@ -308,7 +311,7 @@ class FormGenerator extends React.Component {
         let validationRules;
         const formItems = this.props.formItems;
         for (let i = 0; i < formItems.length; i++) {
-            if (formItems[i].name === rule.field) {
+            if (formItems[i].parameterName === rule.field) {
                 validationRules = formItems[i].validations;
                 break;
             }

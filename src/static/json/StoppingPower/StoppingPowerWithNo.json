@@ -1,0 +1,64 @@
+{
+    "visibleName": "Stopping power",
+    "functionName": "AT_Stopping_Power_with_no",
+    "description": "Retrieves the electronic stopping power in keV/um for the requested energies and particles for a specified material and data source. ",
+    "xTitle": "Energy [MeV]",
+    "yTitle": "Stopping power [keV/um]",
+    "plot": true,
+    "formItems": [
+      {
+        "type": "entry_module",
+        "parameterName": "E_MeV_u",
+        "startholder": "0.1",
+        "endholder": "500",
+        "intervalType": "points",
+        "stepDefaultValue": "1",
+        "pointsDefaultNumber": "500",
+        "validations": {
+          "type": "float",
+          "min": "0.0001",
+          "max": "10000"
+        }
+      },
+      {
+        "type": "plot_type",
+        "visible": true,
+        "defaultValue": "points"
+      },
+      {
+        "type": "select",
+        "parameterName": "material_no",
+        "label": "Material",
+        "values": "materials",
+        "defaultValue": 1,
+        "description": "Choose material type"
+      },
+      {
+        "type": "select",
+        "parameterName": "particle_no",
+        "label": "Particle",
+        "values": "particles",
+        "asManyAsPoints": true,
+        "defaultValue": 1001,
+        "description": "Choose particle type"
+      },
+      {
+        "type": "select",
+        "parameterName": "stopping_power_source_no",
+        "label": "Source",
+        "values": "stopping_power_source_no",
+        "defaultValue": 2,
+        "description": "Choose source type"
+      }
+    ],
+    "moreOptions": {
+      "visible": true,
+      "defaultAxisType": "log"
+    },
+    "modals": {
+      "dataSeries": true,
+      "download": true,
+      "showDataSeries": true,
+      "deleteAll": true
+    }
+  }

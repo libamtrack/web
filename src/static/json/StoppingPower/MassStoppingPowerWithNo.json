@@ -1,5 +1,5 @@
 {
-  "visibleName": "Mass stopping power with no",
+  "visibleName": "Mass stopping power",
   "functionName": "AT_Mass_Stopping_Power_with_no",
   "description": "Retrieves the electronic mass stopping power in MeV*cm2/g for the requested energies and particles for a specified material and data source.",
   "xTitle": "Energy [MeV]",
@@ -9,13 +9,15 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "1",
-      "endholder": "1000",
-      "intervalType": "step",
+      "startholder": "0.1",
+      "endholder": "500",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
-        "min": "0.0001",
-        "max": "10000"
+        "min": "0.1",
+        "max": "500"
       }
     },
     {
@@ -45,11 +47,14 @@
       "parameterName": "stopping_power_source_no",
       "label": "Source",
       "values": "stopping_power_source_no",
-      "defaultValue": 1,
+      "defaultValue": 2,
       "description": "Choose source type"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultAxisType": "log"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,

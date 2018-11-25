@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {Breadcrumb, Col, Icon, Row, Spin, Tooltip} from 'antd';
+import React, { Component } from 'react';
+import { Breadcrumb, Col, Icon, Row, Spin, Tooltip } from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import {getDataSeriesName, prepareDataToCalculate, preparePoints} from './utils/helpers';
+import { getDataSeriesName, prepareDataToCalculate, preparePoints } from './utils/helpers';
 import packageJson from '../../../package.json';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default class FunctionsController extends Component {
     state = {
@@ -24,9 +24,9 @@ export default class FunctionsController extends Component {
         resultPower: [],
         formData: {},
         plot: {
-            plotType: "lines",
-            xType: "linear",
-            yType: "linear"
+            plotType: "",
+            xType: "",
+            yType: ""
         },
         singleResult: 0,
         parametersRules: {}
@@ -40,6 +40,12 @@ export default class FunctionsController extends Component {
                 });
             })
             .then(() => {
+                if (this.state.json.moreOptions && this.state.json.moreOptions.defaultAxisType) {
+                    const defValue = this.state.json.moreOptions.defaultAxisType === 'log' ? 'log' : 'linear';
+                    this.state.plot.xType = defValue;
+                    this.state.plot.yType = defValue;
+                }
+
                 for (let i = 0; i < this.state.json.formItems.length; i++) {
                     const formItem = this.state.json.formItems[i];
 
@@ -75,11 +81,11 @@ export default class FunctionsController extends Component {
         let componentToRender = (
             <div>
                 <h3>{this.state.json.visibleName.concat(" ")}
-                <a href={ packageJson.repository.concat("/edit/master/src/".concat(this.props.jsonPath))}>
-                    <Tooltip title="Edit this page on GitHub!">
-                        <Icon type="edit" style={{fontSize: 20, color: 'black'}} theme='twoTone'/>
-                    </Tooltip>
-                </a>
+                    <a href={packageJson.repository.concat("/edit/master/src/".concat(this.props.jsonPath))}>
+                        <Tooltip title="Edit this page on GitHub!">
+                            <Icon type="edit" style={{ fontSize: 20, color: 'black' }} theme='twoTone' />
+                        </Tooltip>
+                    </a>
                 </h3>
                 {this.state.json.description}
                 <Row>
@@ -90,8 +96,12 @@ export default class FunctionsController extends Component {
                         handlePlotTypeChange={this.handlePlotTypeChange}
                     />
                 </Row>
-                {this.state.json.moreOptions && this.state.json.moreOptions === true ? (
-                    <MoreOptionsForm handleXChange={this.handleXChange} handleYChange={this.handleYChange} />
+                {this.state.json.moreOptions && this.state.json.moreOptions.visible === true ? (
+                    <MoreOptionsForm
+                        handleXChange={this.handleXChange}
+                        handleYChange={this.handleYChange}
+                        defaultValue={this.state.json.moreOptions.defaultAxisType}
+                    />
                 ) : null
                 }
                 {<ModalController
@@ -158,7 +168,17 @@ export default class FunctionsController extends Component {
             }
         }
 
-        this.setState({ dataSeries: newDataSeries });
+        let nAxisTypeX = this.state.plot.xType;
+        let nAxisTypeY = this.state.plot.yType;
+        let nPlotType = this.state.plot.plotType;
+
+        const nPlot = {
+            plotType: nPlotType,
+            xType: nAxisTypeX,
+            yType: nAxisTypeY
+        }
+
+        this.setState({ dataSeries: newDataSeries, plot: nPlot });
     }
 
     deleteDataSeries = (name) => {
@@ -198,11 +218,24 @@ export default class FunctionsController extends Component {
     deleteAll = () => {
         let nDataSeries = this.state.dataSeries;
         let nDataSeriesNames = this.state.dataSeriesNames;
+        let nAxisTypeX = this.state.plot.xType;
+        let nAxisTypeY = this.state.plot.yType;
+        let nPlotType = this.state.plot.plotType;
 
         nDataSeries.length = 0;
         nDataSeriesNames.length = 0;
 
-        this.setState({ dataSeries: nDataSeries, dataSeriesNames: nDataSeriesNames });
+        const nPlot = {
+            plotType: nPlotType,
+            xType: nAxisTypeX,
+            yType: nAxisTypeY
+        }
+
+        this.setState({ 
+            dataSeries: nDataSeries, 
+            dataSeriesNames: nDataSeriesNames,
+            plot: nPlot
+        });
     };
 
     calculateSingleResult = () => {
@@ -241,8 +274,8 @@ export default class FunctionsController extends Component {
         this.state.dataSeriesNames.push(dataSeriesName);
 
         newDataSeries.push({
-            x: data,
-            y: res,
+            x: this.state.plot.xType === 'log' ? dataP : data,
+            y: this.state.plot.yType === 'log' ? resP : res,
             name: dataSeriesName,
             type: 'scatter',
             mode: this.state.plot.plotType
@@ -283,13 +316,13 @@ export default class FunctionsController extends Component {
             );
         return (
             <div>
-            <Breadcrumb>
-                <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
-                <Breadcrumb.Item>{this.state.json.visibleName}</Breadcrumb.Item>
-            </Breadcrumb>
-            <Row type='flex' gutter={8} align='top'>
-                {this.state.loading ? <Spin spinning={this.state.loading} /> : resultComp}
-            </Row>
+                <Breadcrumb>
+                    <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item>{this.state.json.visibleName}</Breadcrumb.Item>
+                </Breadcrumb>
+                <Row type='flex' gutter={8} align='top'>
+                    {this.state.loading ? <Spin spinning={this.state.loading} /> : resultComp}
+                </Row>
             </div>
         );
     }
