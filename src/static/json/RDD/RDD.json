@@ -58,12 +58,11 @@
       "description": "Choose RDD model"
     },
     {
-      "type": "select",
+      "type": "input",
       "parameterName": "rdd_parameter",
-      "label": "RDD model parameters",
-      "values": "rddparameters",
+      "label": "model parameters",
       "asManyAsPoints": false,
-      "defaultValue": 1,
+      "defaultValue": 0.00000005,
       "description": "Choose RDD model"
     },
     {
