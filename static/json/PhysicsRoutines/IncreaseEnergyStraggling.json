@@ -45,7 +45,10 @@
       "description": "Choose particle type"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultAxisType": "linear"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,

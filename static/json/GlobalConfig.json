@@ -15,8 +15,12 @@
       },
       "functions": [
         {
-          "name": "Mass stopping power with no",
+          "name": "Mass stopping power",
           "jsonConfigPath": "/StoppingPower/MassStoppingPowerWithNo.json"
+        },
+        {
+          "name": "Stopping power",
+          "jsonConfigPath": "/StoppingPower/StoppingPowerWithNo.json"
         }
       ]
     },
@@ -50,14 +54,6 @@
         {
           "name": "Effective Charge From Energy Barkas-Bethe",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
-        },
-        {
-          "name": "Dose With Given Fluence And Energy Single",
-          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
-        },
-        {
-          "name": "Dose With Given Fluence And Energy",
-          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluence.json"
         }
       ]
     },
