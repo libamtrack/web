@@ -1,0 +1,386 @@
+[
+    {
+        "name": "H",
+        "value": 1
+    },
+    {
+        "name": "He",
+        "value": 2
+    },
+    {
+        "name": "Li",
+        "value": 3
+    },
+    {
+        "name": "Be",
+        "value": 4
+    },
+    {
+        "name": "B",
+        "value": 5
+    },
+    {
+        "name": "C",
+        "value": 6
+    },
+    {
+        "name": "N",
+        "value": 7
+    },
+    {
+        "name": "O",
+        "value": 8
+    },
+    {
+        "name": "F",
+        "value": 9
+    },
+    {
+        "name": "Ne",
+        "value": 10
+    },
+    {
+        "name": "Na",
+        "value": 11
+    },
+    {
+        "name": "Mg",
+        "value": 12
+    },
+    {
+        "name": "Al",
+        "value": 13
+    },
+    {
+        "name": "Si",
+        "value": 14
+    },
+    {
+        "name": "P",
+        "value": 15
+    },
+    {
+        "name": "S",
+        "value": 16
+    },
+    {
+        "name": "Cl",
+        "value": 17
+    },
+    {
+        "name": "Ar",
+        "value": 18
+    },
+    {
+        "name": "K",
+        "value": 19
+    },
+    {
+        "name": "Ca",
+        "value": 20
+    },
+    {
+        "name": "Sc",
+        "value": 21
+    },
+    {
+        "name": "Ti",
+        "value": 22
+    },
+    {
+        "name": "V",
+        "value": 23
+    },
+    {
+        "name": "Cr",
+        "value": 24
+    },
+    {
+        "name": "Mn",
+        "value": 25
+    },
+    {
+        "name": "Fe",
+        "value": 26
+    },
+    {
+        "name": "Co",
+        "value": 27
+    },
+    {
+        "name": "Ni",
+        "value": 28
+    },
+    {
+        "name": "Cu",
+        "value": 29
+    },
+    {
+        "name": "Zn",
+        "value": 30
+    },
+    {
+        "name": "Ga",
+        "value": 31
+    },
+    {
+        "name": "Ge",
+        "value": 32
+    },
+    {
+        "name": "As",
+        "value": 33
+    },
+    {
+        "name": "Se",
+        "value": 34
+    },
+    {
+        "name": "Br",
+        "value": 35
+    },
+    {
+        "name": "Kr",
+        "value": 36
+    },
+    {
+        "name": "Rb",
+        "value": 37
+    },
+    {
+        "name": "Sr",
+        "value": 38
+    },
+    {
+        "name": "Y",
+        "value": 39
+    },
+    {
+        "name": "Zr",
+        "value": 40
+    },
+    {
+        "name": "Nb",
+        "value": 41
+    },
+    {
+        "name": "Mo",
+        "value": 42
+    },
+    {
+        "name": "Tc",
+        "value": 43
+    },
+    {
+        "name": "Ru",
+        "value": 44
+    },
+    {
+        "name": "Rh",
+        "value": 45
+    },
+    {
+        "name": "Pd",
+        "value": 46
+    },
+    {
+        "name": "Ag",
+        "value": 47
+    },
+    {
+        "name": "Cd",
+        "value": 48
+    },
+    {
+        "name": "In",
+        "value": 49
+    },
+    {
+        "name": "Sn",
+        "value": 50
+    },
+    {
+        "name": "Sb",
+        "value": 51
+    },
+    {
+        "name": "Te",
+        "value": 52
+    },
+    {
+        "name": "I",
+        "value": 53
+    },
+    {
+        "name": "Xe",
+        "value": 54
+    },
+    {
+        "name": "Cs",
+        "value": 55
+    },
+    {
+        "name": "Ba",
+        "value": 56
+    },
+    {
+        "name": "La",
+        "value": 57
+    },
+    {
+        "name": "Ce",
+        "value": 58
+    },
+    {
+        "name": "Pr",
+        "value": 59
+    },
+    {
+        "name": "Nd",
+        "value": 60
+    },
+    {
+        "name": "Pm",
+        "value": 61
+    },
+    {
+        "name": "Sm",
+        "value": 62
+    },
+    {
+        "name": "Eu",
+        "value": 63
+    },
+    {
+        "name": "Gd",
+        "value": 64
+    },
+    {
+        "name": "Tb",
+        "value": 65
+    },
+    {
+        "name": "Dy",
+        "value": 66
+    },
+    {
+        "name": "Ho",
+        "value": 67
+    },
+    {
+        "name": "Er",
+        "value": 68
+    },
+    {
+        "name": "Tm",
+        "value": 69
+    },
+    {
+        "name": "Yb",
+        "value": 70
+    },
+    {
+        "name": "Lu",
+        "value": 71
+    },
+    {
+        "name": "Hf",
+        "value": 72
+    },
+    {
+        "name": "Ta",
+        "value": 73
+    },
+    {
+        "name": "W",
+        "value": 74
+    },
+    {
+        "name": "Re",
+        "value": 75
+    },
+    {
+        "name": "Os",
+        "value": 76
+    },
+    {
+        "name": "Ir",
+        "value": 77
+    },
+    {
+        "name": "Pt",
+        "value": 78
+    },
+    {
+        "name": "Au",
+        "value": 79
+    },
+    {
+        "name": "Hg",
+        "value": 80
+    },
+    {
+        "name": "Tl",
+        "value": 81
+    },
+    {
+        "name": "Pb",
+        "value": 82
+    },
+    {
+        "name": "Bi",
+        "value": 83
+    },
+    {
+        "name": "Po",
+        "value": 84
+    },
+    {
+        "name": "Rn",
+        "value": 86
+    },
+    {
+        "name": "Ra",
+        "value": 88
+    },
+    {
+        "name": "Ac",
+        "value": 89
+    },
+    {
+        "name": "Th",
+        "value": 90
+    },
+    {
+        "name": "Pa",
+        "value": 91
+    },
+    {
+        "name": "U",
+        "value": 92
+    },
+    {
+        "name": "Np",
+        "value": 93
+    },
+    {
+        "name": "Pu",
+        "value": 94
+    },
+    {
+        "name": "Am",
+        "value": 95
+    },
+    {
+        "name": "Cm",
+        "value": 96
+    },
+    {
+        "name": "Bk",
+        "value": 97
+    },
+    {
+        "name": "Cf",
+        "value": 98
+    }
+]

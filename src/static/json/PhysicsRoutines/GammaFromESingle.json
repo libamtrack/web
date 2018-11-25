@@ -1,0 +1,20 @@
+{
+  "visibleName": "Gamma From Energy Single",
+  "functionName": "AT_gamma_from_E_single",
+  "description": "Returns relativistic gamma for single value of energy",
+  "plot": false,
+  "formItems": [
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy",
+      "placeholder": "10",
+      "defaultValue": 10,
+      "validations": {
+        "type": "float",
+        "min": "0",
+        "max": "10000000000000000"
+      }
+    }
+  ]
+}

@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
-import { Col, Row, Spin } from 'antd';
+import React, {Component} from 'react';
+import {Breadcrumb, Col, Icon, Row, Spin, Tooltip} from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import { preparePoints, prepareDataToCalculate, getDataSeriesName } from './utils/helpers';
+import {getDataSeriesName, prepareDataToCalculate, preparePoints} from './utils/helpers';
+import packageJson from '../../../package.json';
+import {Link} from "react-router-dom";
 
 export default class FunctionsController extends Component {
     state = {
@@ -72,7 +74,13 @@ export default class FunctionsController extends Component {
     generateContent = () => {
         let componentToRender = (
             <div>
-                <h3>{this.state.json.visibleName}</h3>
+                <h3>{this.state.json.visibleName.concat(" ")}
+                <a href={ packageJson.repository.concat("/edit/master/src/".concat(this.props.jsonPath))}>
+                    <Tooltip title="Edit this page on GitHub!">
+                        <Icon type="edit" style={{fontSize: 20, color: 'black'}} theme='twoTone'/>
+                    </Tooltip>
+                </a>
+                </h3>
                 {this.state.json.description}
                 <Row>
                     <GenericForm
@@ -274,9 +282,15 @@ export default class FunctionsController extends Component {
                 </div>
             );
         return (
+            <div>
+            <Breadcrumb>
+                <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>{this.state.json.visibleName}</Breadcrumb.Item>
+            </Breadcrumb>
             <Row type='flex' gutter={8} align='top'>
                 {this.state.loading ? <Spin spinning={this.state.loading} /> : resultComp}
             </Row>
+            </div>
         );
     }
 }
