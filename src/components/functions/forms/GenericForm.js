@@ -37,7 +37,7 @@ class FormGenerator extends React.Component {
                 <div>
                     {generatedForm}
                 </div>
-                <div style={{ margin: 6, width: 340 }} align="center">
+                <div style={{ margin: 6, width: 450 }} align="center">
                     <Button style={{ width: 175 }} type='primary' htmlType='submit'>Submit</Button>
                 </div>
             </Form>
@@ -64,7 +64,7 @@ class FormGenerator extends React.Component {
         }
 
         return (
-            <FormItem style={{ margin: 6 }} label={item.label} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+            <FormItem style={{ margin: 6 }} label={item.label} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                 {generatedItem}
             </FormItem>
         );
@@ -132,7 +132,7 @@ class FormGenerator extends React.Component {
                         </FormItem>
                     </Col>
                 </InputGroup>
-                <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+                <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                     <InputGroup compact>
                         <Select style={{ width: 87.5 }}
                             defaultValue={this.state.formData.intervalType === "points" ? "points" : "step"}
@@ -168,7 +168,7 @@ class FormGenerator extends React.Component {
             defValue = defValue === "points" ? "markers" : "lines";
 
             return (
-                <FormItem style={{ margin: 6 }} label={'Plot as'} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+                <FormItem style={{ margin: 6 }} label={'Plot as'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                     <Tooltip title={"Choose plot type"} placement={"right"}>
                         <RadioGroup onChange={this.props.handlePlotTypeChange} defaultValue={defValue}>
                             <RadioButton style={{ width: 87.5 }} value='lines'>Line</RadioButton>
@@ -229,7 +229,7 @@ class FormGenerator extends React.Component {
                     }],
                     initialValue: defValue
                 })(
-                    <Select onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
+                    <Select style={{ width: 175 }} onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
                         {list.map(listElem => (
                             <Option key={listElem.name + listElem.value} value={listElem.value}>
                                 {listElem.name}
