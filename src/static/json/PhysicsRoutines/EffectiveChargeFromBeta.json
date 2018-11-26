@@ -33,7 +33,8 @@
   ],
   "moreOptions": {
     "visible": true,
-    "defaultAxisType": "linear"
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear"
   },
   "modals": {
     "dataSeries": true,
