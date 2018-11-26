@@ -45,7 +45,7 @@ class FormGenerator extends React.Component {
                 </Row>
             </Form>
         );
-    }
+    };
 
     createFormItem = (item) => {
         let generatedItem;
@@ -71,7 +71,7 @@ class FormGenerator extends React.Component {
                 {generatedItem}
             </FormItem>
         );
-    }
+    };
 
     createEntryModule = (item) => {
         const { getFieldDecorator } = this.props.form;
@@ -96,8 +96,9 @@ class FormGenerator extends React.Component {
         return (
             <div>
                 <InputGroup>
-                    <Col style={{ height: 48 }} offset={2} span={10}>
-                        <FormItem style={{ margin: 6 }} label='Start' labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+                    <Row>
+                    <Col style={{ height: 48, display:'inline-block' }}>
+                        <FormItem style={{ margin: 6 }} label='Start' labelCol={{ span: 12 }} wrapperCol={{ span:  4}}>
                             <Tooltip title={"Insert start value"}>
                                 {getFieldDecorator(startName, {
                                     rules: [{
@@ -115,8 +116,8 @@ class FormGenerator extends React.Component {
                             </Tooltip>
                         </FormItem>
                     </Col>
-                    <Col style={{ height: 48 }} offset={0} span={8}>
-                        <FormItem style={{ margin: 6 }} label='End' labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
+                    <Col style={{ height: 48, display:'inline-block' }}>
+                        <FormItem style={{ margin: 6 }} label='End' labelCol={{ span: 16 }} wrapperCol={{ span: 4 }}>
                             <Tooltip title={"Insert end value"}>
                                 {getFieldDecorator(endName, {
                                     rules: [{
@@ -134,6 +135,7 @@ class FormGenerator extends React.Component {
                             </Tooltip>
                         </FormItem>
                     </Col>
+                    </Row>
                 </InputGroup>
                 <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                     <InputGroup compact>
@@ -163,10 +165,10 @@ class FormGenerator extends React.Component {
                 </FormItem>
             </div>
         );
-    }
+    };
 
     createPlotTypeItem = (item) => {
-        if (item.visible && item.visible == true) {
+        if (item.visible && item.visible === true) {
             let defValue = item.defaultValue ? item.defaultValue : "markers";
             defValue = defValue === "points" ? "markers" : "lines";
 
@@ -181,7 +183,7 @@ class FormGenerator extends React.Component {
                 </FormItem>
             );
         }
-    }
+    };
 
     createSingleInputItem = (item) => {
         const { getFieldDecorator } = this.props.form;
@@ -210,7 +212,7 @@ class FormGenerator extends React.Component {
                 </Tooltip>
             </div>
         );
-    }
+    };
 
     createSelectItem = (item) => {
         const { getFieldDecorator } = this.props.form;
@@ -242,7 +244,7 @@ class FormGenerator extends React.Component {
                 )}
             </Tooltip>
         );
-    }
+    };
 
     //HANDLERS -------------------------------------------------------------------------------------------------------------
     handleSubmit = (event) => {
@@ -252,7 +254,7 @@ class FormGenerator extends React.Component {
                 this.props.setFormData(this.state.formData);
             }
         });
-    }
+    };
 
     handleEntryInputChange = (event) => {
         let newFormData = this.state.formData;
@@ -260,15 +262,15 @@ class FormGenerator extends React.Component {
         this.setState({
             formData: newFormData
         });
-    }
+    };
 
     handleEntryIntervalTypeChange = (value) => {
         let newFormData = this.state.formData;
-        newFormData.intervalType = value
+        newFormData.intervalType = value;
         this.setState({
             formData: newFormData
         });
-    }
+    };
 
     handleSelectChange = (name, value) => {
         let newFormData = this.state.formData;
@@ -308,7 +310,7 @@ class FormGenerator extends React.Component {
         }
 
         callback();
-    }
+    };
 
     validate = (rule, value, callback) => {
         let validationRules;
@@ -339,7 +341,7 @@ class FormGenerator extends React.Component {
         }
 
         callback();
-    }
+    };
 
     render() {
         const generatedForm = this.generateForm();
