@@ -40,10 +40,9 @@ export default class FunctionsController extends Component {
                 });
             })
             .then(() => {
-                if (this.state.json.moreOptions && this.state.json.moreOptions.defaultAxisType) {
-                    const defValue = this.state.json.moreOptions.defaultAxisType === 'log' ? 'log' : 'linear';
-                    this.state.plot.xType = defValue;
-                    this.state.plot.yType = defValue;
+                if (this.state.json.moreOptions) {
+                    this.state.plot.xType = this.state.json.moreOptions.defaultXAxisType === 'log' ? 'log' : 'linear';
+                    this.state.plot.yType = this.state.json.moreOptions.defaultYAxisType === 'log' ? 'log' : 'linear';
                 }
 
                 for (let i = 0; i < this.state.json.formItems.length; i++) {
@@ -100,7 +99,8 @@ export default class FunctionsController extends Component {
                     <MoreOptionsForm
                         handleXChange={this.handleXChange}
                         handleYChange={this.handleYChange}
-                        defaultValue={this.state.json.moreOptions.defaultAxisType}
+                        defaultX={this.state.json.moreOptions.defaultXAxisType}
+                        defaultY={this.state.json.moreOptions.defaultYAxisType}
                     />
                 ) : null
                 }
@@ -151,7 +151,7 @@ export default class FunctionsController extends Component {
 
     handlePlotTypeChange = (event) => {
         this.setState({
-            plot: { plotType: event.target.value }
+            plot: { plotType: event.target.value, xType: this.state.plot.xType, yType: this.state.plot.yType }
         });
     };
 
@@ -231,8 +231,8 @@ export default class FunctionsController extends Component {
             yType: nAxisTypeY
         }
 
-        this.setState({ 
-            dataSeries: nDataSeries, 
+        this.setState({
+            dataSeries: nDataSeries,
             dataSeriesNames: nDataSeriesNames,
             plot: nPlot
         });
