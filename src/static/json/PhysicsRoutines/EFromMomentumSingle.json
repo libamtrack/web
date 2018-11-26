@@ -8,9 +8,9 @@
     {
       "type": "input",
       "parameterName": "momentum_MeV_c_u",
-      "label": "Momentum[MeV/c]",
+      "label": "Momentum[MeV/c/amu]",
       "placeholder": "momentum per particle",
-      "defaultValue": 10,
+      "defaultValue": 300,
       "validations": {
         "type": "float",
         "min": "0",
