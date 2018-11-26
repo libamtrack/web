@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Tooltip, Button, Form, Input, Radio, Select } from 'antd';
+import {Button, Col, Form, Input, Radio, Row, Select, Tooltip} from 'antd';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -37,9 +37,12 @@ class FormGenerator extends React.Component {
                 <div>
                     {generatedForm}
                 </div>
-                <div style={{ margin: 6, width: 450 }} align="center">
-                    <Button style={{ width: 175 }} type='primary' htmlType='submit'>Submit</Button>
-                </div>
+                <Row style={{margin: 6}}>
+                    <Col span={8}/>
+                    <Col span={16}>
+                    <Button style={{width: 175 }} type='primary' htmlType='submit'>Submit</Button>
+                    </Col>
+                </Row>
             </Form>
         );
     }
