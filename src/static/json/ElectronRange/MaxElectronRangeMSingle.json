@@ -1,19 +1,19 @@
 {
-  "visibleName": "Maximum Electron Range",
+  "visibleName": "Maximum Electron Range Single",
   "functionName": "AT_max_electron_range_m",
   "description": "Returns the maximum electron range (track diameter) in m for given energy",
   "plot": false,
-  "unit": "MeV",
+  "unit": "m",
   "formItems": [
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy",
+      "label": "Energy [MeV]",
       "placeholder": "10",
-      "defaultValue": 10,
+      "defaultValue": 0.01,
       "validations": {
         "type": "float",
-        "min": "0.000001",
+        "min": "0.000000000001",
         "max": "10000000000000"
       }
     },
