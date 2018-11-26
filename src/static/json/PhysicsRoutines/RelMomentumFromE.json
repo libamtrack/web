@@ -28,7 +28,8 @@
   ],
   "moreOptions": {
     "visible": true,
-    "defaultAxisType": "log"
+    "defaultXAxisType": "log",
+    "defaultYAxisType": "log"
   },
   "modals": {
     "dataSeries": true,
