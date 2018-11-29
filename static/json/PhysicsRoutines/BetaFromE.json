@@ -1,8 +1,8 @@
 {
   "visibleName": "Beta From Energy",
   "functionName": "AT_beta_from_E",
-  "description": "Returns relativistic speed for many particles",
-  "xTitle": "Energy[MeV]",
+  "description": "Returns relativistic speed for particle with given energy per nucleon",
+  "xTitle": "Energy[MeV/amu]",
   "yTitle": "Beta",
   "plot": true,
   "formItems": [
@@ -10,7 +10,10 @@
       "type": "entry_module",
       "parameterName": "E_MeV_u",
       "startholder": "0.1",
-      "endholder": "200",
+      "endholder": "300",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "300",
       "validations": {
         "type": "float",
         "min": "0.0000001",
