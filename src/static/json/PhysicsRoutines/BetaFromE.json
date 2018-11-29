@@ -1,8 +1,8 @@
 {
   "visibleName": "Beta From Energy",
   "functionName": "AT_beta_from_E",
-  "description": "Returns relativistic speed for many particles",
-  "xTitle": "Energy[MeV]",
+  "description": "Returns relativistic speed for particle with given energy per nucleon",
+  "xTitle": "Energy[MeV/amu]",
   "yTitle": "Beta",
   "plot": true,
   "formItems": [

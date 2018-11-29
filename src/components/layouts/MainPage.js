@@ -25,7 +25,7 @@ class MainPage extends React.Component {
         this.state.categories.map(category => (
             category.functions.map(fun => (
                 routes.push(
-                    <Route path={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')} render={() =>
+                    <Route key={fun.name + "RouteKey"} path={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')} render={() =>
                         <FunctionsView
                             openKey={category.name.replace(/ /g, '')}
                             selectedKey={category.name.replace(/ /g, '') + fun.name.replace(/ /g, '')}
@@ -86,14 +86,14 @@ class MainPage extends React.Component {
                             <Row key={1} type='flex' gutter={10} align="center"
                                 style={{ paddingBottom: 25 }}>{this.state.introText}</Row>
                             <Row key={2} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
-                                {categoriesForColumns.map(colums => (
-                                    <Col span={6}>
+                                {categoriesForColumns.map((colums, index) => (
+                                    <Col span={6} key={index}>
                                         {colums.map(category => (
-                                            <ListGroup align="center" style={{ paddingBottom: 50 }}>
+                                            <ListGroup align="center" style={{ paddingBottom: 50 }} key={category.name + "ListGroup"}>
                                                 <ListGroupItem active align="center"
-                                                    style={category.style}>{category.name}</ListGroupItem>
+                                                    style={category.style} key={category.name}>{category.name}</ListGroupItem>
                                                 {category.functions.map(fun => (
-                                                    <ListGroupItem>
+                                                    <ListGroupItem key={fun.name}>
                                                         <Link
                                                             to={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')}
                                                             style={category.functionsStyle}>
@@ -120,20 +120,20 @@ class MainPage extends React.Component {
     render() {
         return (
             <div>
-                <Route exact={true} path={"/"} render={() => (
-                    <Layout className="layout">
+                <Route key={"mainRoute"} exact={true} path={"/"} render={() => (
+                    <Layout key={"mainLayout"} className="layout">
                         {/*LOGO*/}
-                        <Header style={{ background: "#fff", height: "200px" }}>
-                            <Row type='flex' gutter={8} align="center">
-                                <Col>
-                                    <img src={logo} align="center" className="App-logo" alt="logo" />
+                        <Header key={"logoHeader"} style={{ background: "#fff", height: "200px" }}>
+                            <Row key={"logoRow"} type='flex' gutter={8} align="center">
+                                <Col key={"logoCol"}>
+                                    <img key={"logoImg"} src={logo} align="center" className="App-logo" alt="logo" />
                                 </Col>
                             </Row>
                         </Header>
-                        <Content style={{ padding: '0 75px', background: '#fff' }}>
+                        <Content key={"mainPageContent"} style={{ padding: '0 75px', background: '#fff' }}>
                             {this.state.rows}
                         </Content>
-                        <Footer style={{ textAlign: 'center', background: '#fff' }}>
+                        <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
                             {this.state.footerText}
                         </Footer>
                     </Layout>

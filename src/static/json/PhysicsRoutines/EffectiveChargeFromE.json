@@ -12,7 +12,7 @@
       "startholder": "0.01",
       "endholder": "100",
       "intervalType": "points",
-      "stepDefaultValue": "1",
+      "stepDefaultValue": "0.1",
       "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
