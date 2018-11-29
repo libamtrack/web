@@ -152,7 +152,7 @@
         },
         {
           "name": "Maximum Electron Range Single",
-          "jsonConfigPath": "/ElectronRange/MaxElectronRangeM.json"
+          "jsonConfigPath": "/ElectronRange/MaxElectronRangeMSingle.json"
         }
       ]
     }
