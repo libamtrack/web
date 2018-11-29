@@ -2,15 +2,15 @@
   "visibleName": "Relativistic Momentum Per Nucleon Of Particle Single",
   "functionName": "AT_momentum_from_E_MeV_c_u_single",
   "description": "Returns relativistic momentum (per nucleon) of particle",
-  "unit": "MeV/c",
+  "resultUnit": "MeV/c",
   "plot": false,
   "formItems": [
     {
       "type": "input",
       "parameterName": "E_MeV_u",
       "label": "Energy",
-      "placeholder": "10",
-      "defaultValue": 10,
+      "placeholder": "Insert energy",
+      "defaultValue": 150,
       "validations": {
         "type": "float",
         "min": "0.000001",

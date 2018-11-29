@@ -9,10 +9,14 @@ More details how to use this tool you can find clicking green button 'show help'
 
 .. warning:: During development remember to restart your local server, because auto import plugin generates dependencies to functions during start.
 
-2. Prepare JSON that describes functions and put it in directory */src/static/json/<category_name>/*. See details in :ref:`funjson`.
+2. Put wrapper function into */src/functionsFromC* directory.
 
-3. Add all required dictionaries to */src/static/json/dictionaries/*. See details in :ref:`dictjson`.
+3. Prepare JSON that describes functions. See details in :ref:`funjson`.
 
-4. Prepare new category or add function to existing one in :ref:`gcjson`.
+4. Put prepared JSON into directory */src/static/json/<category_name>/*
 
-5. Rebuild app and test :)
+5. Add all required dictionaries to */src/static/json/dictionaries/*. See details in :ref:`dictjson`.
+
+6. Prepare new category or add function to existing one in :ref:`gcjson`, which can be found in */src/static/json/GlobalConfig.json*.
+
+7. Rebuild app and test :)

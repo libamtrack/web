@@ -3,11 +3,12 @@
   "functionName": "AT_beta_from_E_single",
   "description": "Returns relativistic speed for single value of energy",
   "plot": false,
+  "resultPrecision": 4,
   "formItems": [
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy",
+      "label": "Energy [MeV]",
       "placeholder": "10",
       "defaultValue": 10,
       "validations": {

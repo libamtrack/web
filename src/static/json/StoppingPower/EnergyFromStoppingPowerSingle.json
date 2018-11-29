@@ -3,7 +3,7 @@
     "functionName": "AT_Energy_MeV_u_from_Stopping_Power_single",
     "description": "Retrieves energy in MeV from the give stopping power in MeV*cm2/g for the requested particles and a specified material and data source.",
     "plot": false,
-    "unit": "MeV",
+    "resultUnit": "MeV",
     "formItems": [
         {
             "type": "input",
