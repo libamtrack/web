@@ -2,7 +2,8 @@
   "visibleName": "Energy From Beta Single",
   "functionName": "AT_E_from_beta_single",
   "description": "Returns energy per nucleon of particle with relative speed beta",
-  "unit": "MeV",
+  "resultUnit": "MeV",
+  "resultPrecision": 3,
   "plot": false,
   "formItems": [
     {

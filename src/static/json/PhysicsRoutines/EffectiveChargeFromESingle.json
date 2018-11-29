@@ -2,15 +2,14 @@
   "visibleName": "Effective Charge From Energy Barkas-Bethe Single",
   "functionName": "AT_effective_charge_from_E_MeV_u_single",
   "description": "Effective charge according to Barkas-Bethe-approximation for particle with given energy per nucleon",
-  "unit": "C", "TODO": "???",
   "plot": false,
   "formItems": [
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy",
-      "placeholder": "Energy",
-      "defaultValue": 0.33,
+      "label": "Energy [MeV/amu]",
+      "placeholder": "Energy [MeV/amu]",
+      "defaultValue": 10,
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -23,7 +22,7 @@
       "label": "Particle",
       "values": "particles",
       "asManyAsPoints": true,
-      "defaultValue": 1001,
+      "defaultValue": 6012,
       "description": "Choose particle type"
     }
   ]

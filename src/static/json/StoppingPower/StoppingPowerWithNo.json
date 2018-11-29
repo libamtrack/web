@@ -23,7 +23,7 @@
     {
       "type": "plot_type",
       "visible": true,
-      "defaultValue": "points"
+      "defaultValue": "lines"
     },
     {
       "type": "select",

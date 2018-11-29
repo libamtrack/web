@@ -133,6 +133,7 @@ export default class FunctionsController extends Component {
         }
         this.setState({
             plot: {
+                plotType: this.state.plot.plotType,
                 xType: event.target.value,
                 yType: this.state.plot.yType
             },
@@ -143,6 +144,7 @@ export default class FunctionsController extends Component {
     handleYChange = (event) => {
         this.setState({
             plot: {
+                plotType: this.state.plot.plotType,
                 xType: this.state.plot.xType,
                 yType: event.target.value
             }
@@ -218,22 +220,31 @@ export default class FunctionsController extends Component {
     deleteAll = () => {
         let nDataSeries = this.state.dataSeries;
         let nDataSeriesNames = this.state.dataSeriesNames;
-        let nAxisTypeX = this.state.plot.xType;
-        let nAxisTypeY = this.state.plot.yType;
-        let nPlotType = this.state.plot.plotType;
-
+        let nDataLinear = this.state.dataLinear;
+        let nDataPower = this.state.dataPower;
+        let nResultLinear = this.state.resultLinear;
+        let nResultPower = this.state.resultPower;
+        
         nDataSeries.length = 0;
         nDataSeriesNames.length = 0;
+        nDataLinear.length = 0;
+        nDataPower.length = 0;
+        nResultLinear.length = 0;
+        nResultPower.length = 0;
 
         const nPlot = {
-            plotType: nPlotType,
-            xType: nAxisTypeX,
-            yType: nAxisTypeY
+            plotType: this.state.plot.plotType,
+            xType: this.state.plot.xType,
+            yType: this.state.plot.yType
         }
 
         this.setState({
             dataSeries: nDataSeries,
             dataSeriesNames: nDataSeriesNames,
+            dataLinear: nDataLinear,
+            dataPower: nDataPower,
+            resultLinear: nResultLinear,
+            resultPower: nResultPower,
             plot: nPlot
         });
     };
@@ -275,7 +286,7 @@ export default class FunctionsController extends Component {
 
         newDataSeries.push({
             x: this.state.plot.xType === 'log' ? dataP : data,
-            y: this.state.plot.yType === 'log' ? resP : res,
+            y: this.state.plot.xType === 'log' ? resP : res,
             name: dataSeriesName,
             type: 'scatter',
             mode: this.state.plot.plotType
@@ -287,12 +298,13 @@ export default class FunctionsController extends Component {
             resultLinear: resLinear,
             dataPower: dataPower,
             resultPower: resPower
-        });
+        }, () => console.log(this.state));
     };
 
     render() {
         const size = this.state.json.plot && this.state.json.plot === true ? 8 : 24;
-        const unit = this.state.json.unit ? this.state.json.unit : "";
+        const unit = this.state.json.resultUnit ? this.state.json.resultUnit : "";
+        const prec = this.state.json.resultPrecision ? this.state.json.resultPrecision : 12;
         const resultComp = this.state.json.plot && this.state.json.plot === true ? (
             <div>
                 <Col span={size}>
@@ -310,7 +322,7 @@ export default class FunctionsController extends Component {
                 <div>
                     {this.state.toRender}
                     <div style={{ fontSize: 24 }}>
-                        Result: {this.state.singleResult} {unit}
+                        Result: {parseFloat(this.state.singleResult.toFixed(prec))} {unit}
                     </div>
                 </div>
             );

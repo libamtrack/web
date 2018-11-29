@@ -1,4 +1,5 @@
 export default function AT_max_electron_range_m(parameters) {
+	console.log(parameters);
 	let at_max_electron_range_m = Module.cwrap('AT_max_electron_range_m', 'number', ['number', 'number', 'number']);
 
 	/*********************STANDARD PARAMETER*************************/

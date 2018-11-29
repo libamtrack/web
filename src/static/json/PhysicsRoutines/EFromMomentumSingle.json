@@ -2,7 +2,7 @@
   "visibleName": "Energy Of Particle With Given Momentum Single",
   "functionName": "AT_E_MeV_u_from_momentum_single",
   "description": "Returns energy per nucleon of particle with given momentum per nucleon",
-  "unit": "MeV",
+  "resultUnit": "MeV",
   "plot": false,
   "formItems": [
     {
