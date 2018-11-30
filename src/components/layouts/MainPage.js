@@ -32,6 +32,7 @@ class MainPage extends React.Component {
                             openKey={category.name.replace(/ /g, '')}
                             selectedKey={category.name.replace(/ /g, '') + fun.name.replace(/ /g, '')}
                             jsonPath={'static/json/' + fun.jsonConfigPath}
+                            allFunctions={this.state.funs}
                             dictionaryData={this.state.dictionaryData}
                         />
                     } />)
