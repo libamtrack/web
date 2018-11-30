@@ -13,9 +13,11 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "1",
-      "endholder": "20",
-      "intervalType": "step",
+      "startholder": "0.01",
+      "endholder": "100",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
         "min": "0.0001",
@@ -47,7 +49,7 @@
   ],
   "moreOptions": {
     "visible": true,
-    "defaultXAxisType": "linear",
+    "defaultXAxisType": "log",
     "defaultYAxisType": "linear"
   },
   "modals": {
