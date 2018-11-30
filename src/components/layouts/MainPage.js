@@ -1,7 +1,7 @@
 import React from "react";
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
-import {Link, Route} from 'react-router-dom';
-import {Col, Layout, Row} from 'antd';
+import {Link, Redirect, Route} from 'react-router-dom';
+import {AutoComplete, Button, Col, Icon, Input, Layout, Row} from 'antd';
 import logo from '../../static/img/logo.png'
 import FunctionsView from '../layouts/FunctionsView.js';
 import {ListGroup, ListGroupItem} from "react-bootstrap";
@@ -14,6 +14,9 @@ class MainPage extends React.Component {
         introText: "",
         footerText: "",
         categories: [],
+        funs: [],
+        searchFuns: [],
+        searchStyle: {},
         rows: "",
         routes: "",
         dictionariesPaths: [],
@@ -54,7 +57,13 @@ class MainPage extends React.Component {
                 }
             );
         }
-    }
+    };
+
+    handleSearch = (value) => {
+        let result = this.state.funs.filter(o => o.fun.name.toLowerCase().includes(value.toLowerCase()));
+        console.log(result);
+        this.setState({ searchFuns: result });
+    };
 
     componentDidMount() {
         this._asyncRequest = getConfigurationFromJSON('static/json/GlobalConfig.json')
@@ -69,6 +78,13 @@ class MainPage extends React.Component {
             .then(this.getDictionaries)
             .then(e => {
 
+                this.state.categories.forEach(cat => cat.functions.forEach( fun => this.state.funs.push({fun, cat})));
+                this.state.funs = this.state.funs.sort(function (a, b) {
+                    return (a.fun.name.toLowerCase()).localeCompare(b.fun.name.toLowerCase());
+                });
+                this.state.searchFuns = this.state.funs;
+                this.state.searchStyle = JSON.parse(JSON.stringify(this.state.categories[0].style));
+                this.state.searchStyle["width"] = "200%";
                 let numberOfRows = Math.ceil(this.state.categories.length / 4);
                 let categoriesForColumns = [[], [], [], []];
                 for (let i = 0, j = 0; i < numberOfRows; i++) {
@@ -78,14 +94,39 @@ class MainPage extends React.Component {
                     }
                     j++;
                 }
-
-
                 this.setState({
                     rows:
                         (<div>
                             <Row key={1} type='flex' gutter={10} align="center"
                                 style={{ paddingBottom: 25 }}>{this.state.introText}</Row>
-                            <Row key={2} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
+                            <Row key={2} type='flex' gutter={10} align="center"
+                                 style={{ paddingBottom: 25 }}>
+
+                                    <AutoComplete
+                                        className="global-search"
+                                        size="large"
+                                        style={{ width: '70%' }}
+                                        dataSource={this.state.searchFuns.map(renderOption)}
+                                        onSelect={onSelect}
+                                        filterOption={(inputValue, option) =>
+                                            option.props.text.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+                                        placeholder="function name"
+                                        optionLabelProp="text">
+                                        <Input
+                                            suffix={(
+                                                <Button className="search-btn" size="large" style={this.state.searchStyle}>
+                                                    <Icon type="search" />
+                                                </Button>
+                                            )}
+                                        />
+                                    </AutoComplete>
+
+
+
+                            </Row>
+
+
+                            <Row key={3} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
                                 {categoriesForColumns.map((colums, index) => (
                                     <Col span={6} key={index}>
                                         {colums.map(category => (
@@ -143,5 +184,24 @@ class MainPage extends React.Component {
         );
     }
 }
+
+function onSelect(value, option) {
+    return <Redirect to={option} />
+}
+
+function renderOption(item) {
+    const Option = AutoComplete.Option;
+    const path = '/' + item.cat.name.replace(/ /g, '') + '/' + item.fun.name.replace(/ /g, '');
+    return (
+        <Option key={path} text={item.fun.name}>
+            <Link
+                to={path}
+                style={item.cat.functionsStyle}>
+                {item.fun.name}
+            </Link>
+        </Option>
+    );
+}
+
 
 export default MainPage;
