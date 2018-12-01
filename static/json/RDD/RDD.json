@@ -13,8 +13,6 @@
       "startholder": "0.0000000001",
       "endholder": "0.00001",
       "intervalType": "points",
-      "stepDefaultValue": "0.000001",
-      "pointsDefaultNumber": "300",      
       "validations": {
         "type": "float",
         "min": "0.000000000000000.1",
@@ -84,17 +82,11 @@
       "defaultValue": 1,
       "description": "Choose source type"
     }
-    ,
-    {
-      "type": "plot_type",
-      "visible": true,
-      "defaultValue": "lines"
-    }
   ],
   "moreOptions": {
     "visible": true,
-    "defaultXAxisType": "log",
-    "defaultYAxisType": "log"
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear"
   },
   "modals": {
     "dataSeries": true,
