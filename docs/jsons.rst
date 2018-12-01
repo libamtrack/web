@@ -113,7 +113,7 @@ In this file user can describe all parameters which are needed to generate form 
         "resultUnit": " ",
         "resultPrecision": 12,
         "formItems": [],
-        "moreOptions": true,
+        "moreOptions": {},
         "modals": {
             "dataSeries": true,
             "download": true,
