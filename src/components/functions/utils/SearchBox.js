@@ -1,11 +1,11 @@
 import React from "react";
-import { Link, Redirect } from 'react-router-dom';
-import { AutoComplete, Button, Icon, Input } from 'antd';
+import {Link, Redirect} from 'react-router-dom';
+import {AutoComplete, Button, Icon, Input} from 'antd';
 
 export default class SearchBox extends React.Component {
     state = {
         searchFuns: this.props.searchFuns
-    }
+    };
 
     renderOption = (item) => {
         const Option = AutoComplete.Option;
@@ -19,16 +19,11 @@ export default class SearchBox extends React.Component {
                 </Link>
             </Option>
         );
-    }
+    };
 
     onSelect(option) {
         return <Redirect to={option} />
     }
-
-    handleSearch = (value) => {
-        let result = this.state.funs.filter(o => o.fun.name.toLowerCase().includes(value.toLowerCase()));
-        this.setState({ searchFuns: result });
-    };
 
     render() {
         const size = this.props.searchStyle ? "large" : "small";
@@ -48,7 +43,7 @@ export default class SearchBox extends React.Component {
             >
                 <Input
                     suffix={(
-                        <Button className="search-btn" size={size} style={buttonStyle}>
+                        <Button className="search-btn" size={size} style={buttonStyle} type="primary">
                             <Icon type="search" />
                         </Button>
                     )}

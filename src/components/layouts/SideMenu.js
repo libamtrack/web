@@ -1,6 +1,6 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import {Layout, Menu} from 'antd';
+import {Link} from 'react-router-dom';
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
 import SearchBox from "../functions/utils/SearchBox.js";
 import logo from "../../static/img/logo.png";
@@ -43,10 +43,12 @@ class SideMenu extends React.Component {
                     <img style={{ width: 185, height: 185, paddingLeft: 15 }} src={logo} align="center"
                         className="App-logo" alt="logo" />
                 </Link>
+                <Layout style={{ marginBottom: '20px' }}>
                 <SearchBox
                     searchFuns={this.props.allFunctions}
                     searchStyle={null}
                 />
+                </Layout>
                 <Layout style={{ padding: '2px 0px 2px' }}>
                     <Menu
                         mode="vertical"
