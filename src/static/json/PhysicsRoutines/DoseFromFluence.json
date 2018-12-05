@@ -30,8 +30,8 @@
       "type": "input",
       "parameterName": "fluence_cm2",
       "label": "Fluence",
-      "placeholder": "1",
-      "defaultValue": 1,
+      "placeholder": "100000000",
+      "defaultValue": 100000000,
       "asManyAsPoints": true,
       "description": "fluence in 1/cm2",
       "validations": {

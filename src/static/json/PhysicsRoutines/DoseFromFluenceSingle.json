@@ -9,8 +9,8 @@
       "type": "input",
       "parameterName": "E_MeV_u",
       "label": "Energy",
-      "placeholder": "10",
-      "defaultValue": 10,
+      "placeholder": "150",
+      "defaultValue": 150,
       "description": "Energy per unit mass",
       "validations": {
         "type": "float",
@@ -31,8 +31,8 @@
       "type": "input",
       "parameterName": "fluence_cm2",
       "label": "Fluence",
-      "placeholder": "1",
-      "defaultValue": 1,
+      "placeholder": "100000000",
+      "defaultValue": 100000000,
       "description": "fluence in 1/cm2",
       "validations": {
         "type": "float",
