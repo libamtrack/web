@@ -9,19 +9,21 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "1",
-      "endholder": "1000",
-      "intervalType": "step",
+      "startholder": "0.00001",
+      "endholder": "10",
+      "intervalType": "points",
+      "stepDefaultValue": "0.01",
+      "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
-        "min": "0.0001",
-        "max": "10000"
+        "min": "0.000001",
+        "max": "1000"
       }
     },
     {
       "type": "plot_type",
       "visible": true,
-      "defaultValue": "points"
+      "defaultValue": "lines"
     },
     {
       "type": "select",
@@ -40,7 +42,11 @@
       "description": "Choose ER model"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "log",
+    "defaultYAxisType": "log"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,

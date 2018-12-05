@@ -10,11 +10,14 @@
       "type": "entry_module",
       "parameterName": "gamma",
       "startholder": "1.01",
-      "endholder": "10",
+      "endholder": "1.5",
+      "intervalType": "points",
+      "stepDefaultValue": "0.01",
+      "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
         "min": "1.0000001",
-        "max": "100000000"
+        "max": "100"
       }
     },
     {
@@ -23,7 +26,11 @@
       "defaultValue": "lines"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,

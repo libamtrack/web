@@ -1,10 +1,11 @@
 import React from "react";
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
-import {Link, Route} from 'react-router-dom';
-import {Col, Layout, Row} from 'antd';
+import { Link, Route } from 'react-router-dom';
+import { Col, Layout, Row } from 'antd';
 import logo from '../../static/img/logo.png'
 import FunctionsView from '../layouts/FunctionsView.js';
-import {ListGroup, ListGroupItem} from "react-bootstrap";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
+import SearchBox from "../functions/utils/SearchBox";
 
 const { Header, Content, Footer } = Layout;
 
@@ -14,6 +15,7 @@ class MainPage extends React.Component {
         introText: "",
         footerText: "",
         categories: [],
+        funs: [],
         rows: "",
         routes: "",
         dictionariesPaths: [],
@@ -25,11 +27,12 @@ class MainPage extends React.Component {
         this.state.categories.map(category => (
             category.functions.map(fun => (
                 routes.push(
-                    <Route path={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')} render={() =>
+                    <Route key={fun.name + "RouteKey"} path={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')} render={() =>
                         <FunctionsView
                             openKey={category.name.replace(/ /g, '')}
                             selectedKey={category.name.replace(/ /g, '') + fun.name.replace(/ /g, '')}
                             jsonPath={'static/json/' + fun.jsonConfigPath}
+                            allFunctions={this.state.funs}
                             dictionaryData={this.state.dictionaryData}
                         />
                     } />)
@@ -54,7 +57,7 @@ class MainPage extends React.Component {
                 }
             );
         }
-    }
+    };
 
     componentDidMount() {
         this._asyncRequest = getConfigurationFromJSON('static/json/GlobalConfig.json')
@@ -69,6 +72,12 @@ class MainPage extends React.Component {
             .then(this.getDictionaries)
             .then(e => {
 
+                this.state.categories.forEach(cat => cat.functions.forEach(fun => this.state.funs.push({ fun, cat })));
+                this.state.funs = this.state.funs.sort(function (a, b) {
+                    return (a.fun.name.toLowerCase()).localeCompare(b.fun.name.toLowerCase());
+                });
+                let searchStyle = JSON.parse(JSON.stringify(this.state.categories[0].style));
+                searchStyle["width"] = "200%";
                 let numberOfRows = Math.ceil(this.state.categories.length / 4);
                 let categoriesForColumns = [[], [], [], []];
                 for (let i = 0, j = 0; i < numberOfRows; i++) {
@@ -78,22 +87,27 @@ class MainPage extends React.Component {
                     }
                     j++;
                 }
-
-
                 this.setState({
                     rows:
                         (<div>
-                            <Row key={1} type='flex' gutter={10} align="center"
-                                style={{ paddingBottom: 25 }}>{this.state.introText}</Row>
+                            <Row key={1} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
+                                {this.state.introText}
+                            </Row>
                             <Row key={2} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
-                                {categoriesForColumns.map(colums => (
-                                    <Col span={6}>
+                                <SearchBox
+                                    searchFuns={this.state.funs}
+                                    searchStyle={searchStyle}
+                                />
+                            </Row>
+                            <Row key={3} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
+                                {categoriesForColumns.map((colums, index) => (
+                                    <Col span={6} key={index}>
                                         {colums.map(category => (
-                                            <ListGroup align="center" style={{ paddingBottom: 50 }}>
+                                            <ListGroup align="center" style={{ paddingBottom: 50 }} key={category.name + "ListGroup"}>
                                                 <ListGroupItem active align="center"
-                                                    style={category.style}>{category.name}</ListGroupItem>
+                                                    style={category.style} key={category.name}>{category.name}</ListGroupItem>
                                                 {category.functions.map(fun => (
-                                                    <ListGroupItem>
+                                                    <ListGroupItem key={fun.name}>
                                                         <Link
                                                             to={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')}
                                                             style={category.functionsStyle}>
@@ -105,7 +119,9 @@ class MainPage extends React.Component {
                                         ))}
                                     </Col>
                                 ))}
-                            </Row></div>)
+                            </Row>
+                        </div>
+                        )
                 })
             })
             .then(this.generateRoutes);
@@ -120,20 +136,20 @@ class MainPage extends React.Component {
     render() {
         return (
             <div>
-                <Route exact={true} path={"/"} render={() => (
-                    <Layout className="layout">
+                <Route key={"mainRoute"} exact={true} path={"/"} render={() => (
+                    <Layout key={"mainLayout"} className="layout">
                         {/*LOGO*/}
-                        <Header style={{ background: "#fff", height: "200px" }}>
-                            <Row type='flex' gutter={8} align="center">
-                                <Col>
-                                    <img src={logo} align="center" className="App-logo" alt="logo" />
+                        <Header key={"logoHeader"} style={{ background: "#fff", height: "200px" }}>
+                            <Row key={"logoRow"} type='flex' gutter={8} align="center">
+                                <Col key={"logoCol"}>
+                                    <img key={"logoImg"} src={logo} align="center" className="App-logo" alt="logo" />
                                 </Col>
                             </Row>
                         </Header>
-                        <Content style={{ padding: '0 75px', background: '#fff' }}>
+                        <Content key={"mainPageContent"} style={{ padding: '0 75px', background: '#fff' }}>
                             {this.state.rows}
                         </Content>
-                        <Footer style={{ textAlign: 'center', background: '#fff' }}>
+                        <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
                             {this.state.footerText}
                         </Footer>
                     </Layout>

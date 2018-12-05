@@ -2,7 +2,7 @@
   "visibleName": "Energy From Gamma Single",
   "functionName": "AT_E_from_gamma_single",
   "description": "Returns energy for single value of relativistic gamma",
-  "unit": "MeV",
+  "resultUnit": "MeV",
   "plot": false,
   "formItems": [
     {

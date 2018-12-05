@@ -3,17 +3,20 @@
   "functionName": "AT_effective_charge_from_beta",
   "description": "Effective charge according to Barkas-Bethe-approximation: Zeff = Z *[1- exp( -125 * beta / Z^(2/3) )] calculated for particle with given relative speed beta",
   "xTitle": "Beta",
-  "yTitle": "Effective charge[C]",
+  "yTitle": "Effective charge",
   "plot": true,
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "beta",
-      "startholder": "0.1",
-      "endholder": "0.9",
+      "startholder": "0",
+      "endholder": "0.3",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
-        "min": "0.0000001",
+        "min": "0",
         "max": "0.9999999"
       }
     },{
@@ -31,7 +34,11 @@
       "defaultValue": "lines"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,

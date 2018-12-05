@@ -110,9 +110,10 @@ In this file user can describe all parameters which are needed to generate form 
         "xTitle": "Energy [MeV]",
         "yTitle": "Mass stopping power [MeV*cm2/g]",
         "plot": true,
-        "unit": null,
+        "resultUnit": " ",
+        "resultPrecision": 12,
         "formItems": [],
-        "moreOptions": true,
+        "moreOptions": {},
         "modals": {
             "dataSeries": true,
             "download": true,
@@ -133,11 +134,13 @@ In this file user can describe all parameters which are needed to generate form 
 
 * **plot** (*boolean*) - flag that descrbes whether function returns results on plot (true) or as single value (false)
 
-* **unit** (*string*) - units for functions that return single results
+* **resultUnit** (*string*) - units for functions that return single results
+
+* **resultPrecision** (*int*) - how many significant digits will be displayed in result for single result functions. Default: 12
 
 * **formItems** (*array*) - form fields described in :ref:`formitems`
 
-* **moreOptions** (*boolean*) - flag that describes whether to display buttons for changing axis type (linear/logarithmic)
+* **moreOptions** (*object*) - described in :ref:`moreoptions`
 
 * **modals** (*array*) - contains flags describing which elements will be displayed on function page in "Data Series options" section
 
@@ -184,7 +187,9 @@ It is a collection of simple form fields that allows to generate a serie of numb
       "parameterName": "E_MeV_u",
       "startholder": "1",
       "endholder": "1000",
-      "intervalType": "step",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "500",
       "validations": {
             "type": "float",
             "min": "0.0001",
@@ -197,6 +202,10 @@ It is a collection of simple form fields that allows to generate a serie of numb
 * **endholder** (*float/string*) - initial value for "End" input
 
 * **intervalType** (*string*, ["step", "pointsNo"]) - default value for "Generate" block - default: "step"
+
+* **stepDefaultValue** (*string/float*) - initial value interval type "step" - default: 0.1
+
+* **pointsDefaultNumber** (*string/int*) - initial value for interval type "points" - default: 50
 
 * **validations** (*array*) - array with validation rules for "Start" and "End" inputs
         
@@ -282,6 +291,30 @@ Item that allows user to choose some values from list. Lists are provided as :re
 * **values** (*string*) - dictionary name from :ref:`gcjson`
 
 * **defaultValue** (*float/int*) - initial value from dictionary object (from property "value")
+
+
+.. _moreoptions:
+
+More options
+------------
+
+This fields are responsible for describing types/scales of plot X and Y axis
+
+.. code-block:: json
+    
+    {
+        "moreOptions": {
+            "visible": true,
+            "defaultXAxisType": "log",
+            "defaultYAxisType": "linear"
+        }
+    }
+
+* **visible** (*boolean*) - specifies whether this component is visible on main page or not
+
+* **defaultXAxisType** (*string*, ["log", "linear"]) - specifies scale of X-axis, if not provided "linear" will be applied
+
+* **defaultYAxisType** (*string*, ["log", "linear"]) - specifies scale of Y-axis, if not provided "linear" will be applied
 
 
 .. _dictjson:

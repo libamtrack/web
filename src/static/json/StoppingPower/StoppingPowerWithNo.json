@@ -1,20 +1,16 @@
 {
-  "visibleName": "Increase Of Energy Straggling",
-  "functionName": "AT_energy_straggling_MeV2_cm2_g",
-  "description": ["Get energy spread with depth according to Bohr's classical theory Bohr,",
-  "N. (1915), Phil. Mag. 30, 581ff, see also Evans, R.D. (1955), The atomic nucleus, McGraw Hill, New York, p. 661 ",
-  "In the literature dsE2dz is often given in units ergs2/cm. Here we report it mass-normalized MeV2*cm2/g",
-  "Since the effective charge of the particle enters the equation, particle types and energies have to be given. ",
-  "The equation is however limited to energies > 10 MeV/u and not too heavy ions"],
+  "visibleName": "Stopping power",
+  "functionName": "AT_Stopping_Power_with_no",
+  "description": "Retrieves the electronic stopping power in keV/um for the requested energies and particles for a specified material and data source. ",
   "xTitle": "Energy [MeV]",
-  "yTitle": "Increase of energy [MeV*cm2/g]",
+  "yTitle": "Stopping power [keV/um]",
   "plot": true,
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "0.01",
-      "endholder": "100",
+      "startholder": "0.1",
+      "endholder": "500",
       "intervalType": "points",
       "stepDefaultValue": "1",
       "pointsDefaultNumber": "500",
@@ -45,12 +41,20 @@
       "asManyAsPoints": true,
       "defaultValue": 1001,
       "description": "Choose particle type"
+    },
+    {
+      "type": "select",
+      "parameterName": "stopping_power_source_no",
+      "label": "Source",
+      "values": "stopping_power_source_no",
+      "defaultValue": 2,
+      "description": "Choose source type"
     }
   ],
   "moreOptions": {
     "visible": true,
     "defaultXAxisType": "log",
-    "defaultYAxisType": "linear"
+    "defaultYAxisType": "log"
   },
   "modals": {
     "dataSeries": true,

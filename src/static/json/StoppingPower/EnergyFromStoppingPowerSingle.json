@@ -1,0 +1,45 @@
+{
+    "visibleName": "Energy from stopping power single",
+    "functionName": "AT_Energy_MeV_u_from_Stopping_Power_single",
+    "description": "Retrieves energy in MeV from the give stopping power in MeV*cm2/g for the requested particles and a specified material and data source.",
+    "plot": false,
+    "resultUnit": "MeV",
+    "formItems": [
+        {
+            "type": "input",
+            "parameterName": "Stopping_Power_MeV_cm2_g",
+            "label": "Stopping power [MeV/cm2*g]",
+            "placeholder": "Stopping power in MeV/cm2*g",
+            "defaultValue": 10,
+            "validations": {
+                "type": "float",
+                "min": "5",
+                "max": "1000"
+            }
+        },
+        {
+            "type": "select",
+            "parameterName": "material_no",
+            "label": "Material",
+            "values": "materials",
+            "defaultValue": 1,
+            "description": "Choose material type"
+        },
+        {
+            "type": "select",
+            "parameterName": "particle_no",
+            "label": "Particle",
+            "values": "particles",
+            "defaultValue": 1001,
+            "description": "Choose particle type"
+        },
+        {
+            "type": "select",
+            "parameterName": "stopping_power_source_no",
+            "label": "Source",
+            "values": "stopping_power_source_no",
+            "defaultValue": 2,
+            "description": "Choose source type"
+        }
+    ]
+}

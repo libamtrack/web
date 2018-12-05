@@ -15,8 +15,12 @@
       },
       "functions": [
         {
-          "name": "Mass stopping power with no",
+          "name": "Mass stopping power",
           "jsonConfigPath": "/StoppingPower/MassStoppingPowerWithNo.json"
+        },
+        {
+          "name": "Stopping power",
+          "jsonConfigPath": "/StoppingPower/StoppingPowerWithNo.json"
         }
       ]
     },
@@ -156,7 +160,7 @@
         },
         {
           "name": "Maximum Electron Range Single",
-          "jsonConfigPath": "/ElectronRange/MaxElectronRangeM.json"
+          "jsonConfigPath": "/ElectronRange/MaxElectronRangeMSingle.json"
         }
       ]
     }

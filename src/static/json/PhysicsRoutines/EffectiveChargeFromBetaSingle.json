@@ -2,7 +2,6 @@
   "visibleName": "Effective Charge From Beta Barkas-Bethe Single",
   "functionName": "AT_effective_charge_from_beta_single",
   "description": "Effective charge according to Barkas-Bethe-approximation: Zeff = Z *[1- exp( -125 * beta / Z^(2/3) )] calculated for particle with given relative speed beta",
-  "unit": "C", "TODO": "???",
   "plot": false,
   "formItems": [
     {
@@ -22,7 +21,7 @@
       "label": "Atomic no of",
       "values": "atomicNumbers",
       "asManyAsPoints": false,
-      "defaultValue": 1,
+      "defaultValue": 6,
       "description": "Choose particle to get atomic number"
     }
   ]
