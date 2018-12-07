@@ -153,10 +153,10 @@ export default class FunctionsController extends Component {
 
     handlePlotTypeChange = (event) => {
         this.setState({
-            plot: { 
-                plotType: event.target.value, 
-                xType: this.state.plot.xType, 
-                yType: this.state.plot.yType 
+            plot: {
+                plotType: event.target.value,
+                xType: this.state.plot.xType,
+                yType: this.state.plot.yType
             }
         });
     };
@@ -228,7 +228,7 @@ export default class FunctionsController extends Component {
         let nDataPower = this.state.dataPower;
         let nResultLinear = this.state.resultLinear;
         let nResultPower = this.state.resultPower;
-        
+
         nDataSeries.length = 0;
         nDataSeriesNames.length = 0;
         nDataLinear.length = 0;
@@ -323,7 +323,7 @@ export default class FunctionsController extends Component {
                 </Col>
             </div>
         ) : (
-                <div>
+                <div style={{ width: '60%' }}>
                     {this.state.toRender}
                     <div style={{ fontSize: 24 }}>
                         Result: {parseFloat(this.state.singleResult.toFixed(prec))} {unit}
