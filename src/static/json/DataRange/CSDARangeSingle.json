@@ -34,7 +34,7 @@
         "parameterName": "particle_no",
         "label": "Particle",
         "values": "particles",
-        "asManyAsPoints": true,
+        "asManyAsPoints": false,
         "defaultValue": 1001,
         "description": "Choose particle type"
       },
