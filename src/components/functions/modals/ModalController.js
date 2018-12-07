@@ -51,9 +51,16 @@ export default class ModalController extends React.Component {
         this.setState({ dataSeriesNameToShow: name }, () => this.setModalVisible("showDataSeriesModalVisible", true));
     };
 
-    downloadSingleDataSeries = (dataSeries) => {
+    downloadSingleDataSeries = (serie) => {
+        this.setModalVisible("dataSeriesModalVisible", false);
+
+        let dataSeries = [];
+        dataSeries.push(serie);
+
         this.setState({ dataToSave: prepareDataToSave(dataSeries, this.props.functionName) });
         this.setModalVisible("downloadModalVisible", true);
+        
+        this.setModalVisible("dataSeriesModalVisible", true);
     };
 
     downloadSingleDataSeriesByName = (name) => {
