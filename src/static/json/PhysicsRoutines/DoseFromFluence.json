@@ -11,6 +11,9 @@
       "parameterName": "E_MeV_u",
       "startholder": "0.1",
       "endholder": "200",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "300",
       "validations": {
         "type": "float",
         "min": "0.0000001",
@@ -45,7 +48,7 @@
       "parameterName": "material_no",
       "label": "Material",
       "values": "materials",
-      "asManyAsPoints": true,
+      "asManyAsPoints": false,
       "defaultValue": 1,
       "description": "Choose material type"
     },
@@ -54,8 +57,8 @@
       "parameterName": "stopping_power_source_no",
       "label": "Source",
       "values": "stopping_power_source_no",
-      "asManyAsPoints": true,
-      "defaultValue": 1,
+      "asManyAsPoints": false,
+      "defaultValue": 2,
       "description": "Choose source type"
     },
     {
