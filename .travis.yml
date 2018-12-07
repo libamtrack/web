@@ -16,7 +16,8 @@ deploy:
   keep-history: true
   local-dir: ./dist
   on:
-    branch: master
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ master
 
   #deploy to libamtrack.github.io/web_dev
   provider: pages
