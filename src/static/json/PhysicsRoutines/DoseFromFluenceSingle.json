@@ -7,8 +7,21 @@
   "formItems": [
     {
       "type": "input",
+      "parameterName": "fluence_cm2",
+      "label": "Fluence [1/cm2]",
+      "placeholder": "1000000000",
+      "defaultValue": 1000000000,
+      "description": "fluence in 1/cm2",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "10000000000000000"
+      }
+    },
+    {
+      "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy",
+      "label": "Energy [MeV/amu]",
       "placeholder": "150",
       "defaultValue": 150,
       "description": "Energy per unit mass",
@@ -28,19 +41,6 @@
       "description": "Choose particle type"
     },
     {
-      "type": "input",
-      "parameterName": "fluence_cm2",
-      "label": "Fluence",
-      "placeholder": "100000000",
-      "defaultValue": 100000000,
-      "description": "fluence in 1/cm2",
-      "validations": {
-        "type": "float",
-        "min": "0.000001",
-        "max": "10000000000000000"
-      }
-    },
-    {
       "type": "select",
       "parameterName": "material_no",
       "label": "Material",
@@ -55,7 +55,7 @@
       "label": "Source",
       "values": "stopping_power_source_no",
       "asManyAsPoints": false,
-      "defaultValue": 1,
+      "defaultValue": 2,
       "description": "Choose source type"
     }
   ]
