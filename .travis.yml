@@ -25,7 +25,6 @@ deploy:
     keep-history: true
     local-dir: ./dist
     repo: libamtrack/web_dev
-    target-branch: master
     on:
       all_branches: true
       condition: $TRAVIS_BRANCH =~ ^feature #deploy when commit to branch feature
