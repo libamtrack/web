@@ -105,6 +105,7 @@ export default class FunctionsController extends Component {
                 ) : null
                 }
                 {<ModalController
+                    functionName={this.state.json.visibleName}
                     modals={this.state.json.modals}
                     dataSeries={this.state.dataSeries}
                     deleteDataSeries={this.deleteDataSeries}

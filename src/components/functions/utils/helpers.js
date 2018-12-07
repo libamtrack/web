@@ -1,19 +1,69 @@
+const annotation = "# Provided by Libamtrack \n";
+
 export function prepareDataToSave(dataSeries, functionName) {
-    let result = "#" + functionName + "\n";
-    for (let i = 0; i < dataSeries.length; i++) {
-        result += prepareSingleDataToSave(dataSeries[i]);
+    let result = annotation + getCurrentData();
+    result += "# " + functionName + "\n";
+    result += getAxisLabels(dataSeries);
+
+    const forEndCond = getMaxDataSeriesLength(dataSeries);
+
+    for (let i = 0; i < forEndCond; i++) {
+        for (let j = 0; j < dataSeries.length; j++) {
+            if (dataSeries[j].x.length > i) {
+                result += dataSeries[j].x[i] + "," + dataSeries[j].y[i];
+            } else {
+                result += ",";
+            }
+
+            if (j === (dataSeries.length - 1)) {
+                result += "\n";
+            } else {
+                result += ",";
+            }
+        }
     }
 
     return result;
 }
 
-export function prepareSingleDataToSave(dataSeries) {
-    let prepared = "#" + dataSeries.name + "\n";
-    prepared += "\"x\"" + ",\"y\"" + "\n";
-    for (let i = 0; i < dataSeries.x.length; i++) {
-        prepared += "\"" + dataSeries.x[i] + "\"" + ",\"" + dataSeries.y[i] + "\"" + "\n";
+function getAxisLabels(dataSeries) {
+    let labels = "";
+
+    for (let i = 0; i < dataSeries.length; i++) {
+        labels += "\"" + dataSeries[i].name + "_x\",";
+        labels += "\"" + dataSeries[i].name + "_y\"";
+
+        if (i === (dataSeries.length - 1)) {
+            labels += "\n";
+        } else {
+            labels += ",";
+        }
     }
-    return prepared;
+
+    return labels;
+}
+
+function getMaxDataSeriesLength(dataSeries) {
+    let maxLength = 0;
+
+    for (let i = 0; i < dataSeries.length; i++) {
+        if (dataSeries[i].x.length > maxLength) {
+            maxLength = dataSeries[i].x.length;
+        }
+    }
+
+    return maxLength;
+}
+
+function getCurrentData() {
+    var currentDate = new Date();
+
+    return "# Generated: " + currentDate.getDate() + "/"
+        + (currentDate.getMonth() + 1) + "/"
+        + currentDate.getFullYear() + " @ "
+        + currentDate.getHours() + ":"
+        + currentDate.getMinutes() + ":"
+        + currentDate.getSeconds() + "\n";
 }
 
 export function preparePoints(start, end, pointsCount, type) {

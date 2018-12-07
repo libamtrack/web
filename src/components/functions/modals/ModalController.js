@@ -4,7 +4,7 @@ import DataSeriesModal from './DataSeriesModal.js';
 import ShowDataSeriesModal from './ShowDataModal.js';
 import DownloadDataModal from './DownloadDataModal.js';
 import ChangeSeriesNameModal from './ChangeSeriesNameModal.js';
-import { prepareDataToSave, prepareSingleDataToSave } from '../utils/helpers.js';
+import { prepareDataToSave } from '../utils/helpers.js';
 
 const Panel = Collapse.Panel;
 const confirm = Modal.confirm;
@@ -51,9 +51,16 @@ export default class ModalController extends React.Component {
         this.setState({ dataSeriesNameToShow: name }, () => this.setModalVisible("showDataSeriesModalVisible", true));
     };
 
-    downloadSingleDataSeries = (dataSeries) => {
-        this.setState({ dataToSave: prepareSingleDataToSave(dataSeries) });
+    downloadSingleDataSeries = (serie) => {
+        this.setModalVisible("dataSeriesModalVisible", false);
+
+        let dataSeries = [];
+        dataSeries.push(serie);
+
+        this.setState({ dataToSave: prepareDataToSave(dataSeries, this.props.functionName) });
         this.setModalVisible("downloadModalVisible", true);
+        
+        this.setModalVisible("dataSeriesModalVisible", true);
     };
 
     downloadSingleDataSeriesByName = (name) => {
@@ -77,7 +84,7 @@ export default class ModalController extends React.Component {
     }
 
     downloadAll = () => {
-        this.setState({ dataToSave: prepareDataToSave(this.state.dataSeries, "haha") });
+        this.setState({ dataToSave: prepareDataToSave(this.state.dataSeries, this.props.functionName) });
     };
 
     showConfirm = (delMethod) => {
