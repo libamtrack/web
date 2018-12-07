@@ -15,7 +15,8 @@ deploy:
   github-token: $GH_TOKEN # defined at Travis/Settings/Environment Variables
   keep-history: true
   local-dir: ./dist
-  on: master
+  on:
+    branch: master
 
   #deploy to libamtrack.github.io/web_dev
   provider: pages
