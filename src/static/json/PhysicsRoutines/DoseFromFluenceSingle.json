@@ -1,0 +1,62 @@
+{
+  "visibleName": "Dose With Given Fluence And Energy Single",
+  "functionName": "AT_dose_Gy_from_fluence_cm2_single",
+  "description": "Returns dose in Gy for particle with given fluence and energy",
+  "plot": false,
+  "unit": "Gy",
+  "formItems": [
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy",
+      "placeholder": "150",
+      "defaultValue": 150,
+      "description": "Energy per unit mass",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "10000000000000000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": false,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    },
+    {
+      "type": "input",
+      "parameterName": "fluence_cm2",
+      "label": "Fluence",
+      "placeholder": "100000000",
+      "defaultValue": 100000000,
+      "description": "fluence in 1/cm2",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "10000000000000000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose material type"
+    },
+    {
+      "type": "select",
+      "parameterName": "stopping_power_source_no",
+      "label": "Source",
+      "values": "stopping_power_source_no",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose source type"
+    }
+  ]
+}
