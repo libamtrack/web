@@ -2,7 +2,7 @@
   "visibleName": "Dose With Given Fluence And Energy",
   "functionName": "AT_dose_Gy_from_fluence_cm2",
   "description": "Returns dose in Gy for each given particle",
-  "xTitle": "Energy[MeV]",
+  "xTitle": "Energy[MeV/amu]",
   "yTitle": "Dose [Gy]",
   "plot": true,
   "formItems": [
@@ -32,7 +32,7 @@
     {
       "type": "input",
       "parameterName": "fluence_cm2",
-      "label": "Fluence",
+      "label": "Fluence [1/cm2]",
       "placeholder": "100000000",
       "defaultValue": 100000000,
       "asManyAsPoints": true,
@@ -67,7 +67,11 @@
       "defaultValue": "lines"
     }
   ],
-  "moreOptions": true,
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear"
+  },
   "modals": {
     "dataSeries": true,
     "download": true,
