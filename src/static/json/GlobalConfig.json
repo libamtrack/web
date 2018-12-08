@@ -25,6 +25,23 @@
       ]
     },
     {
+      "name": "Track Structure",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
+      "functions": [
+        {
+          "name": "Radial Dose Distribution",
+          "jsonConfigPath": "/RDD/RDD.json"
+        }
+      ]
+    },
+    {
       "name": "Physics",
       "style": {
         "background": "#3727AA",
@@ -127,23 +144,6 @@
       ]
     },
     {
-      "name": "Track Structure",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "Radial Dose Distribution",
-          "jsonConfigPath": "/RDD/RDD.json"
-        }
-      ]
-    },
-    {
       "name": "Electron Range",
       "style": {
         "background": "#3727AA",
@@ -163,12 +163,41 @@
           "jsonConfigPath": "/ElectronRange/MaxElectronRangeMSingle.json"
         }
       ]
+    },
+    {
+      "name": "Data Range",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
+      "functions": [
+        {
+          "name": "CSDA Range Single",
+          "jsonConfigPath": "/DataRange/CSDARangeSingle.json"
+        },
+        {
+          "name": "CSDA Range Multi",
+          "jsonConfigPath": "/DataRange/CSDARangeMulti.json"
+        },
+        {
+          "name": "CSDA Energy After Slab Single",
+          "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabSingle.json"
+        },
+        {
+          "name": "CSDA Energy After Slab Multi",
+          "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabMulti.json"
+        }
+      ]
     }
   ],
   "dictionaries": [
     {
       "name": "particles",
-      "jsonConfigPath": "/dictionaries/Particles.json" 
+      "jsonConfigPath": "/dictionaries/Particles.json"
     },
     {
       "name": "atomicNumbers",
@@ -190,6 +219,5 @@
       "name": "er_models",
       "jsonConfigPath": "/dictionaries/ERModels.json"
     }
-
   ]
 }

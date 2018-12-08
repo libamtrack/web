@@ -202,7 +202,7 @@ class FormGenerator extends React.Component {
                         }, {
                             validator: this.validate
                         }],
-                        initialValue: item.defaultValue ? item.defaultValue : 0.5
+                        initialValue: typeof item.defaultValue !== undefined ? item.defaultValue : 0.5
                     })(
                         <Input style={{ width: 175, textAlign: 'center' }}
                             name={item.parameterName}
