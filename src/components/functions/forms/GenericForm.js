@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Col, Form, Input, Radio, Row, Select, Tooltip} from 'antd';
+import { Button, Col, Form, Input, Radio, Row, Select, Tooltip } from 'antd';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -37,10 +37,10 @@ class FormGenerator extends React.Component {
                 <div>
                     {generatedForm}
                 </div>
-                <Row style={{margin: 6}}>
-                    <Col span={8}/>
+                <Row style={{ margin: 6 }}>
+                    <Col span={8} />
                     <Col span={16}>
-                    <Button style={{width: 175 }} type='primary' htmlType='submit'>Submit</Button>
+                        <Button style={{ width: 175 }} type='primary' htmlType='submit'>Submit</Button>
                     </Col>
                 </Row>
             </Form>
@@ -97,44 +97,44 @@ class FormGenerator extends React.Component {
             <div>
                 <InputGroup>
                     <Row>
-                    <Col style={{ height: 48, display:'inline-block' }}>
-                        <FormItem style={{ margin: 6 }} label='Start' labelCol={{ span: 12 }} wrapperCol={{ span:  4}}>
-                            <Tooltip title={"Insert start value"}>
-                                {getFieldDecorator(startName, {
-                                    rules: [{
-                                        required: true, message: "Field required!"
-                                    }, {
-                                        validator: this.validateEntryModule
-                                    }],
-                                    initialValue: startHolder
-                                })(
-                                    <Input style={{ width: 87.5, textAlign: 'center' }}
-                                        name={startName}
-                                        placeholder={startHolder}
-                                        onChange={this.handleEntryInputChange} />
-                                )}
-                            </Tooltip>
-                        </FormItem>
-                    </Col>
-                    <Col style={{ height: 48, display:'inline-block' }}>
-                        <FormItem style={{ margin: 6 }} label='End' labelCol={{ span: 16 }} wrapperCol={{ span: 4 }}>
-                            <Tooltip title={"Insert end value"}>
-                                {getFieldDecorator(endName, {
-                                    rules: [{
-                                        required: true, message: "Field required!"
-                                    }, {
-                                        validator: this.validateEntryModule
-                                    }],
-                                    initialValue: endHolder
-                                })(
-                                    <Input style={{ width: 87.5, textAlign: 'center' }}
-                                        name={endName}
-                                        placeholder={endHolder}
-                                        onChange={this.handleEntryInputChange} />
-                                )}
-                            </Tooltip>
-                        </FormItem>
-                    </Col>
+                        <Col style={{ height: 48, display: 'inline-block' }}>
+                            <FormItem style={{ margin: 6 }} label='Start' labelCol={{ span: 12 }} wrapperCol={{ span: 4 }}>
+                                <Tooltip title={"Insert start value"}>
+                                    {getFieldDecorator(startName, {
+                                        rules: [{
+                                            required: true, message: "Field required!"
+                                        }, {
+                                            validator: this.validateEntryModule
+                                        }],
+                                        initialValue: startHolder
+                                    })(
+                                        <Input style={{ width: 87.5, textAlign: 'center' }}
+                                            name={startName}
+                                            placeholder={startHolder}
+                                            onChange={this.handleEntryInputChange} />
+                                    )}
+                                </Tooltip>
+                            </FormItem>
+                        </Col>
+                        <Col style={{ height: 48, display: 'inline-block' }}>
+                            <FormItem style={{ margin: 6 }} label='End' labelCol={{ span: 16 }} wrapperCol={{ span: 4 }}>
+                                <Tooltip title={"Insert end value"}>
+                                    {getFieldDecorator(endName, {
+                                        rules: [{
+                                            required: true, message: "Field required!"
+                                        }, {
+                                            validator: this.validateEntryModule
+                                        }],
+                                        initialValue: endHolder
+                                    })(
+                                        <Input style={{ width: 87.5, textAlign: 'center' }}
+                                            name={endName}
+                                            placeholder={endHolder}
+                                            onChange={this.handleEntryInputChange} />
+                                    )}
+                                </Tooltip>
+                            </FormItem>
+                        </Col>
                     </Row>
                 </InputGroup>
                 <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
@@ -234,7 +234,10 @@ class FormGenerator extends React.Component {
                     }],
                     initialValue: defValue
                 })(
-                    <Select style={{ width: 175 }} onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
+                    <Select
+                        dropdownMatchSelectWidth={false}
+                        style={{ width: 175 }}
+                        onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
                         {list.map(listElem => (
                             <Option key={listElem.name + listElem.value} value={listElem.value}>
                                 {listElem.name}
