@@ -9,7 +9,7 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "0.1",
+      "startholder": "20",
       "endholder": "200",
       "intervalType": "points",
       "stepDefaultValue": "1",
@@ -33,8 +33,8 @@
       "type": "input",
       "parameterName": "fluence_cm2",
       "label": "Fluence [1/cm2]",
-      "placeholder": "100000000",
-      "defaultValue": 100000000,
+      "placeholder": "1000000000",
+      "defaultValue": 1000000000,
       "asManyAsPoints": true,
       "description": "fluence in 1/cm2",
       "validations": {
