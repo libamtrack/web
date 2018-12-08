@@ -180,6 +180,10 @@
           "jsonConfigPath": "/DataRange/CSDARangeSingle.json"
         },
         {
+          "name": "CSDA Range Multi",
+          "jsonConfigPath": "/DataRange/CSDARangeMulti.json"
+        },
+        {
           "name": "CSDA Energy After Slab Single",
           "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabSingle.json"
         }

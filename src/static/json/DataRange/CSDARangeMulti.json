@@ -1,0 +1,66 @@
+{
+    "visibleName": "CSDA Range Multi",
+    "functionName": "AT_CSDA_range_g_cm2_multi",
+    "description": "Computes the CSDA range using the PSTAR data",
+    "plot": true,
+    "xTitle": "Initial energy [MeV/amu]",
+    "yTitle": "CSDA range [g/cm^2]",
+    "resultPrecision": 6,
+    "formItems": [
+        {
+            "type": "entry_module",
+            "parameterName": "E_initial_MeV_u",
+            "startholder": "0.1",
+            "endholder": "500",
+            "intervalType": "points",
+            "stepDefaultValue": "1",
+            "pointsDefaultNumber": "500",
+            "validations": {
+                "type": "float",
+                "min": "1e-6",
+                "max": "9000"
+            }
+        },
+        {
+            "type": "input",
+            "parameterName": "E_final_MeV_u",
+            "label": "Final Energy",
+            "placeholder": "Final energy",
+            "asManyAsPoints": true,
+            "defaultValue": 0,
+            "validations": {
+                "type": "float",
+                "min": "0",
+                "max": "1e4"
+            }
+        },
+        {
+            "type": "select",
+            "parameterName": "particle_no",
+            "label": "Particle",
+            "values": "particles",
+            "asManyAsPoints": true,
+            "defaultValue": 1001,
+            "description": "Choose particle type"
+        },
+        {
+            "type": "select",
+            "parameterName": "material_no",
+            "label": "Material",
+            "values": "materials",
+            "defaultValue": 1,
+            "description": "Choose material type"
+        }
+    ],
+    "moreOptions": {
+        "visible": true,
+        "defaultXAxisType": "linear",
+        "defaultYAxisType": "log"
+    },
+    "modals": {
+        "dataSeries": true,
+        "download": true,
+        "showDataSeries": true,
+        "deleteAll": true
+    }
+}
