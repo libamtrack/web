@@ -1,0 +1,51 @@
+{
+  "visibleName": "CSDA Energy After Slab Single",
+  "functionName": "AT_CSDA_energy_after_slab_E_MeV_u_single",
+  "description": "Computes the ion energy after transversing a slab of material using",
+  "plot": false,
+  "resultUnit": "MeV",
+  "formItems": [
+    {
+      "type": "input",
+      "parameterName": "E_initial_MeV_u",
+      "label": "Initial Energy [MeV/amu]",
+      "placeholder": "Initial energy",
+      "defaultValue": 5000,
+      "validations": {
+        "type": "float",
+        "min": "0",
+        "max": "1e4"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": false,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "defaultValue": 1,
+      "description": "Choose material type"
+    },
+    {
+      "type": "input",
+      "parameterName": "slab_thickness_m",
+      "label": "Slab thickness",
+      "placeholder": "Slab thickness",
+      "defaultValue": 2,
+      "description": "Thickness of slab to transversed",
+      "validations": {
+        "type": "float",
+        "min": "0",
+        "max": "1e4"
+      }
+    }
+  ]
+}

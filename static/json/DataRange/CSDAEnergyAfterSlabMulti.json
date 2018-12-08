@@ -1,0 +1,65 @@
+{
+    "visibleName": "CSDA Energy After Slab Multi",
+    "functionName": "AT_CSDA_energy_after_slab_E_MeV_u_multi",
+    "description": "Computes the ion energy after transversing a slab of material using Bethe stopping power and CSDA approach for many energies / particles",
+    "plot": true,
+    "xTitle": "Initial energy [MeV/amu]",
+    "yTitle": "CSDA Energy after slab [MeV/amu]",
+    "formItems": [
+        {
+            "type": "entry_module",
+            "parameterName": "E_initial_MeV_u",
+            "startholder": "1000",
+            "endholder": "2000",
+            "intervalType": "points",
+            "stepDefaultValue": "1",
+            "pointsDefaultNumber": "500",
+            "validations": {
+                "type": "float",
+                "min": "1e-6",
+                "max": "9000"
+            }
+        },
+        {
+            "type": "select",
+            "parameterName": "particle_no",
+            "label": "Particle",
+            "values": "particles",
+            "asManyAsPoints": true,
+            "defaultValue": 1001,
+            "description": "Choose particle type"
+        },
+        {
+            "type": "select",
+            "parameterName": "material_no",
+            "label": "Material",
+            "values": "materials",
+            "defaultValue": 1,
+            "description": "Choose material type"
+        },
+        {
+            "type": "input",
+            "parameterName": "slab_thickness_m",
+            "label": "Slab thickness",
+            "placeholder": "Slab thickness",
+            "defaultValue": 2,
+            "description": "Thickness of slab to transversed",
+            "validations": {
+                "type": "float",
+                "min": "0",
+                "max": "1e4"
+            }
+        }
+    ],
+    "moreOptions": {
+        "visible": true,
+        "defaultXAxisType": "linear",
+        "defaultYAxisType": "log"
+    },
+    "modals": {
+        "dataSeries": true,
+        "download": true,
+        "showDataSeries": true,
+        "deleteAll": true
+    }
+}
