@@ -4,17 +4,18 @@
     "description": "Computes the CSDA range using the PSTAR data",
     "plot": false,
     "resultUnit": "g/cm^2",
+    "resultPrecision": 6,
     "formItems": [
       {
         "type": "input",
         "parameterName": "E_initial_MeV_u",
         "label": "Initial Energy [MeV/amu]",
         "placeholder": "Initial energy",
-        "defaultValue": 0.1,
+        "defaultValue": 100,
         "validations": {
           "type": "float",
           "min": "0",
-          "max": "1000000000"
+          "max": "1e12"
         }
       },
       {
@@ -22,11 +23,11 @@
         "parameterName": "E_final_MeV_u",
         "label": "Final Energy [MeV/amu]",
         "placeholder": "Final energy",
-        "defaultValue": 10,
+        "defaultValue": 0,
         "validations": {
           "type": "float",
           "min": "0",
-          "max": "1000000000"
+          "max": "1e4"
         }
       },
       {
