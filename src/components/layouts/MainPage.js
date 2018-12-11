@@ -1,10 +1,10 @@
 import React from "react";
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
-import { Link, Route } from 'react-router-dom';
-import { Col, Layout, Row } from 'antd';
+import {Link, Route} from 'react-router-dom';
+import {Col, Layout, Row} from 'antd';
 import logo from '../../static/img/logo.png'
 import FunctionsView from '../layouts/FunctionsView.js';
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import {ListGroup, ListGroupItem} from "react-bootstrap";
 import SearchBox from "../functions/utils/SearchBox";
 
 const { Header, Content, Footer } = Layout;
@@ -27,7 +27,7 @@ class MainPage extends React.Component {
         this.state.categories.map(category => (
             category.functions.map(fun => (
                 routes.push(
-                    <Route key={fun.name + "RouteKey"} path={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')} render={() =>
+                    <Route key={fun.name + "RouteKey" + Math.random().toString(36).substring(7)} path={'/' + category.name.replace(/ /g, '') + '/' + fun.name.replace(/ /g, '')} render={() =>
                         <FunctionsView
                             openKey={category.name.replace(/ /g, '')}
                             selectedKey={category.name.replace(/ /g, '') + fun.name.replace(/ /g, '')}
