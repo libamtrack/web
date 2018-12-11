@@ -1,5 +1,5 @@
 {
-  "visibleName": "Gamma From Energy Single",
+  "visibleName": "Gamma From Energy",
   "functionName": "AT_gamma_from_E_single",
   "description": "Returns relativistic gamma for single value of energy",
   "plot": false,

@@ -1,7 +1,7 @@
 {
-  "visibleName": "Maximum electron ranges",
+  "visibleName": "Maximum electron range",
   "functionName": "AT_max_electron_ranges_m",
-  "description": "Returns the maximum electron range (track radius) in m for a given parametrization",
+  "description": "Returns the maximum electron range (track radius) for a given parametrization",
   "xTitle": "Energy [MeV]",
   "yTitle": "electron range (track radius) [m]",
   "plot": true,

@@ -1,11 +1,11 @@
 {
   "visibleName": "Radial dose distribution",
   "functionName": "AT_D_RDD_Gy",
-  "description": "TODO",
+  "description": "Dose distribution around ion track",
   "xTitle": "Distance [m]",
   "yTitle": "Dose [Gy]",
   "plot": true,
-  "unit": null,
+  "unit": "Gy",
   "formItems": [
     {
       "type": "entry_module",
@@ -62,10 +62,10 @@
     {
       "type": "input",
       "parameterName": "rdd_parameter",
-      "label": "Model parms:",
+      "label": "Model params:",
       "asManyAsPoints": false,
       "defaultValue": 0.00000001,
-      "description": "Choose RDD model"
+      "description": "Model parameter"
     },
     {
       "type": "select",
@@ -79,7 +79,7 @@
     {
       "type": "select",
       "parameterName": "stopping_power_source_no",
-      "label": "Source",
+      "label": "LET Source",
       "values": "stopping_power_source_no",
       "defaultValue": 1,
       "description": "Choose source type"

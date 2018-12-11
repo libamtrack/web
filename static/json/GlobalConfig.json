@@ -4,7 +4,7 @@
   "footerText": "LibamtrackWeb ©2018",
   "categories": [
     {
-      "name": "StoppingPower",
+      "name": "Energy And Momentum",
       "style": {
         "background": "#3727AA",
         "border": "3727AA",
@@ -15,12 +15,57 @@
       },
       "functions": [
         {
-          "name": "Mass stopping power",
-          "jsonConfigPath": "/StoppingPower/MassStoppingPowerWithNo.json"
+          "name": "Relativistic β from energy",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromE.json"
         },
         {
-          "name": "Stopping power",
+          "name": "Energy from relativistic β",
+          "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
+        },
+        {
+          "name": "Energy from relativistic  γ",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
+        },
+        {
+          "name": "Relativistic γ from energy",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
+        },
+        {
+          "name": "Energy from momentum",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
+        },
+        {
+          "name": "Momentum from energy",
+          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
+        }
+      ]
+    },
+    {
+      "name": "Particle range and stopping power",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
+      "functions": [
+        {
+          "name": "CSDA range of proton/ion",
+          "jsonConfigPath": "/DataRange/CSDARangeMulti.json"
+        },
+        {
+          "name": "Energy decrease passing slab of material",
+          "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabMulti.json"
+        },
+        {
+          "name": "Stopping power from energy",
           "jsonConfigPath": "/StoppingPower/StoppingPowerWithNo.json"
+        },
+        {
+          "name": "Dose from fluence and energy",
+          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluence.json"
         }
       ]
     },
@@ -38,134 +83,19 @@
         {
           "name": "Radial Dose Distribution",
           "jsonConfigPath": "/RDD/RDD.json"
-        }
-      ]
-    },
-    {
-      "name": "Physics",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "Effective Charge From Beta Barkas-Bethe Single",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBetaSingle.json"
         },
         {
-          "name": "Effective Charge From Beta Barkas-Bethe",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromBeta.json"
-        },
-        {
-          "name": "Increase Of Energy Straggling",
-          "jsonConfigPath": "/PhysicsRoutines/IncreaseEnergyStraggling.json"
-        },
-        {
-          "name": "Effective Charge From Energy Barkas-Bethe Single",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
-        },
-        {
-          "name": "Effective Charge From Energy Barkas-Bethe",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
-        },
-        {
-          "name": "Dose With Given Fluence And Energy Single",
-          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
-        },
-        {
-          "name": "Dose With Given Fluence And Energy",
-          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluence.json"
-        }
-      ]
-    },
-    {
-      "name": "Energy And Momentum",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "Beta From Energy Single",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
-        },
-        {
-          "name": "Beta From Energy",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromE.json"
-        },
-        {
-          "name": "Energy From Beta Single",
-          "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
-        },
-        {
-          "name": "Energy From Beta",
-          "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
-        },
-        {
-          "name": "Energy From Gamma Single",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
-        },
-        {
-          "name": "Energy From Gamma",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
-        },
-        {
-          "name": "Gamma From Energy Single",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
-        },
-        {
-          "name": "Gamma From Energy",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
-        },
-        {
-          "name": "Energy Of Particle With Given Momentum Single",
-          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
-        },
-        {
-          "name": "Energy Of Particle With Given Momentum",
-          "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
-        },
-        {
-          "name": "Relativistic Momentum Per Nucleon Of Particle Single",
-          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
-        },
-        {
-          "name": "Relativistic Momentum Per Nucleon Of Particle",
-          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
-        }
-      ]
-    },
-    {
-      "name": "Electron Range",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "Maximum Electron Ranges",
+          "name": "Track width",
           "jsonConfigPath": "/ElectronRange/MaxElectronRangesM.json"
         },
         {
-          "name": "Maximum Electron Range Single",
-          "jsonConfigPath": "/ElectronRange/MaxElectronRangeMSingle.json"
+          "name": "Ion effective charge",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
         }
       ]
     },
     {
-      "name": "Data Range",
+      "name": "Calculators",
       "style": {
         "background": "#3727AA",
         "border": "3727AA",
@@ -176,21 +106,50 @@
       },
       "functions": [
         {
-          "name": "CSDA Range Single",
+          "name": "CSDA range",
           "jsonConfigPath": "/DataRange/CSDARangeSingle.json"
         },
         {
-          "name": "CSDA Range Multi",
-          "jsonConfigPath": "/DataRange/CSDARangeMulti.json"
+          "name": "Effective Charge from energy",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
         },
         {
-          "name": "CSDA Energy After Slab Single",
+          "name": "β from energy",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
+        },
+        {
+          "name": "Energy from β",
+          "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
+        },
+        {
+          "name": "Energy From γ",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
+        },
+        {
+          "name": "γ From Energy",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
+        },
+        {
+          "name": "Energy from momentum",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
+        },
+        {
+          "name": "Momentum from energy",
+          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
+        },
+        {
+          "name": "Dose from fluence and energy",
+          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
+        },
+        {
+          "name": "CSDA Energy After Slab",
           "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabSingle.json"
         },
         {
-          "name": "CSDA Energy After Slab Multi",
-          "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabMulti.json"
+          "name": "Electron range",
+          "jsonConfigPath": "/ElectronRange/MaxElectronRangeMSingle.json"
         }
+
       ]
     }
   ],
