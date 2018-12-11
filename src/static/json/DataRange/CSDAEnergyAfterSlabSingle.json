@@ -1,7 +1,7 @@
 {
-  "visibleName": "CSDA Energy After Slab Single",
+  "visibleName": "Energy decrease passing slab",
   "functionName": "AT_CSDA_energy_after_slab_E_MeV_u_single",
-  "description": "Computes the ion energy after transversing a slab of material using",
+  "description": "The ion energy after passing a slab of material (CSDA approach, Bethe-Bloch stopping power)",
   "plot": false,
   "resultUnit": "MeV/amu",
   "formItems": [

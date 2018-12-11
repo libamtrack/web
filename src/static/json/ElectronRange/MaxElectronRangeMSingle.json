@@ -1,7 +1,7 @@
 {
-  "visibleName": "Maximum Electron Range Single",
+  "visibleName": "Maximum Electron Range",
   "functionName": "AT_max_electron_range_m",
-  "description": "Returns the maximum electron range (track diameter) in m for given energy",
+  "description": "Returns the maximum electron range (track diameter) for given energy",
   "plot": false,
   "resultUnit": "m",
   "formItems": [

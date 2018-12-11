@@ -1,7 +1,7 @@
 {
-  "visibleName": "Relativistic Momentum Per Nucleon Of Particle Single",
+  "visibleName": "Momentum from energy",
   "functionName": "AT_momentum_from_E_MeV_c_u_single",
-  "description": "Returns relativistic momentum (per nucleon) of particle",
+  "description": "Relativistic momentum as a function of kinetic energy",
   "resultUnit": "MeV/c",
   "plot": false,
   "formItems": [

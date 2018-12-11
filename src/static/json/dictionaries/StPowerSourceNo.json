@@ -1,9 +1,5 @@
 [
     {
-        "name": "FromFile",
-        "value": 0
-    },
-    {
         "name": "Bethe",
         "value": 1
     },

@@ -1,7 +1,7 @@
 {
-  "visibleName": "Energy Of Particle With Given Momentum Single",
+  "visibleName": "Energy from momentum",
   "functionName": "AT_E_MeV_u_from_momentum_single",
-  "description": "Returns energy per nucleon of particle with given momentum per nucleon",
+  "description": "Kinetic energy as a function of relativistic momentum",
   "resultUnit": "MeV",
   "plot": false,
   "formItems": [

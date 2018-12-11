@@ -1,9 +1,9 @@
 {
-  "visibleName": "Dose With Given Fluence And Energy Single",
+  "visibleName": "Dose from fluence and energy",
   "functionName": "AT_dose_Gy_from_fluence_cm2_single",
-  "description": "Returns dose in Gy for particle with given fluence and energy",
+  "description": "Entrance dose delivered by particles with given type, fluence and kinetic energy. Calculated assuming validity of track-segment condition.",
   "plot": false,
-  "unit": "Gy",
+  "resultUnit": "Gy",
   "formItems": [
     {
       "type": "input",

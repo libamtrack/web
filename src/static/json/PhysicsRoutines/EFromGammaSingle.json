@@ -1,14 +1,14 @@
 {
   "visibleName": "Energy From Gamma Single",
   "functionName": "AT_E_from_gamma_single",
-  "description": "Returns energy for single value of relativistic gamma",
+  "description": "Energy corresponding to relativistic γ",
   "resultUnit": "MeV",
   "plot": false,
   "formItems": [
     {
       "type": "input",
       "parameterName": "gamma",
-      "label": "Gamma",
+      "label": "γ",
       "placeholder": "Gamma",
       "defaultValue": 2,
       "validations": {
