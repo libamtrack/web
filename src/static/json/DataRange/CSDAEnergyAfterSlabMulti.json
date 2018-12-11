@@ -1,10 +1,10 @@
 {
-    "visibleName": "CSDA Energy After Slab Multi",
+    "visibleName": "Energy decrease passing slab",
     "functionName": "AT_CSDA_energy_after_slab_E_MeV_u_multi",
-    "description": "Computes the ion energy after transversing a slab of material using Bethe stopping power and CSDA approach for many energies / particles",
+    "description": "The ion energy after passing a slab of material (CSDA approach, Bethe-Bloch stopping power)",
     "plot": true,
-    "xTitle": "Initial energy [MeV/amu]",
-    "yTitle": "CSDA Energy after slab [MeV/amu]",
+    "xTitle": "Initial energy (before slab) [MeV/amu]",
+    "yTitle": "Final energy (after slab) [MeV/amu]",
     "formItems": [
         {
             "type": "entry_module",
@@ -26,7 +26,7 @@
             "label": "Slab thickness [m]",
             "placeholder": "Slab thickness [m]",
             "defaultValue": 0.02,
-            "description": "Thickness of slab to transversed",
+            "description": "Thickness of a slab",
             "validations": {
                 "type": "float",
                 "min": "0",

@@ -1,7 +1,7 @@
 {
-  "visibleName": "Relativistic Momentum Per Nucleon Of Particle",
+  "visibleName": "Momentum from energy",
   "functionName": "AT_momentum_MeV_c_u_from_E_MeV_u",
-  "description": "Returns relativistic momenta per nucleon for particles with given kinetic energy",
+  "description": "Relativistic momentum as a function of kinetic energy",
   "xTitle": "Energy [MeV/amu]",
   "yTitle": "Momentum [MeV/c/amu]",
   "plot": true,
@@ -28,8 +28,8 @@
   ],
   "moreOptions": {
     "visible": true,
-    "defaultXAxisType": "log",
-    "defaultYAxisType": "log"
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear"
   },
   "modals": {
     "dataSeries": true,

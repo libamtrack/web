@@ -1,8 +1,8 @@
 {
-  "visibleName": "Energy Of Particle With Given Momentum",
+  "visibleName": "Energy from momentum",
   "functionName": "AT_E_MeV_u_from_momentum_MeV_c_u",
-  "description": "Returns energy per nucleon for particles with given momentum per nucleon",
-  "xTitle": "Momentum Per Nucleon [MeV/c/amu]",
+  "description": "Kinetic energy as a function of relativistic momentum",
+  "xTitle": "Momentum [MeV/c/amu]",
   "yTitle": "Energy [MeV/amu]",
   "plot": true,
   "formItems": [

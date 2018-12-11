@@ -1,9 +1,9 @@
 {
   "visibleName": "Gamma From Energy",
   "functionName": "AT_gamma_from_E",
-  "description": "Returns relativistic gamma",
+  "description": "Relativistic γ from energy",
   "xTitle": "Energy[MeV]",
-  "yTitle": "Gamma",
+  "yTitle": "γ",
   "plot": true,
   "formItems": [
     {
