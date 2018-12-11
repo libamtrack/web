@@ -1,9 +1,9 @@
 {
-  "visibleName": "Energy From Beta",
+  "visibleName": "Energy from relativistic β",
   "functionName": "AT_E_from_beta",
-  "description": "Returns energy per nucleon of particle with relativistic speed beta",
-  "xTitle": "beta",
-  "yTitle": "Energy [MeV]",
+  "description": "Returns energy per nucleon of particle with relativistic speed β (v/c)",
+  "xTitle": "β (v/c)",
+  "yTitle": "Energy [MeV/amu]",
   "plot": true,
   "formItems": [
     {
