@@ -1,10 +1,10 @@
 {
-  "visibleName": "CSDA Range Single",
+  "visibleName": "CSDA Range of proton or ion",
   "functionName": "AT_CSDA_range_g_cm2_single",
-  "description": "Computes the CSDA range using the PSTAR data",
+  "description": "CSDA range using the PSTAR stopping power data. It is possible to calculate a range until final energy is reached, instead of until full particle stop.",
   "plot": false,
   "resultUnit": "g/cm^2",
-  "resultPrecision": 6,
+  "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",
