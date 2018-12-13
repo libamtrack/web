@@ -4,6 +4,7 @@
   "description": "Kinetic energy as a function of relativistic momentum",
   "resultUnit": "MeV",
   "plot": false,
+  "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",

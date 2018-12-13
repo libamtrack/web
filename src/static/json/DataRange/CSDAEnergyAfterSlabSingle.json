@@ -4,6 +4,7 @@
   "description": "The ion energy after passing a slab of material (CSDA approach, Bethe-Bloch stopping power)",
   "plot": false,
   "resultUnit": "MeV/amu",
+  "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",
