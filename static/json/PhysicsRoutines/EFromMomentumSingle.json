@@ -3,6 +3,7 @@
   "functionName": "AT_E_MeV_u_from_momentum_single",
   "description": "Kinetic energy as a function of relativistic momentum",
   "resultUnit": "MeV",
+  "resultPrecision": 2,
   "plot": false,
   "formItems": [
     {
