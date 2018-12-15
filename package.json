@@ -41,7 +41,7 @@
   "author": "Arkadiusz Dudzik & Piotr Zmilczak",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "7.1.5",
+    "@babel/cli": "7.2.0",
     "@babel/core": "7.1.6",
     "babel-loader": "8.0.4",
     "@babel/plugin-proposal-class-properties": "7.0.0",
