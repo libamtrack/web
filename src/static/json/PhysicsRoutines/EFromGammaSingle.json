@@ -3,6 +3,7 @@
   "functionName": "AT_E_from_gamma_single",
   "description": "Energy corresponding to relativistic γ",
   "resultUnit": "MeV",
+  "resultPrecision": 3,
   "plot": false,
   "formItems": [
     {
