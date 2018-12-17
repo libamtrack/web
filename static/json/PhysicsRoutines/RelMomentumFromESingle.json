@@ -4,6 +4,7 @@
   "description": "Relativistic momentum as a function of kinetic energy",
   "resultUnit": "MeV/c",
   "plot": false,
+  "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",

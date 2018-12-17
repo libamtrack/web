@@ -5,6 +5,7 @@
   "resultUnit": "MeV",
   "resultPrecision": 2,
   "plot": false,
+  "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",
