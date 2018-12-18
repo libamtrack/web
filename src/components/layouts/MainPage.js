@@ -101,7 +101,7 @@ class MainPage extends React.Component {
                             </Row>
                             <Row key={3} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
                                 {categoriesForColumns.map((colums, index) => (
-                                    <Col span={6} key={index} style={{ paddingLeft: 50, width: 350}}>
+                                    <Col span={6} key={index} style={{ paddingLeft: 10, width: 350}}>
                                         {colums.map(category => (
                                             <ListGroup align="center" style={{ paddingBottom: 50 }} key={category.name + "ListGroup"}>
                                                 <ListGroupItem active align="center"
