@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - "node"
 
+if: $TRAVIS_BRANCH =~ ^feature
+  - sed -i '6s/.*/\"homepage\": \"https://libamtrack.github.io/web_dev\",/' package.json
+  - cat package.json
+
 install:
   - npm install
 script:
