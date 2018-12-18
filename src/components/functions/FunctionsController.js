@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { Breadcrumb, Col, Icon, Row, Spin, Tooltip } from 'antd';
+import React, {Component} from 'react';
+import {Breadcrumb, Col, Icon, Row, Spin, Tooltip} from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import { getDataSeriesName, prepareDataToCalculate, preparePoints } from './utils/helpers';
+import {getDataSeriesName, prepareDataToCalculate, preparePoints} from './utils/helpers';
 import packageJson from '../../../package.json';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 export default class FunctionsController extends Component {
     state = {
@@ -68,6 +68,10 @@ export default class FunctionsController extends Component {
                 }
             })
             .then(this.generateContent)
+    }
+
+    componentDidUpdate(props,state,root) {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub,root]);
     }
 
     componentWillUnmount() {

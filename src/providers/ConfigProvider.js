@@ -8,6 +8,6 @@ async function parseJSON(jsonFile) {
 }
 
 export default async function getConfigurationFromJSON(jsonPath) {
-    return parseJSON((window.location.href.includes("localhost") ? "/" : packageJson.homepage) + "/" + jsonPath)
+    return parseJSON((window.location.href.includes("localhost") ? "/" : (packageJson.homepage + "/")) + jsonPath)
         .catch(e => e.console.error(e));
 }
