@@ -3,7 +3,7 @@ node_js:
   - "node"
 
 install:
-  - if [[ $TRAVIS_BRANCH =~ (^feature) ]]; sed -i '6s/web/web_dev/' package.json; cat package.json; fi
+  - if [[ $TRAVIS_BRANCH =~ (^feature) ]]; then sed -i '6s/web/web_dev/' package.json; cat package.json; fi;
   - npm install
 script:
   - npm run build
