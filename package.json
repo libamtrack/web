@@ -39,7 +39,7 @@
     "auxiliary"
   ],
   "author": "Arkadiusz Dudzik & Piotr Zmilczak",
-  "license": "GNU General Public License v3.0",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@babel/cli": "7.2.0",
     "@babel/core": "7.2.2",

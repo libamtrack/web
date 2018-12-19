@@ -14,12 +14,14 @@ const PlotComponent = (props) => {
                         xaxis: {
                             title: props.xTitle,
                             type: props.xType,
-                            exponentformat: 'power'
+                            exponentformat: 'power',
+                            automargin: true
                         },
                         yaxis: {
                             title: props.yTitle,
                             type: props.yType,
-                            exponentformat: 'power'
+                            exponentformat: 'power',
+                            automargin: true
                         }
                     }}
                     config={{displayModeBar: true}}
