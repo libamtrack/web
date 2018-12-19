@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import { Breadcrumb, Col, Icon, Row, Spin, Tooltip } from 'antd';
+import React, {Component} from 'react';
+import {Breadcrumb, Col, Icon, Row, Spin, Tooltip} from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import { getDataSeriesName, prepareDataToCalculate, preparePoints } from './utils/helpers';
+import {getDataSeriesName, prepareDataToCalculate, preparePoints} from './utils/helpers';
 import packageJson from '../../../package.json';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
+import Script from 'react-load-script'
 
 export default class FunctionsController extends Component {
     state = {
@@ -70,6 +71,12 @@ export default class FunctionsController extends Component {
             .then(this.generateContent)
     }
 
+    componentDidUpdate(props,state,root) {
+        try {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, root]);
+        } catch (e) {}
+    }
+
     componentWillUnmount() {
         if (this._asyncRequest) {
             this._asyncRequest = null;
@@ -79,6 +86,11 @@ export default class FunctionsController extends Component {
     generateContent = () => {
         let componentToRender = (
             <div>
+                {this.state.json.isMathJaxSupported && this.state.json.isMathJaxSupported === true ? (
+                    <Script url="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"/>
+                ) : null
+                }
+
                 <h3>{this.state.json.visibleName.concat(" ")}
                     <a href={packageJson.repository.concat("/edit/master/src/".concat(this.props.jsonPath))}>
                         <Tooltip title="Edit this page on GitHub!">
