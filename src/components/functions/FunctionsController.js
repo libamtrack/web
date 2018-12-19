@@ -86,7 +86,7 @@ export default class FunctionsController extends Component {
     generateContent = () => {
         let componentToRender = (
             <div>
-                {this.state.json.isMathJaxSupport && this.state.json.isMathJaxSupport === true ? (
+                {this.state.json.isMathJaxSupported && this.state.json.isMathJaxSupported === true ? (
                     <Script url="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"/>
                 ) : null
                 }
