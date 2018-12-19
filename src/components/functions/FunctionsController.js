@@ -71,6 +71,12 @@ export default class FunctionsController extends Component {
             .then(this.generateContent)
     }
 
+    componentDidUpdate(props,state,root) {
+        try {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, root]);
+        } catch (e) {}
+    }
+
     componentWillUnmount() {
         if (this._asyncRequest) {
             this._asyncRequest = null;
