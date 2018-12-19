@@ -8,7 +8,7 @@
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy \\(\\frac{MeV}{amu}\\)",
+      "label": "Energy \\(\\frac{\\mathrm{MeV}}{\\mathrm{amu}}\\)",
       "defaultValue": 10,
       "validations": {
         "type": "float",
