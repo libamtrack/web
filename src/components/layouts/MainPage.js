@@ -1,11 +1,11 @@
 import React from "react";
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
 import {Link, Route} from 'react-router-dom';
-import {Col, Layout, Row} from 'antd';
+import {Col, ListGroup, ListGroupItem} from 'react-bootstrap';
 import logo from '../../static/img/logo.png'
 import FunctionsView from '../layouts/FunctionsView.js';
-import {ListGroup, ListGroupItem} from "react-bootstrap";
 import SearchBox from "../functions/utils/SearchBox";
+import {Layout, Row} from "antd";
 
 const { Header, Content, Footer } = Layout;
 
@@ -101,7 +101,7 @@ class MainPage extends React.Component {
                             </Row>
                             <Row key={3} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
                                 {categoriesForColumns.map((colums, index) => (
-                                    <Col span={6} key={index}>
+                                    <Col span={6} key={index} style={{ paddingLeft: 10, width: 350}}>
                                         {colums.map(category => (
                                             <ListGroup align="center" style={{ paddingBottom: 50 }} key={category.name + "ListGroup"}>
                                                 <ListGroupItem active align="center"
@@ -141,9 +141,7 @@ class MainPage extends React.Component {
                         {/*LOGO*/}
                         <Header key={"logoHeader"} style={{ background: "#fff", height: "200px" }}>
                             <Row key={"logoRow"} type='flex' gutter={8} align="center">
-                                <Col key={"logoCol"}>
-                                    <img key={"logoImg"} src={logo} align="center" className="App-logo" alt="logo" />
-                                </Col>
+                                <img key={"logoImg"} src={logo} align="center" className="App-logo" alt="logo" />
                             </Row>
                         </Header>
                         <Content key={"mainPageContent"} style={{ padding: '0 75px', background: '#fff' }}>
