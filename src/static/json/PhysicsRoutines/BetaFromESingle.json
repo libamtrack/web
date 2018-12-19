@@ -4,6 +4,7 @@
   "description": "Relativistic speed β \\(\\frac{v}{c}\\) of particle as a function of energy per nucleon",
   "plot": false,
   "resultPrecision": 4,
+  "isMathJaxSupport": true,
   "formItems": [
     {
       "type": "input",
