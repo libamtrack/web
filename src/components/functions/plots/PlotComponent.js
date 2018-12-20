@@ -24,7 +24,7 @@ const PlotComponent = (props) => {
                             automargin: true
                         }
                     }}
-                    config={{displayModeBar: true}}
+                    config={{displayModeBar: true, showSendToCloud: true}}
                 /><br/>
             </div>
         );
