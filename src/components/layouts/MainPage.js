@@ -14,6 +14,7 @@ class MainPage extends React.Component {
         applicationTile: "",
         introText: "",
         footerText: "",
+        deployInfo: "",
         categories: [],
         funs: [],
         rows: "",
@@ -67,6 +68,8 @@ class MainPage extends React.Component {
                     this.state.categories = confData.categories;
                     this.state.introText = confData.introText;
                     this.state.footerText = confData.footerText;
+                    this.state.deployInfo = "Deploy date: " + confData.deployDate + " from branch: "
+                        + confData.deployBranch + " and commit number: " + confData.deployCommit;
                     this.state.dictionariesPaths = confData.dictionaries;
                 })
             .then(this.getDictionaries)
@@ -101,7 +104,7 @@ class MainPage extends React.Component {
                             </Row>
                             <Row key={3} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
                                 {categoriesForColumns.map((colums, index) => (
-                                    <Col span={6} key={index} style={{ paddingLeft: 10, width: 350}}>
+                                    <Col span={6} key={index} style={{ paddingLeft: 10, width: 320}}>
                                         {colums.map(category => (
                                             <ListGroup align="center" style={{ paddingBottom: 50 }} key={category.name + "ListGroup"}>
                                                 <ListGroupItem active align="center"
@@ -148,7 +151,8 @@ class MainPage extends React.Component {
                             {this.state.rows}
                         </Content>
                         <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
-                            {this.state.footerText}
+                            <Row>{this.state.footerText}</Row>
+                            <Row>{this.state.deployInfo}</Row>
                         </Footer>
                     </Layout>
                 )} />
