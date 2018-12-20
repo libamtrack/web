@@ -59,7 +59,7 @@ export default class ModalController extends React.Component {
 
         this.setState({ dataToSave: prepareDataToSave(dataSeries, this.props.functionName) });
         this.setModalVisible("downloadModalVisible", true);
-        
+
         this.setModalVisible("dataSeriesModalVisible", true);
     };
 
@@ -73,7 +73,7 @@ export default class ModalController extends React.Component {
     };
 
     showRenameModal = (name) => {
-        this.setState({dataSeriesNameToChange: name});
+        this.setState({ dataSeriesNameToChange: name });
         this.setModalVisible("changeNameModalVisible", true);
     }
 
@@ -131,7 +131,7 @@ export default class ModalController extends React.Component {
                                         <ChangeSeriesNameModal modalVisible={this.state.changeNameModalVisible}
                                             setModalVisible={this.setModalVisible}
                                             currentDataName={this.state.dataSeriesNameToChange}
-                                            renameDataSeries={(oldName, newName) => 
+                                            renameDataSeries={(oldName, newName) =>
                                                 this.setState({ dataSeriesNameToChange: oldName }, () => this.renameDataSeries(oldName, newName))}
                                             name={"changeNameModalVisible"}
                                         />

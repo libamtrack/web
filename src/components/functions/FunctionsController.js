@@ -9,6 +9,7 @@ import * as FunctionsFromC from '../../functionsFromC/';
 import { getDataSeriesName, prepareDataToCalculate, preparePoints } from './utils/helpers';
 import packageJson from '../../../package.json';
 import { Link } from "react-router-dom";
+import ErrorModal from "./modals/ErrorModal";
 
 export default class FunctionsController extends Component {
     state = {
@@ -29,7 +30,8 @@ export default class FunctionsController extends Component {
             yType: ""
         },
         singleResult: 0,
-        parametersRules: {}
+        parametersRules: {},
+        isError: false
     };
 
     componentDidMount() {
@@ -255,55 +257,75 @@ export default class FunctionsController extends Component {
     };
 
     calculateSingleResult = () => {
-        const fun = FunctionsFromC[this.state.json.functionName];
-        this.setState({ singleResult: fun(this.state.formData) });
+        try {
+            const fun = FunctionsFromC[this.state.json.functionName];
+
+            if (typeof fun === undefined) {
+                alert("Cannot find function with name: " + this.state.json.functionName);
+                return;
+            }
+
+            this.setState({ singleResult: fun(this.state.formData) });
+        } catch (error) {
+            this.setState({ isError: true });
+        }
     };
 
     calculate = () => {
-        const fun = FunctionsFromC[this.state.json.functionName];
-        let newDataSeries = this.state.dataSeries;
+        try {
+            const fun = FunctionsFromC[this.state.json.functionName];
 
-        let generatedPoints = preparePoints(
-            this.state.formData.start,
-            this.state.formData.end,
-            this.state.formData.pointsNo,
-            this.state.formData.intervalType
-        );
+            if (typeof fun === undefined) {
+                alert("Cannot find function with name: " + this.state.json.functionName);
+                return;
+            }
 
-        let data = generatedPoints.lin;
-        let dataLinear = this.state.dataLinear;
-        dataLinear.push(data);
+            let newDataSeries = this.state.dataSeries;
 
-        let dataP = generatedPoints.log;
-        let dataPower = this.state.dataPower;
-        dataPower.push(dataP);
+            let generatedPoints = preparePoints(
+                this.state.formData.start,
+                this.state.formData.end,
+                this.state.formData.pointsNo,
+                this.state.formData.intervalType
+            );
 
-        let res = fun(prepareDataToCalculate(this.state.entryName, data, this.state.formData, this.state.parametersRules));
-        let resLinear = this.state.resultLinear;
-        resLinear.push(res);
+            let data = generatedPoints.lin;
+            let dataLinear = this.state.dataLinear;
+            dataLinear.push(data);
 
-        let resP = fun(prepareDataToCalculate(this.state.entryName, dataP, this.state.formData, this.state.parametersRules));
-        let resPower = this.state.resultPower;
-        resPower.push(resP);
+            let dataP = generatedPoints.log;
+            let dataPower = this.state.dataPower;
+            dataPower.push(dataP);
 
-        const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
-        this.state.dataSeriesNames.push(dataSeriesName);
+            let res = fun(prepareDataToCalculate(this.state.entryName, data, this.state.formData, this.state.parametersRules));
+            let resLinear = this.state.resultLinear;
+            resLinear.push(res);
 
-        newDataSeries.push({
-            x: this.state.plot.xType === 'log' ? dataP : data,
-            y: this.state.plot.xType === 'log' ? resP : res,
-            name: dataSeriesName,
-            type: 'scatter',
-            mode: this.state.plot.plotType
-        });
+            let resP = fun(prepareDataToCalculate(this.state.entryName, dataP, this.state.formData, this.state.parametersRules));
+            let resPower = this.state.resultPower;
+            resPower.push(resP);
 
-        this.setState({
-            dataSeries: newDataSeries,
-            dataLinear: dataLinear,
-            resultLinear: resLinear,
-            dataPower: dataPower,
-            resultPower: resPower
-        });
+            const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
+            this.state.dataSeriesNames.push(dataSeriesName);
+
+            newDataSeries.push({
+                x: this.state.plot.xType === 'log' ? dataP : data,
+                y: this.state.plot.xType === 'log' ? resP : res,
+                name: dataSeriesName,
+                type: 'scatter',
+                mode: this.state.plot.plotType
+            });
+
+            this.setState({
+                dataSeries: newDataSeries,
+                dataLinear: dataLinear,
+                resultLinear: resLinear,
+                dataPower: dataPower,
+                resultPower: resPower
+            });
+        } catch (error) {
+            this.setState({ isError: true });
+        }
     };
 
     render() {
@@ -340,6 +362,11 @@ export default class FunctionsController extends Component {
                 <Row type='flex' gutter={8} align='top'>
                     {this.state.loading ? <Spin spinning={this.state.loading} /> : resultComp}
                 </Row>
+                <ErrorModal modalVisible={this.state.isError}
+                    setModalVisible={(value) => this.setState({ isError: value })}
+                    functionName={this.state.json.functionName}
+                    parameters={this.state.formData}
+                />
             </div>
         );
     }
