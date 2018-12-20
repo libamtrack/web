@@ -4,7 +4,7 @@ node_js:
 
 install:
   - if [[ $TRAVIS_BRANCH =~ (^feature) ]]; then sed -i '6s/web/web_dev/' package.json; fi;
-  - set TZ=Europe/Warsaw
+  - TZ=Europe/Warsaw
   - current_date_time="`date`"
   - sed -i 's/NO_DEPLOY_DATE/'"$current_date_time"'/' ./src/static/json/GlobalConfig.json
   - sed -i 's~NO_DEPLOY_BRANCH~'"$TRAVIS_BRANCH"'~' ./src/static/json/GlobalConfig.json
