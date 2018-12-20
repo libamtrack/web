@@ -178,5 +178,8 @@
       "name": "er_models",
       "jsonConfigPath": "/dictionaries/ERModels.json"
     }
-  ]
+  ],
+  "deployDate":"NO_DEPLOY_DATE",
+  "deployBranch":"NO_DEPLOY_BRANCH",
+  "deployCommit":"NO_DEPLOY_COMMIT"
 }

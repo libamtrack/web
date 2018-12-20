@@ -1,4 +1,5 @@
 import readData from "./DataProvider.js";
+import packageJson from '../../package.json';
 
 async function parseJSON(jsonFile) {
     const json = await readData(jsonFile);
@@ -7,6 +8,6 @@ async function parseJSON(jsonFile) {
 }
 
 export default async function getConfigurationFromJSON(jsonPath) {
-    return parseJSON((window.location.href.includes("localhost") ? "/" : "/web/") + jsonPath)
+    return parseJSON((window.location.href.includes("localhost") ? "/" : (packageJson.homepage + "/")) + jsonPath)
         .catch(e => e.console.error(e));
 }
