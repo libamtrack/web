@@ -20,15 +20,15 @@
     },
     {
       "type": "input",
-      "parameterName": "slab_thickness_m",
-      "label": "Slab thickness [m]",
-      "placeholder": "Slab thickness[m]",
-      "defaultValue": 0.03,
+      "parameterName": "slab_thickness_cm",
+      "label": "Slab thickness [cm]",
+      "placeholder": "Slab thickness[cm]",
+      "defaultValue": 3.0,
       "description": "Thickness of slab",
       "validations": {
         "type": "float",
-        "min": "0",
-        "max": "1e4"
+        "min": "1e-7",
+        "max": "1e5"
       }
     },
     {
