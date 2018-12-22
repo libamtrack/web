@@ -62,7 +62,7 @@
     "style-loader": "0.23.1",
     "webpack": "4.28.2",
     "webpack-cli": "3.1.2",
-    "webpack-dev-server": "3.1.12"
+    "webpack-dev-server": "3.1.13"
   },
   "dependencies": {
     "@axetroy/react-download": "1.1.1",
