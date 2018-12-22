@@ -23,11 +23,12 @@ export default function AT_CSDA_energy_after_slab_E_MeV_u_single(parameters) {
 	let material_no = parameters.material_no;
 
 	/*********************STANDARD PARAMETER*************************/
-	if(typeof parameters.slab_thickness_m === "undefined"){
-		 alert("MESSAGE TO DEVELOPER: NO PARAMETER slab_thickness_m IN OBJECT PASSED TO THIS FUNCTIONS");
+	if(typeof parameters.slab_thickness_cm === "undefined"){
+		 alert("MESSAGE TO DEVELOPER: NO PARAMETER slab_thickness_cm IN OBJECT PASSED TO THIS FUNCTIONS");
 		 return "error";
 	}
-	let slab_thickness_m = parameters.slab_thickness_m;
+	// convertin from user friendly [cm] to [m] required by libamtrack
+	let slab_thickness_m = 0.01 * parameters.slab_thickness_cm;
 
 	/*********************CALL FUNCTION******************************/
 	let result = at_csda_energy_after_slab_e_mev_u_single(E_initial_MeV_u, particle_no, material_no, slab_thickness_m);
