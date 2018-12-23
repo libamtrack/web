@@ -7,8 +7,51 @@
     <link rel="shortcut icon" href="static/img/favicon.ico">
     <title>LibamtrackWeb</title>
 </head>
-<body>
+<script type="text/javascript">
+    let loadScript = function (src, callbackfn) {
+        let newScript = document.createElement("script");
+        newScript.type = "text/javascript";
+        newScript.setAttribute("async", "true");
+        newScript.setAttribute("src", src);
+
+        if (newScript.readyState) {
+            newScript.onreadystatechange = function () {
+                if (/loaded|complete/.test(newScript.readyState)) callbackfn();
+            }
+        } else {
+            newScript.addEventListener("load", callbackfn, false);
+        }
+
+        document.documentElement.firstChild.appendChild(newScript);
+    };
+
+    function detectBrowserSupport() {
+        let notSupportedMsg = "You browser is not supported";
+        let libatPath = 'static/js/libat.js';
+        let libatWithoutWasmPath = 'static/js/libatwithoutwasm.js';
+        if(navigator.userAgent.indexOf('MSIE')!==-1 || navigator.appVersion.indexOf('Trident/') > -1){
+            /* Microsoft Internet Explorer*/
+            let ua = navigator.appVersion;
+            if (ua.indexOf("Trident/7.0") > -1)
+                loadScript(libatWithoutWasmPath, null); //IE 11
+            else if (ua.indexOf("Trident/6.0") > -1)
+                loadScript(libatWithoutWasmPath, null); //IE 10 NOT TESTED
+            else if (ua.indexOf("Trident/5.0") > -1)
+                loadScript(libatWithoutWasmPath, null); //IE 9 NOT TESTED
+            else if (ua.indexOf("Trident/4.0") > -1)
+                loadScript(libatWithoutWasmPath, null); //IE 8 NOT TESTED
+            else if (ua.indexOf("Trident/3.0") > -1)
+                loadScript(libatWithoutWasmPath, null); //IE 7 NOT TESTED
+            else
+                window.alert(notSupportedMsg);  // IE < 7 FOR SURE NOT COMPATIBLE
+        } else {
+            /* NOT Microsoft Internet Explorer*/
+            loadScript(libatPath, null);
+        }
+    }
+</script>
+<body onload="detectBrowserSupport()">
+<script id="js" src="" ></script>
 <div id="index"></div>
-<script src="static/js/libat.js"></script>
 <script type="text/javascript" src="bundle.js"></script></body>
 </html>
