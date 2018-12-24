@@ -33,19 +33,20 @@
             /* Microsoft Internet Explorer*/
             let ua = navigator.appVersion;
             if (ua.indexOf("Trident/7.0") > -1)
-                loadScript(libatWithoutWasmPath, null); //IE 11
-            else if (ua.indexOf("Trident/6.0") > -1)
-                loadScript(libatWithoutWasmPath, null); //IE 10 NOT TESTED
-            else if (ua.indexOf("Trident/5.0") > -1)
-                loadScript(libatWithoutWasmPath, null); //IE 9 NOT TESTED
-            else if (ua.indexOf("Trident/4.0") > -1)
-                loadScript(libatWithoutWasmPath, null); //IE 8 NOT TESTED
-            else if (ua.indexOf("Trident/3.0") > -1)
-                loadScript(libatWithoutWasmPath, null); //IE 7 NOT TESTED
+                loadScript(libatWithoutWasmPath, null); //IE 11 WORKS
             else
-                window.alert(notSupportedMsg);  // IE < 7 FOR SURE NOT COMPATIBLE
+                window.alert(notSupportedMsg);  // IE < 11 FOR SURE NOT COMPATIBLE (JS version)
+        } else if(navigator.userAgent.indexOf('Chrom') !== -1){
+            /* Chrome or Chromium*/
+            let chromeVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2], 10);
+            if(chromeVersion >= 57)
+                loadScript(libatPath, null);
+            else if (chromeVersion >= 41)
+                loadScript(libatWithoutWasmPath, null);
+            else
+                window.alert(notSupportedMsg);
         } else {
-            /* NOT Microsoft Internet Explorer*/
+            /* NOT Microsoft Internet Explorer or Chrome*/
             loadScript(libatPath, null);
         }
     }
