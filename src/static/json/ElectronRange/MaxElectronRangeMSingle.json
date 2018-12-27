@@ -1,20 +1,21 @@
 {
-  "visibleName": "Maximum Electron Range",
+  "visibleName": "Track width",
   "functionName": "AT_max_electron_range_m",
-  "description": "Returns the maximum electron range (track diameter) for given energy",
+  "description": "Returns the track width defined as maximum range of delta electron created by ion of given energy",
   "plot": false,
-  "resultUnit": "m",
+  "resultUnit": "um",
+  "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy [MeV]",
+      "label": "Ion energy [MeV/amu]",
       "placeholder": "10",
-      "defaultValue": 0.01,
+      "defaultValue": 10.0,
       "validations": {
         "type": "float",
-        "min": "0.000000000001",
-        "max": "10000000000000"
+        "min": "0.000001",
+        "max": "1000000"
       }
     },
     {
@@ -28,7 +29,7 @@
     },{
       "type": "select",
       "parameterName": "er_model",
-      "label": "ER model",
+      "label": "Parametrisation",
       "values": "er_models",
       "asManyAsPoints": false,
       "defaultValue": 7,
