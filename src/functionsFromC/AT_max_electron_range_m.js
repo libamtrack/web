@@ -1,5 +1,6 @@
 export default function AT_max_electron_range_m(parameters) {
 	console.log(parameters);
+	/** electron range as function of electron energy, material type and parametrization model **/
 	let at_max_electron_range_m = Module.cwrap('AT_max_electron_range_m', 'number', ['number', 'number', 'number']);
 
 	/*********************STANDARD PARAMETER*************************/
@@ -24,7 +25,8 @@ export default function AT_max_electron_range_m(parameters) {
 	let er_model = parameters.er_model;
 
 	/*********************CALL FUNCTION******************************/
-	let result = at_max_electron_range_m(E_MeV_u, material_no, er_model);
+	/** convert units from [m] to [um] **/
+	let result = 1e6 * at_max_electron_range_m(E_MeV_u, material_no, er_model);
 
 
 	return result;

@@ -146,7 +146,7 @@
           "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabSingle.json"
         },
         {
-          "name": "Electron range",
+          "name": "Track width",
           "jsonConfigPath": "/ElectronRange/MaxElectronRangeMSingle.json"
         }
 
