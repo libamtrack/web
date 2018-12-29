@@ -280,7 +280,7 @@ class FormGenerator extends React.Component {
             const fValue = parseFloat(value);
 
             if (!regObj.test(value)) {
-                callback("Bad value!");
+                callback("Incorrect format!");
             }
 
             if (validationRules.min && fValue < parseFloat(validationRules.min)) {
@@ -311,15 +311,15 @@ class FormGenerator extends React.Component {
             const fValue = parseFloat(value);
 
             if (!regObj.test(value)) {
-                callback("Bad value!");
+                callback("Incorrect format!");
             }
 
             if (validationRules.min && fValue < parseFloat(validationRules.min)) {
-                callback("Bad value!");
+                callback("Minimum value is: " + validationRules.min);
             }
 
             if (validationRules.max && fValue > parseFloat(validationRules.max)) {
-                callback("Bad value!");
+                callback("Maximum value is: " + validationRules.max);
             }
         }
 
