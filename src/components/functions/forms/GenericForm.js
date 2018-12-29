@@ -53,8 +53,6 @@ class FormGenerator extends React.Component {
         switch (item.type.toLowerCase()) {
             case 'entry_module':
                 return this.createEntryModule(item);
-            case 'plot_type':
-                return this.createPlotTypeItem(item);
             case 'input':
                 generatedItem = this.createSingleInputItem(item);
                 break;
@@ -165,24 +163,6 @@ class FormGenerator extends React.Component {
                 </FormItem>
             </div>
         );
-    };
-
-    createPlotTypeItem = (item) => {
-        if (item.visible && item.visible === true) {
-            let defValue = item.defaultValue ? item.defaultValue : "markers";
-            defValue = defValue === "points" ? "markers" : "lines";
-
-            return (
-                <FormItem style={{ margin: 6 }} label={'Plot as'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
-                    <Tooltip title={"Choose plot type"} placement={"right"}>
-                        <RadioGroup onChange={this.props.handlePlotTypeChange} defaultValue={defValue}>
-                            <RadioButton style={{ width: 87.5 }} value='lines'>Line</RadioButton>
-                            <RadioButton style={{ width: 87.5 }} value='markers'>Points</RadioButton>
-                        </RadioGroup>
-                    </Tooltip>
-                </FormItem>
-            );
-        }
     };
 
     createSingleInputItem = (item) => {

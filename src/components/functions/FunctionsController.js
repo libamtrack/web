@@ -46,6 +46,7 @@ export default class FunctionsController extends Component {
                 if (this.state.json.moreOptions) {
                     this.state.plot.xType = this.state.json.moreOptions.defaultXAxisType === 'log' ? 'log' : 'linear';
                     this.state.plot.yType = this.state.json.moreOptions.defaultYAxisType === 'log' ? 'log' : 'linear';
+                    this.state.plot.plotType = this.state.json.moreOptions.plotType === "points" ? "markers" : "lines";
                 }
 
                 for (let i = 0; i < this.state.json.formItems.length; i++) {
@@ -53,11 +54,6 @@ export default class FunctionsController extends Component {
 
                     if (formItem.type === "entry_module") {
                         this.setState({ entryName: formItem.parameterName });
-                    }
-
-                    if (formItem.type === "plot_type") {
-                        const value = formItem.defaultValue ? formItem.defaultValue : "markers";
-                        this.state.plot["plotType"] = value === "points" ? "markers" : "lines";
                     }
 
                     if (formItem.asManyAsPoints) {
@@ -106,13 +102,14 @@ export default class FunctionsController extends Component {
                         setFormData={this.setFormData}
                         formItems={this.state.json.formItems}
                         dictionaryData={this.props.dictionaryData}
-                        handlePlotTypeChange={this.handlePlotTypeChange}
                     />
                 </Row>
                 {this.state.json.moreOptions && this.state.json.moreOptions.visible === true ? (
                     <MoreOptionsForm
                         handleXChange={this.handleXChange}
                         handleYChange={this.handleYChange}
+                        handlePlotTypeChange={this.handlePlotTypeChange}
+                        plotTypeConf={this.state.json.moreOptions.plotType}
                         defaultX={this.state.json.moreOptions.defaultXAxisType}
                         defaultY={this.state.json.moreOptions.defaultYAxisType}
                     />
