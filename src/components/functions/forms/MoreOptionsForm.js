@@ -16,7 +16,7 @@ const customPanelStyle = {
 const MoreOptionsForm = (props) => {
     const defXValue = props.defaultX === 'log' ? 'log' : 'linear';
     const defYValue = props.defaultY === 'log' ? 'log' : 'linear';
-    const plotTypeVisible = typeof plotTypeConf === undefined ? false : true;
+    const plotTypeVisible = typeof props.plotTypeConf === "undefined" ? false : true;
     const defPlotType = props.plotTypeConf === "points" ? "markers" : "lines";
     return (
         <Form layout='horizontal'>
