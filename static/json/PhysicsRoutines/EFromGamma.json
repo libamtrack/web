@@ -19,17 +19,13 @@
         "min": "1.0000001",
         "max": "100"
       }
-    },
-    {
-      "type": "plot_type",
-      "visible": true,
-      "defaultValue": "lines"
     }
   ],
   "moreOptions": {
     "visible": true,
     "defaultXAxisType": "linear",
-    "defaultYAxisType": "linear"
+    "defaultYAxisType": "linear",
+    "plotType": "lines"
   },
   "modals": {
     "dataSeries": true,

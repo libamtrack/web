@@ -28,17 +28,13 @@
       "asManyAsPoints": true,
       "defaultValue": 1001,
       "description": "Choose particle type"
-    },
-    {
-      "type": "plot_type",
-      "visible": true,
-      "defaultValue": "lines"
     }
   ],
   "moreOptions": {
     "visible": true,
     "defaultXAxisType": "log",
-    "defaultYAxisType": "linear"
+    "defaultYAxisType": "linear",
+    "plotType": "lines"
   },
   "modals": {
     "dataSeries": true,
