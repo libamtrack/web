@@ -84,17 +84,12 @@
       "defaultValue": 1,
       "description": "Choose source type"
     }
-    ,
-    {
-      "type": "plot_type",
-      "visible": true,
-      "defaultValue": "lines"
-    }
   ],
   "moreOptions": {
     "visible": true,
     "defaultXAxisType": "log",
-    "defaultYAxisType": "log"
+    "defaultYAxisType": "log",
+    "plotType": "lines"
   },
   "modals": {
     "dataSeries": true,

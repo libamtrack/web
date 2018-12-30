@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {Breadcrumb, Col, Icon, Row, Spin, Tooltip} from 'antd';
+import React, { Component } from 'react';
+import { Breadcrumb, Col, Icon, Row, Spin, Tooltip } from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import {getDataSeriesName, prepareDataToCalculate, preparePoints} from './utils/helpers';
+import { getDataSeriesName, prepareDataToCalculate, preparePoints } from './utils/helpers';
 import packageJson from '../../../package.json';
 import { Link } from "react-router-dom";
 import ErrorModal from "./modals/ErrorModal";
@@ -46,6 +46,7 @@ export default class FunctionsController extends Component {
                 if (this.state.json.moreOptions) {
                     this.state.plot.xType = this.state.json.moreOptions.defaultXAxisType === 'log' ? 'log' : 'linear';
                     this.state.plot.yType = this.state.json.moreOptions.defaultYAxisType === 'log' ? 'log' : 'linear';
+                    this.state.plot.plotType = this.state.json.moreOptions.plotType === "points" ? "markers" : "lines";
                 }
 
                 for (let i = 0; i < this.state.json.formItems.length; i++) {
@@ -53,11 +54,6 @@ export default class FunctionsController extends Component {
 
                     if (formItem.type === "entry_module") {
                         this.setState({ entryName: formItem.parameterName });
-                    }
-
-                    if (formItem.type === "plot_type") {
-                        const value = formItem.defaultValue ? formItem.defaultValue : "markers";
-                        this.state.plot["plotType"] = value === "points" ? "markers" : "lines";
                     }
 
                     if (formItem.asManyAsPoints) {
@@ -73,10 +69,10 @@ export default class FunctionsController extends Component {
             .then(this.generateContent)
     }
 
-    componentDidUpdate(props,state,root) {
+    componentDidUpdate(props, state, root) {
         try {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, root]);
-        } catch (e) {}
+        } catch (e) { }
     }
 
     componentWillUnmount() {
@@ -89,7 +85,7 @@ export default class FunctionsController extends Component {
         let componentToRender = (
             <div>
                 {this.state.json.isMathJaxSupported && this.state.json.isMathJaxSupported === true ? (
-                    <Script url="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"/>
+                    <Script url="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" />
                 ) : null
                 }
 
@@ -106,13 +102,14 @@ export default class FunctionsController extends Component {
                         setFormData={this.setFormData}
                         formItems={this.state.json.formItems}
                         dictionaryData={this.props.dictionaryData}
-                        handlePlotTypeChange={this.handlePlotTypeChange}
                     />
                 </Row>
                 {this.state.json.moreOptions && this.state.json.moreOptions.visible === true ? (
                     <MoreOptionsForm
                         handleXChange={this.handleXChange}
                         handleYChange={this.handleYChange}
+                        handlePlotTypeChange={this.handlePlotTypeChange}
+                        plotTypeConf={this.state.json.moreOptions.plotType}
                         defaultX={this.state.json.moreOptions.defaultXAxisType}
                         defaultY={this.state.json.moreOptions.defaultYAxisType}
                     />
@@ -133,6 +130,12 @@ export default class FunctionsController extends Component {
     };
 
     handleXChange = (event) => {
+        if (this.state.formData.start === 0 && event.target.value === "log") {
+            alert("Logarithmic scale on X axis requested for invalid lower range value (zero).\n" +
+                "Rescaling to [" + this.state.formData.end / 10000 + "," + this.state.formData.end + "] only for logarithmic scale.\n" +
+                "Please consider setting new value to lower range border.")
+        }
+
         let newDataSeries = this.state.dataSeries;
         if (this.state.plot.xType === "linear" && event.target.value === "log") {
             for (let i = 0; i < newDataSeries.length; i++) {

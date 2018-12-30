@@ -77,10 +77,16 @@ export function preparePoints(start, end, pointsCount, type) {
         pointsNo = pointsCount;
     }
 
+    let logStart = start;
+
+    if (logStart === 0) {
+        logStart = end / 10000;
+    }
+
     return (
         {
             lin: linspace(start, end, pointsNo),
-            log: logspace(Math.log10(start), Math.log10(end), pointsNo)
+            log: logspace(Math.log10(logStart), Math.log10(end), pointsNo)
         }
     );
 }

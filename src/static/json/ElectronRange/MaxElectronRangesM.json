@@ -21,11 +21,6 @@
       }
     },
     {
-      "type": "plot_type",
-      "visible": true,
-      "defaultValue": "lines"
-    },
-    {
       "type": "select",
       "parameterName": "material_no",
       "label": "Material",
@@ -45,7 +40,8 @@
   "moreOptions": {
     "visible": true,
     "defaultXAxisType": "log",
-    "defaultYAxisType": "log"
+    "defaultYAxisType": "log",
+    "plotType": "lines"
   },
   "modals": {
     "dataSeries": true,

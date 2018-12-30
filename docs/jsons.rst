@@ -112,6 +112,7 @@ In this file user can describe all parameters which are needed to generate form 
         "plot": true,
         "resultUnit": " ",
         "resultPrecision": 12,
+        "isMathJaxSupported": true,
         "formItems": [],
         "moreOptions": {},
         "modals": {
@@ -137,6 +138,8 @@ In this file user can describe all parameters which are needed to generate form 
 * **resultUnit** (*string*) - units for functions that return single results
 
 * **resultPrecision** (*int*) - how many significant digits will be displayed in result for single result functions. Default: 12
+
+* **isMathJaxSupported** (*boolean*) - specifies whether to load MathJax script to translate used MathJax expressions in labels/descriptions etc.
 
 * **formItems** (*array*) - form fields described in :ref:`formitems`
 
@@ -251,25 +254,6 @@ Single input item that allows insert single number.
     * **max** (*float/int/string*) - input value
 
 
-Plot type
-~~~~~~~~~
-
-Radio button that allows to determine if plot will be display as point or line. It doesn't have "parameterName" property and
-will be ignored when function doesn't return result as plot.
-
-.. code-block:: json
-
-    {
-      "type": "plot_type",
-      "visible": true,
-      "defaultValue": "points"
-    }
-
-* **visible** (*boolean*) - determines whether this item is visible or not
-
-* **defaultValue** (*string*, ["lines", "points"]) - initial plot type - default: "points"
-
-
 Select
 ~~~~~~
 
@@ -306,7 +290,8 @@ This fields are responsible for describing types/scales of plot X and Y axis
         "moreOptions": {
             "visible": true,
             "defaultXAxisType": "log",
-            "defaultYAxisType": "linear"
+            "defaultYAxisType": "linear",
+            "plotType": "lines"
         }
     }
 
@@ -316,6 +301,7 @@ This fields are responsible for describing types/scales of plot X and Y axis
 
 * **defaultYAxisType** (*string*, ["log", "linear"]) - specifies scale of Y-axis, if not provided "linear" will be applied
 
+* **plotType** (*string*, ["lines", "points"]) - button that allows to determine if plot will be display as points or line. When not provided button will not be displayed and plot type will be "line"
 
 .. _dictjson:
 
