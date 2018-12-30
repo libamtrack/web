@@ -301,7 +301,7 @@ This fields are responsible for describing types/scales of plot X and Y axis
 
 * **defaultYAxisType** (*string*, ["log", "linear"]) - specifies scale of Y-axis, if not provided "linear" will be applied
 
-* **plotType** (*string*, ["lines", "points"]) - radio button that allows to determine if plot will be display as points or line. When not provided button will not be displayed and plot type will be "line"
+* **plotType** (*string*, ["lines", "points"]) - button that allows to determine if plot will be display as points or line. When not provided button will not be displayed and plot type will be "line"
 
 .. _dictjson:
 

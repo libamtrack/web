@@ -81,12 +81,7 @@ export function preparePoints(start, end, pointsCount, type) {
 
     if (logStart === 0) {
         logStart = end / 10000;
-        alert("Logarithmic scale on X axis requested for invalid lower range value (zero).\n" +
-            "Rescaling to [" + logStart + "," + end + "] only for logarithmic scale.\n" +
-            "Please consider setting new value to lower range border.")
     }
-
-    console.log(logStart);
 
     return (
         {
