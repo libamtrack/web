@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import { Breadcrumb, Col, Icon, Row, Spin, Tooltip } from 'antd';
+import React, {Component} from 'react';
+import {Breadcrumb, Icon, Spin, Tooltip} from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
 import ModalController from './modals/ModalController.js';
 import getConfigurationFromJSON from "../../providers/ConfigProvider.js"
 import * as FunctionsFromC from '../../functionsFromC/';
-import { getDataSeriesName, prepareDataToCalculate, preparePoints } from './utils/helpers';
+import {getDataSeriesName, prepareDataToCalculate, preparePoints} from './utils/helpers';
 import packageJson from '../../../package.json';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import ErrorModal from "./modals/ErrorModal";
 import Script from 'react-load-script'
+import {Col, Row} from "react-bootstrap";
 
 export default class FunctionsController extends Component {
     state = {
@@ -348,20 +349,20 @@ export default class FunctionsController extends Component {
         const unit = this.state.json.resultUnit ? this.state.json.resultUnit : "";
         const prec = this.state.json.resultPrecision ? this.state.json.resultPrecision : 12;
         const resultComp = this.state.json.plot && this.state.json.plot === true ? (
-            <div>
-                <Col span={size}>
+            <Row>
+                <Col md={4} mdPull={4}>
                     {this.state.toRender}
                 </Col>
-                <Col span={24 - size}>
+                <Col md={6} mdPush={6} >
                     <PlotComponent dataSeries={this.state.dataSeries}
                         xTitle={this.state.json.xTitle}
                         yTitle={this.state.json.yTitle}
                         xType={this.state.plot.xType}
                         yType={this.state.plot.yType} />
                 </Col>
-            </div>
+            </Row>
         ) : (
-                <div style={{ width: '60%' }}>
+                <div>
                     {this.state.toRender}
                     <div style={{ fontSize: 24 }}>
                         Result: {parseFloat(this.state.singleResult.toFixed(prec))} {unit}
@@ -374,9 +375,7 @@ export default class FunctionsController extends Component {
                     <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>{this.state.json.visibleName}</Breadcrumb.Item>
                 </Breadcrumb>
-                <Row type='flex' gutter={8} align='top'>
                     {this.state.loading ? <Spin spinning={this.state.loading} /> : resultComp}
-                </Row>
                 <ErrorModal modalVisible={this.state.isError}
                     setModalVisible={(value) => this.setState({ isError: value })}
                     functionName={this.state.json.functionName}
