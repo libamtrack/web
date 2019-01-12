@@ -1,8 +1,6 @@
 import React from 'react';
-import {Button, Form, Input, Radio, Select, Tooltip} from 'antd';
+import {Button, Form, Input, Select, Tooltip} from 'antd';
 
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
@@ -10,9 +8,9 @@ const Option = Select.Option;
 const floatPattern = /^\d+\.?\d*$/;
 const intPattern = /^\d+$/;
 
-const filedWidth = 175;
-const labelSpan = 8;
-const filedSpan = 6;
+const inputFieldWidth = 175;
+const textLabelForInputSpan = 8;
+const inputFieldSpan = 6;
 
 class FormGenerator extends React.Component {
     state = {
@@ -41,8 +39,8 @@ class FormGenerator extends React.Component {
                 <div>
                     {generatedForm}
                 </div>
-                    <FormItem style={{ margin: 6 }} label={" "} labelCol={{ span: labelSpan }} wrapperCol={{ span: filedSpan }} colon={false}>
-                        <Button style={{ width: filedWidth }} type='primary' htmlType='submit'>Submit</Button>
+                    <FormItem style={{ margin: 6 }} label={" "} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan }} colon={false}>
+                        <Button style={{ width: inputFieldWidth }} type='primary' htmlType='submit'>Submit</Button>
                     </FormItem>
             </Form>
         );
@@ -66,7 +64,7 @@ class FormGenerator extends React.Component {
         }
 
         return (
-            <FormItem style={{ margin: 6 }} label={item.label} labelCol={{ span: labelSpan }} wrapperCol={{ span: filedSpan }}>
+            <FormItem style={{ margin: 6 }} label={item.label} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan }}>
                 {generatedItem}
             </FormItem>
         );
@@ -105,7 +103,7 @@ class FormGenerator extends React.Component {
                                 }],
                                 initialValue: startHolder
                             })(
-                                <Input style={{ width: filedWidth/2, textAlign: 'center' }}
+                                <Input style={{ width: inputFieldWidth/2, textAlign: 'center' }}
                                     name={startName}
                                     placeholder={startHolder}
                                     onChange={this.handleEntryInputChange} />
@@ -122,7 +120,7 @@ class FormGenerator extends React.Component {
                                 }],
                                 initialValue: endHolder
                             })(
-                                <Input style={{ width: filedWidth/2, textAlign: 'center' }}
+                                <Input style={{ width: inputFieldWidth/2, textAlign: 'center' }}
                                     name={endName}
                                     placeholder={endHolder}
                                     onChange={this.handleEntryInputChange} />
@@ -132,7 +130,7 @@ class FormGenerator extends React.Component {
                 </InputGroup>
                 <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                     <InputGroup compact>
-                        <Select style={{ width: filedWidth/2}}
+                        <Select style={{ width: inputFieldWidth/2}}
                             defaultValue={this.state.formData.intervalType === "points" ? "points" : "step"}
                             onChange={this.handleEntryIntervalTypeChange}
                         >
@@ -148,7 +146,7 @@ class FormGenerator extends React.Component {
                                 }],
                                 initialValue: this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault
                             })(
-                                <Input style={{ width: filedWidth/2 }}
+                                <Input style={{ width: inputFieldWidth/2 }}
                                     name={pointNoName}
                                     placeholder={this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault}
                                     onChange={this.handleEntryInputChange} />
@@ -179,7 +177,7 @@ class FormGenerator extends React.Component {
                         }],
                         initialValue: typeof item.defaultValue !== undefined ? item.defaultValue : 0.5
                     })(
-                        <Input style={{ width: filedWidth, textAlign: 'center' }}
+                        <Input style={{ width: inputFieldWidth, textAlign: 'center' }}
                             name={item.parameterName}
                             placeholder={item.placeholder}
                             onChange={this.handleEntryInputChange} />
@@ -211,7 +209,7 @@ class FormGenerator extends React.Component {
                 })(
                     <Select
                         dropdownMatchSelectWidth={false}
-                        style={{ width: filedWidth }}
+                        style={{ width: inputFieldWidth }}
                         onChange={(value) => this.handleSelectChange(item.parameterName, value)}>
                         {list.map(listElem => (
                             <Option key={listElem.name + listElem.value} value={listElem.value}>
