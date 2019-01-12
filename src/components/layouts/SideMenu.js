@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
 import SearchBox from "../functions/utils/SearchBox.js";
 import logo from "../../static/img/logo.png";
+import Sider from "antd/es/layout/Sider";
 
 const { SubMenu } = Menu;
 
@@ -36,9 +37,18 @@ class SideMenu extends React.Component {
             });
     }
 
+    onCollapse = (collapsed) => {
+        console.log(collapsed);
+    };
+
     render() {
         return (
-            <div>
+                <Sider
+                    style={{background: "white"}}
+                    breakpoint="lg"
+                    collapsedWidth="0"
+                    onBreakpoint={(broken) => { console.log(broken); }}
+                    onCollapse={(collapsed, type) => { console.log(collapsed, type); }}>
                 <Link to={"/"}>
                     <img style={{ width: 185, height: 185, paddingLeft: 15 }} src={logo} align="center"
                         className="App-logo" alt="logo" />
@@ -59,7 +69,7 @@ class SideMenu extends React.Component {
                         {this.state.subMenus}
                     </Menu>
                 </Layout>
-            </div>
+                </Sider>
         );
     }
 }

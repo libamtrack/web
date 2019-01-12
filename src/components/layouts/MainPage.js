@@ -80,7 +80,7 @@ class MainPage extends React.Component {
                     return (a.fun.name.toLowerCase()).localeCompare(b.fun.name.toLowerCase());
                 });
                 let searchStyle = JSON.parse(JSON.stringify(this.state.categories[0].style));
-                searchStyle["width"] = "200%";
+                searchStyle["width"] = "170%";
                 let numberOfRows = Math.ceil(this.state.categories.length / 4);
                 let categoriesForColumns = [[], [], [], []];
                 for (let i = 0, j = 0; i < numberOfRows; i++) {
@@ -93,7 +93,7 @@ class MainPage extends React.Component {
                 this.setState({
                     rows:
                         (<div>
-                            <Row key={1} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
+                            <Row key={1} type='flex' gutter={10} align="center" style={{ paddingBottom: 25, paddingLeft: 25, paddingRight: 25 }}>
                                 {this.state.introText}
                             </Row>
                             <Row key={2} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
@@ -147,7 +147,7 @@ class MainPage extends React.Component {
                                 <img key={"logoImg"} src={logo} align="center" className="App-logo" alt="logo" />
                             </Row>
                         </Header>
-                        <Content key={"mainPageContent"} style={{ padding: '0 75px', background: '#fff' }}>
+                        <Content key={"mainPageContent"} style={{ padding: '0 20px 20px 10px', background: '#fff' }}>
                             {this.state.rows}
                         </Content>
                         <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
