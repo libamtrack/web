@@ -26,29 +26,43 @@
     };
 
     function detectBrowserSupport() {
-        let notSupportedMsg = "You browser is not supported";
-        let libatPath = 'static/js/libat.js';
-        let libatWithoutWasmPath = 'static/js/libatwithoutwasm.js';
-        if(navigator.userAgent.indexOf('MSIE')!==-1 || navigator.appVersion.indexOf('Trident/') > -1){
-            /* Microsoft Internet Explorer*/
-            let ua = navigator.appVersion;
-            if (ua.indexOf("Trident/7.0") > -1)
-                loadScript(libatWithoutWasmPath, null); //IE 11 WORKS
-            else
-                window.alert(notSupportedMsg);  // IE < 11 FOR SURE NOT COMPATIBLE (JS version)
-        } else if(navigator.userAgent.indexOf('Chrom') !== -1){
-            /* Chrome or Chromium*/
-            let chromeVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2], 10);
-            if(chromeVersion >= 57)
+        let loadedLib = false;
+        let someRandomString = "forSureCantFindThis";
+        detectBrowserVersionAndLoadLib("Chrome", "Chromium", 57, 41) ? loadedLib = true : loadedLib;
+        detectBrowserVersionAndLoadLib("Chromium", someRandomString, 57, 41) ? loadedLib = true : loadedLib;
+        detectBrowserVersionAndLoadLib("Trident", someRandomString, 100, 7) ? loadedLib = true : loadedLib; //100 - some random number grater than 7 ( last IE version )
+        detectBrowserVersionAndLoadLib("Edge", someRandomString, 16, 0) ? loadedLib = true : loadedLib;
+        detectBrowserVersionAndLoadLib("Firefox", "Seamonkey", 52, 0) ? loadedLib = true : loadedLib;
+        detectBrowserVersionAndLoadLib("Safari", "Chrom", 11, 0) ? loadedLib = true : loadedLib;
+        detectBrowserVersionAndLoadLib("Opera", someRandomString, 44, 0) ? loadedLib = true : loadedLib;
+        if(!loadedLib){
+            // If we didn't recognise any browser let's try load withoutwasm anyway.
+            console.log("We didn't recognise your browser, let us know on https://github.com/libamtrack/web " +
+                "what are you using by creating issue");
+            loadScript('static/js/libatwithoutwasm.js', null);
+        }
+    }
+
+    function detectBrowserVersionAndLoadLib(browserName, notContainsThisString,minBrowserVersionWasm, minBrowserVersionGeneral) {
+        if(navigator.userAgent.indexOf(browserName) !== -1 && navigator.userAgent.indexOf(notContainsThisString) === -1){
+            let notSupportedMsg = "You browser is not supported";
+            let libatPath = 'static/js/libat.js';
+            let libatWithoutWasmPath = 'static/js/libatwithoutwasm.js';
+
+            let regex = new RegExp( browserName + "\/([0-9]+)\\.");
+            let version = parseInt(window.navigator.userAgent.match(regex)[1]);
+
+            console.log("Browser: " + browserName + " version: " + version);
+            if(version >= minBrowserVersionWasm)
                 loadScript(libatPath, null);
-            else if (chromeVersion >= 41)
+            else if (version >= minBrowserVersionGeneral)
                 loadScript(libatWithoutWasmPath, null);
             else
                 window.alert(notSupportedMsg);
-        } else {
-            /* NOT Microsoft Internet Explorer or Chrome*/
-            loadScript(libatPath, null);
+
+            return true;
         }
+        return false;
     }
 </script>
 <body onload="detectBrowserSupport()">
