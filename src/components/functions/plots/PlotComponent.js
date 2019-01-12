@@ -6,11 +6,16 @@ const PlotComponent = (props) => {
             <div>
                 <Plot
                     data={props.dataSeries}
+                    useResizeHandler
+                    style={{ width: '100%', height: '100%' }}
                     layout={{
-                        width: 800,
-                        height: 600,
+                        autosize: true,
                         margin: {l: 60, r: 40, t: 20, b: 60},
                         showlegend: true,
+                        legend : {
+                            orientation: 'h',
+                            y:-0.15
+                        },
                         xaxis: {
                             title: props.xTitle,
                             type: props.xType,

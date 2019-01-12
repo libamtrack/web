@@ -8,16 +8,14 @@ const { Content, Sider } = Layout;
 const FunctionsView = (props) => {
     return (
         <Layout>
-            <Layout>
-                <SideMenu selectedKey={props.selectedKey}
-                    openKey={props.openKey}
-                    allFunctions={props.allFunctions}
-                />
-                <Layout style={{ padding: '0 2px 2px' }}>
-                    <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-                        <FunctionsController jsonPath={props.jsonPath} dictionaryData={props.dictionaryData} />
-                    </Content>
-                </Layout>
+            <SideMenu selectedKey={props.selectedKey}
+                openKey={props.openKey}
+                allFunctions={props.allFunctions}
+            />
+            <Layout style={{ padding: '0 2px 2px' }}>
+                <Content style={{ background: '#fff', minHeight: 280 }}>
+                    <FunctionsController jsonPath={props.jsonPath} dictionaryData={props.dictionaryData} />
+                </Content>
             </Layout>
         </Layout>
     );

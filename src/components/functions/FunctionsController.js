@@ -350,10 +350,10 @@ export default class FunctionsController extends Component {
         const prec = this.state.json.resultPrecision ? this.state.json.resultPrecision : 12;
         const resultComp = this.state.json.plot && this.state.json.plot === true ? (
             <Row>
-                <Col md={4} mdPull={4}>
+                <Col lg={5} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                     {this.state.toRender}
                 </Col>
-                <Col md={6} mdPush={6} >
+                <Col lg={6}>
                     <PlotComponent dataSeries={this.state.dataSeries}
                         xTitle={this.state.json.xTitle}
                         yTitle={this.state.json.yTitle}
@@ -362,7 +362,7 @@ export default class FunctionsController extends Component {
                 </Col>
             </Row>
         ) : (
-                <div>
+                <div style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                     {this.state.toRender}
                     <div style={{ fontSize: 24 }}>
                         Result: {parseFloat(this.state.singleResult.toFixed(prec))} {unit}
@@ -371,7 +371,7 @@ export default class FunctionsController extends Component {
             );
         return (
             <div>
-                <Breadcrumb>
+                <Breadcrumb style={{marginLeft:40, marginTop: 15}}>
                     <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>{this.state.json.visibleName}</Breadcrumb.Item>
                 </Breadcrumb>

@@ -43,12 +43,11 @@ class SideMenu extends React.Component {
 
     render() {
         return (
-                <Sider
-                    style={{background: "white"}}
-                    breakpoint="lg"
-                    collapsedWidth="0"
-                    onBreakpoint={(broken) => { console.log(broken); }}
-                    onCollapse={(collapsed, type) => { console.log(collapsed, type); }}>
+            <Sider
+                style={{background: "white"}}
+                breakpoint="xl"
+                collapsedWidth="0" >
+
                 <Link to={"/"}>
                     <img style={{ width: 185, height: 185, paddingLeft: 15 }} src={logo} align="center"
                         className="App-logo" alt="logo" />
@@ -69,7 +68,7 @@ class SideMenu extends React.Component {
                         {this.state.subMenus}
                     </Menu>
                 </Layout>
-                </Sider>
+            </Sider>
         );
     }
 }
