@@ -37,10 +37,6 @@ class SideMenu extends React.Component {
             });
     }
 
-    onCollapse = (collapsed) => {
-        console.log(collapsed);
-    };
-
     render() {
         return (
             <Sider
