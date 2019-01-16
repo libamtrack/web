@@ -4,6 +4,7 @@
   "description": "Entrance dose delivered by particles with given type, fluence and kinetic energy. Calculated assuming validity of track-segment condition.",
   "plot": false,
   "resultUnit": "Gy",
+  "resultPrecision": 6,
   "formItems": [
     {
       "type": "input",

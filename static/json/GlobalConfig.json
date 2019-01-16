@@ -23,20 +23,20 @@
           "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
         },
         {
-          "name": "Energy from relativistic  γ",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
-        },
-        {
           "name": "Relativistic γ from energy",
           "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
         },
         {
-          "name": "Energy from momentum",
-          "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
+          "name": "Energy from relativistic  γ",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
         },
         {
           "name": "Momentum from energy",
           "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
+        },
+        {
+          "name": "Energy from momentum",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
         }
       ]
     },
@@ -122,20 +122,20 @@
           "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
         },
         {
-          "name": "Energy From γ",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
-        },
-        {
           "name": "γ From Energy",
           "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
         },
         {
-          "name": "Energy from momentum",
-          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
+          "name": "Energy From γ",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
         },
         {
           "name": "Momentum from energy",
           "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
+        },
+        {
+          "name": "Energy from momentum",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
         },
         {
           "name": "Dose from fluence and energy",
@@ -179,7 +179,7 @@
       "jsonConfigPath": "/dictionaries/ERModels.json"
     }
   ],
-  "deployDate":"Wed Jan 16 08:49:55 CET 2019",
+  "deployDate":"Wed Jan 16 22:41:48 CET 2019",
   "deployBranch":"master",
-  "deployCommit":"2ce9eb9"
+  "deployCommit":"9f8d3f8"
 }
