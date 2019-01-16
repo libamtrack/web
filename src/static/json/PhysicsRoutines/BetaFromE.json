@@ -9,15 +9,15 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "startholder": "0.1",
+      "startholder": "0.0",
       "endholder": "300",
       "intervalType": "points",
       "stepDefaultValue": "1",
       "pointsDefaultNumber": "300",
       "validations": {
         "type": "float",
-        "min": "0.0000001",
-        "max": "1000000000"
+        "min": "0.0",
+        "max": "1000000000.0"
       }
     }
   ],
