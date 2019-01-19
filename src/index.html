@@ -37,9 +37,16 @@
         detectBrowserVersionAndLoadLib("Opera", someRandomString, 44, 0) ? loadedLib = true : loadedLib;
         if(!loadedLib){
             // If we didn't recognise any browser let's try load withoutwasm anyway.
-            console.log("We didn't recognise your browser, let us know on https://github.com/libamtrack/web " +
-                "what are you using by creating issue");
             loadScript('static/js/libatwithoutwasm.js', null);
+
+            console.log("We didn't recognise your browser, let us know on https://github.com/libamtrack/web " +
+                "what browser you are using by creating issue");
+
+            let footer = document.getElementsByClassName("ant-layout-footer")[0];
+            let div = document.createElement('div');
+            div.innerHTML = "We didn't recognise your browser, let us know on <a href=\"https://github.com/libamtrack/web\">GitHub</a> what browser you are using by creating issue";
+            div.setAttribute('class', 'ant-row');
+            footer.appendChild(div);
         }
     }
 
