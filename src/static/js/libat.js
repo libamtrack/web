@@ -1762,7 +1762,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 1291824;
+STATICTOP = STATIC_BASE + 1294320;
 /* global initializers */  __ATINIT__.push({ func: function() { ___emscripten_environ_constructor() } });
 
 
@@ -1771,7 +1771,7 @@ STATICTOP = STATIC_BASE + 1291824;
 
 
 
-var STATIC_BUMP = 1291824;
+var STATIC_BUMP = 1294320;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
