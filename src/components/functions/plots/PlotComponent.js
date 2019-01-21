@@ -12,6 +12,7 @@ const PlotComponent = (props) => {
                         autosize: true,
                         margin: {l: 60, r: 40, t: 20, b: 60},
                         showlegend: true,
+                        dragmode: false,
                         legend : {
                             orientation: 'h',
                             y:-0.15
