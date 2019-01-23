@@ -1,0 +1,76 @@
+{
+  "visibleName": "Energy Loss Vavilov",
+  "functionName": "AT_Vavilov_energy_loss_distribution",
+  "description": ["Vavilov energy loss distribution"],
+  "xTitle": "Energy [keV]",
+  "yTitle": "PDF [a.u.]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "energy_loss_keV",
+      "startholder": "10.0",
+      "endholder": "1000.0",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "500",
+      "validations": {
+        "type": "float",
+        "min": "0.0001",
+        "max": "10000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "defaultValue": 1,
+      "description": "Choose material type"
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    },
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy [MeV]",
+      "placeholder": "150",
+      "defaultValue": 150,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "slab_thickness_um",
+      "label": "Slab thickness [um]",
+      "placeholder": "100",
+      "defaultValue": 100,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    }
+  ],
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "log",
+    "defaultYAxisType": "linear",
+    "plotType": "lines"
+  },
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}

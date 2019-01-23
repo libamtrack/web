@@ -66,6 +66,14 @@
         {
           "name": "Dose from fluence and energy",
           "jsonConfigPath": "/PhysicsRoutines/DoseFromFluence.json"
+        },
+        {
+          "name": "Energy loss Landau",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyLossLandau.json"
+        },
+        {
+          "name": "Energy loss Vavilov",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyLossVavilov.json"
         }
       ]
     },
