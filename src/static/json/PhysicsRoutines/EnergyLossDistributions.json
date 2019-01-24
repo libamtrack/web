@@ -1,7 +1,7 @@
 {
-  "visibleName": "Energy Loss Vavilov",
-  "functionName": "AT_Vavilov_energy_loss_distribution",
-  "description": ["Vavilov energy loss distribution"],
+  "visibleName": "Energy Loss distributions",
+  "functionName": "AT_energy_loss_distributions",
+  "description": ["Energy loss distributions"],
   "xTitle": "Energy [keV]",
   "yTitle": "PDF [a.u.]",
   "plot": true,
@@ -37,6 +37,14 @@
       "description": "Choose particle type"
     },
     {
+      "type": "select",
+      "parameterName": "energy_loss_model",
+      "label": "Model",
+      "values": "energy_loss_distributions",
+      "defaultValue": 1,
+      "description": "Choose energy loss model"
+    },
+    {
       "type": "input",
       "parameterName": "E_MeV_u",
       "label": "Energy [MeV]",
@@ -44,7 +52,7 @@
       "defaultValue": 150.0,
       "validations": {
         "type": "float",
-        "min": "0.00001",
+        "min": "0.000001",
         "max": "1000000.0"
       }
     },
@@ -56,7 +64,7 @@
       "defaultValue": 1000.0,
       "validations": {
         "type": "float",
-        "min": "0.001",
+        "min": "0.000001",
         "max": "1000000.0"
       }
     }

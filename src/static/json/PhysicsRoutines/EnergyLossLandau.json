@@ -9,14 +9,14 @@
     {
       "type": "entry_module",
       "parameterName": "energy_loss_keV",
-      "startholder": "10.0",
+      "startholder": "0.0",
       "endholder": "1000.0",
       "intervalType": "points",
       "stepDefaultValue": "1",
       "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
-        "min": "0.0001",
+        "min": "0.0",
         "max": "10000"
       }
     },
@@ -52,8 +52,8 @@
       "type": "input",
       "parameterName": "slab_thickness_um",
       "label": "Slab thickness [um]",
-      "placeholder": "100",
-      "defaultValue": 100,
+      "placeholder": "100.0",
+      "defaultValue": 1000.0,
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -63,7 +63,7 @@
   ],
   "moreOptions": {
     "visible": true,
-    "defaultXAxisType": "log",
+    "defaultXAxisType": "linear",
     "defaultYAxisType": "linear",
     "plotType": "lines"
   },
