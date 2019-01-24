@@ -68,14 +68,6 @@
           "jsonConfigPath": "/PhysicsRoutines/DoseFromFluence.json"
         },
         {
-          "name": "Energy loss Landau",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyLossLandau.json"
-        },
-        {
-          "name": "Energy loss Vavilov",
-          "jsonConfigPath": "/PhysicsRoutines/EnergyLossVavilov.json"
-        },
-        {
           "name": "Energy loss distribution",
           "jsonConfigPath": "/PhysicsRoutines/EnergyLossDistributions.json"
         }
