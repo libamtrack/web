@@ -1,7 +1,7 @@
 {
   "visibleName": "Energy Loss distributions",
   "functionName": "AT_energy_loss_distributions",
-  "description": ["Energy loss distributions"],
+  "description": ["Landau and Vavilov energy loss distributions"],
   "xTitle": "Energy [keV]",
   "yTitle": "PDF [a.u.]",
   "plot": true,
@@ -17,7 +17,7 @@
       "validations": {
         "type": "float",
         "min": "0.0",
-        "max": "10000"
+        "max": "10000000.0"
       }
     },
     {
