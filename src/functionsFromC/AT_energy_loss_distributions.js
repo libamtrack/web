@@ -65,7 +65,7 @@ export default function AT_energy_loss_distributions(parameters) {
 
     /*********************CALL FUNCTION******************************/
 
-    if( energy_loss_model == 1 ){ // Vavilov
+    if( energy_loss_model === 1 ){ // Vavilov
         let result = at_vavilov_energy_loss_distribution(n, energy_loss_keVHeap, E_MeV_u, particle_no, material_no, slab_thickness_um, fDdDReturnHeap.byteOffset);
     } else { // Landau
         let result = at_landau_energy_loss_distribution(n, energy_loss_keVHeap, E_MeV_u, particle_no, material_no, slab_thickness_um, fDdDReturnHeap.byteOffset);
