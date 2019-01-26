@@ -66,6 +66,10 @@
         {
           "name": "Dose from fluence and energy",
           "jsonConfigPath": "/PhysicsRoutines/DoseFromFluence.json"
+        },
+        {
+          "name": "Energy loss distribution",
+          "jsonConfigPath": "/PhysicsRoutines/EnergyLossDistributions.json"
         }
       ]
     },
@@ -177,6 +181,10 @@
     {
       "name": "er_models",
       "jsonConfigPath": "/dictionaries/ERModels.json"
+    },
+    {
+      "name": "energy_loss_distributions",
+      "jsonConfigPath": "/dictionaries/EnergyLossDistributions.json"
     }
   ],
   "deployDate":"NO_DEPLOY_DATE",
