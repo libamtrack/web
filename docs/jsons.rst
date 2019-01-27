@@ -188,6 +188,7 @@ It is a collection of simple form fields that allows to generate a serie of numb
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
+      "label": "energy [MeV]"
       "startholder": "1",
       "endholder": "1000",
       "intervalType": "points",
@@ -199,6 +200,7 @@ It is a collection of simple form fields that allows to generate a serie of numb
             "max": "10000"
       }
     }
+* **label** (*string*) - string added to "Start" and "End" input labels f.e. for "label": "energy [MeV]" label for first input will be "Start energy [MeV]:" and for second "End energy [MeV]:"
 
 * **startholder** (*float/string*) - initial value for "Start" input
 
