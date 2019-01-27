@@ -14,6 +14,9 @@ const inputFieldSpan = 6;
 
 const inputIdPrefix = "input-id-";
 
+const startName = "start";
+const endName = "end";
+
 class FormGenerator extends React.Component {
     state = {
         toRender: "",
@@ -80,8 +83,6 @@ class FormGenerator extends React.Component {
         const stepValue = "step";
         const stepDefault = typeof item.stepDefaultValue !== undefined ? item.stepDefaultValue : 0.1;
         const pointsDefault = typeof item.pointsDefaultNumber !== undefined ? item.pointsDefaultNumber : 50;
-        const startName = "start";
-        const endName = "end";
         const pointNoName = "pointsNo";
 
         if (!this.state.formItemsCounters.has(item.parameterName)) {
@@ -274,6 +275,9 @@ class FormGenerator extends React.Component {
             const regObj = RegExp(pattern);
             const fValue = parseFloat(value);
 
+            const startValue = rule.field === startName ? parseFloat(value) : this.state.formData[startName];
+            const endValue = rule.field === endName ? parseFloat(value) : this.state.formData[endName];
+
             if (!regObj.test(value)) {
                 callback("Incorrect format!");
             }
@@ -284,6 +288,10 @@ class FormGenerator extends React.Component {
 
             if (validationRules.max && fValue > parseFloat(validationRules.max)) {
                 callback("Bad value!");
+            }
+
+            if ( startValue >= endValue){
+                callback("Start bigger than end value!");
             }
         }
 
@@ -316,6 +324,7 @@ class FormGenerator extends React.Component {
             if (validationRules.max && fValue > parseFloat(validationRules.max)) {
                 callback("Maximum value is: " + validationRules.max);
             }
+
         }
 
         callback();

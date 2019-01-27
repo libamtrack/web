@@ -3,11 +3,11 @@ import {Layout} from 'antd';
 import SideMenu from "./SideMenu.js";
 import FunctionsController from '../functions/FunctionsController.js';
 
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 
 const FunctionsView = (props) => {
     return (
-        <Layout>
+        <Layout >
             <SideMenu selectedKey={props.selectedKey}
                 openKey={props.openKey}
                 allFunctions={props.allFunctions}
@@ -16,6 +16,7 @@ const FunctionsView = (props) => {
                 <Content style={{ background: '#fff', minHeight: 280 }}>
                     <FunctionsController jsonPath={props.jsonPath} dictionaryData={props.dictionaryData} />
                 </Content>
+                {props.footer}
             </Layout>
         </Layout>
     );
