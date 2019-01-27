@@ -12,6 +12,8 @@ const inputFieldWidth = 175;
 const textLabelForInputSpan = 8;
 const inputFieldSpan = 6;
 
+const inputIdPrefix = "input-id-";
+
 class FormGenerator extends React.Component {
     state = {
         toRender: "",
@@ -169,7 +171,7 @@ class FormGenerator extends React.Component {
         return (
             <div>
                 <Tooltip title={typeof item.description !== 'undefined' ? item.description : "Insert value"}>
-                    {getFieldDecorator(item.parameterName, {
+                    {getFieldDecorator(inputIdPrefix + item.parameterName, {
                         rules: [{
                             required: true, message: "Please, insert a value!"
                         }, {
@@ -178,10 +180,9 @@ class FormGenerator extends React.Component {
                         initialValue: typeof item.defaultValue !== undefined ? item.defaultValue : 0.5
                     })(
                         <Input style={{ width: inputFieldWidth, textAlign: 'center' }}
-                            name={item.parameterName}
-                            placeholder={item.placeholder}
-                            autocomplete="false"
-                            onChange={this.handleEntryInputChange} />
+                               parametername={item.parameterName}
+                               placeholder={item.placeholder}
+                               onChange={this.handleEntryInputChange} />
                     )}
                 </Tooltip>
             </div>
@@ -235,7 +236,7 @@ class FormGenerator extends React.Component {
 
     handleEntryInputChange = (event) => {
         let newFormData = this.state.formData;
-        newFormData[event.target.name] = parseFloat(event.target.value);
+        newFormData[event.target.parametername] = parseFloat(event.target.value);
         this.setState({
             formData: newFormData
         });
@@ -293,7 +294,7 @@ class FormGenerator extends React.Component {
         let validationRules;
         const formItems = this.props.formItems;
         for (let i = 0; i < formItems.length; i++) {
-            if (formItems[i].parameterName === rule.field) {
+            if (inputIdPrefix + formItems[i].parameterName === rule.field) {
                 validationRules = formItems[i].validations;
                 break;
             }
