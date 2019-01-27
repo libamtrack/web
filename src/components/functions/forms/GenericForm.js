@@ -96,7 +96,7 @@ class FormGenerator extends React.Component {
         return (
             <div>
                 <InputGroup>
-                    <FormItem style={{ margin: 6, display: 'inline-block'}} label='Start' labelCol={{ span: 16, offset: 4 }} wrapperCol={{ span: 4 }}>
+                    <FormItem style={{ margin: 6, display: 'inline-block'}} label='Start' labelCol={{ span: 8, offset: 6 }} wrapperCol={{ span: 10 }}>
                         <Tooltip title={"Insert start value"}>
                             {getFieldDecorator(startName, {
                                 rules: [{
@@ -107,9 +107,9 @@ class FormGenerator extends React.Component {
                                 initialValue: startHolder
                             })(
                                 <Input style={{ width: inputFieldWidth/2, textAlign: 'center' }}
-                                    name={startName}
-                                    placeholder={startHolder}
-                                    onChange={this.handleEntryInputChange} />
+                                       parametername={startName}
+                                       placeholder={startHolder}
+                                       onChange={this.handleEntryInputChange} />
                             )}
                         </Tooltip>
                     </FormItem>
@@ -124,9 +124,9 @@ class FormGenerator extends React.Component {
                                 initialValue: endHolder
                             })(
                                 <Input style={{ width: inputFieldWidth/2, textAlign: 'center' }}
-                                    name={endName}
-                                    placeholder={endHolder}
-                                    onChange={this.handleEntryInputChange} />
+                                       parametername={endName}
+                                       placeholder={endHolder}
+                                       onChange={this.handleEntryInputChange} />
                             )}
                         </Tooltip>
                     </FormItem>
@@ -150,9 +150,9 @@ class FormGenerator extends React.Component {
                                 initialValue: this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault
                             })(
                                 <Input style={{ width: inputFieldWidth/2 }}
-                                    name={pointNoName}
-                                    placeholder={this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault}
-                                    onChange={this.handleEntryInputChange} />
+                                       parametername={pointNoName}
+                                       placeholder={this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault}
+                                       onChange={this.handleEntryInputChange} />
                             )}
                         </Tooltip>
                     </InputGroup>
@@ -237,7 +237,7 @@ class FormGenerator extends React.Component {
 
     handleEntryInputChange = (event) => {
         let newFormData = this.state.formData;
-        newFormData[event.target.parametername] = parseFloat(event.target.value);
+        newFormData[event.target.getAttribute('parametername')] = parseFloat(event.target.value);
         this.setState({
             formData: newFormData
         });
@@ -292,6 +292,8 @@ class FormGenerator extends React.Component {
 
             if ( startValue >= endValue){
                 callback("Start bigger than end value!");
+            } else {
+                this.props.form.validateFields([rule.field === startName ? endName : startName], { force: true });
             }
         }
 
