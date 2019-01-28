@@ -1,7 +1,7 @@
 {
   "applicationTile": "Libamtrack",
   "introText": "libamtrack provides computational routines for the prediction of detector response and radiobiological efficiency in heavy charged particle beams.",
-  "footerText": "LibamtrackWeb ©2018",
+  "footerText": "LibamtrackWeb ©2019",
   "categories": [
     {
       "name": "Energy And Momentum",
@@ -187,7 +187,7 @@
       "jsonConfigPath": "/dictionaries/EnergyLossDistributions.json"
     }
   ],
-  "deployDate":"Sun Jan 27 18:13:29 CET 2019",
+  "deployDate":"Mon Jan 28 08:39:43 CET 2019",
   "deployBranch":"master",
-  "deployCommit":"6fcc0ec"
+  "deployCommit":"f5ebcbc"
 }
