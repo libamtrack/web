@@ -14,6 +14,9 @@ const inputFieldSpan = 6;
 
 const inputIdPrefix = "input-id-";
 
+const startName = "start";
+const endName = "end";
+
 class FormGenerator extends React.Component {
     state = {
         toRender: "",
@@ -76,12 +79,11 @@ class FormGenerator extends React.Component {
         const { getFieldDecorator } = this.props.form;
         const startHolder = typeof item.startholder !== 'undefined' ? item.startholder : "0.1";
         const endHolder = typeof item.endholder !== 'undefined' ? item.endholder : "0.9";
+        const label = item.label !== undefined ? item.label : "";
 
         const stepValue = "step";
         const stepDefault = typeof item.stepDefaultValue !== undefined ? item.stepDefaultValue : 0.1;
         const pointsDefault = typeof item.pointsDefaultNumber !== undefined ? item.pointsDefaultNumber : 50;
-        const startName = "start";
-        const endName = "end";
         const pointNoName = "pointsNo";
 
         if (!this.state.formItemsCounters.has(item.parameterName)) {
@@ -94,42 +96,40 @@ class FormGenerator extends React.Component {
 
         return (
             <div>
-                <InputGroup>
-                    <FormItem style={{ margin: 6, display: 'inline-block'}} label='Start' labelCol={{ span: 16, offset: 4 }} wrapperCol={{ span: 4 }}>
-                        <Tooltip title={"Insert start value"}>
-                            {getFieldDecorator(startName, {
-                                rules: [{
-                                    required: true, message: "Field required!"
-                                }, {
-                                    validator: this.validateEntryModule
-                                }],
-                                initialValue: startHolder
-                            })(
-                                <Input style={{ width: inputFieldWidth/2, textAlign: 'center' }}
-                                    name={startName}
-                                    placeholder={startHolder}
-                                    onChange={this.handleEntryInputChange} />
-                            )}
-                        </Tooltip>
-                    </FormItem>
-                    <FormItem style={{ margin: 6, display: 'inline-block'}} label='End' labelCol={{ span: 16, offset:7}} wrapperCol={{ span: 1 }}>
-                        <Tooltip title={"Insert end value"}>
-                            {getFieldDecorator(endName, {
-                                rules: [{
-                                    required: true, message: "Field required!"
-                                }, {
-                                    validator: this.validateEntryModule
-                                }],
-                                initialValue: endHolder
-                            })(
-                                <Input style={{ width: inputFieldWidth/2, textAlign: 'center' }}
-                                    name={endName}
-                                    placeholder={endHolder}
-                                    onChange={this.handleEntryInputChange} />
-                            )}
-                        </Tooltip>
-                    </FormItem>
-                </InputGroup>
+                <FormItem style={{ margin: 6 }} label={"Start " + label} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan }}>
+                    <Tooltip title={"Insert start value"}>
+                        {getFieldDecorator(startName, {
+                            rules: [{
+                                required: true, message: "Field required!"
+                            }, {
+                                validator: this.validateEntryModule
+                            }],
+                            initialValue: startHolder
+                        })(
+                            <Input style={{ width: inputFieldWidth, textAlign: 'center' }}
+                                   parametername={startName}
+                                   placeholder={startHolder}
+                                   onChange={this.handleEntryInputChange} />
+                        )}
+                    </Tooltip>
+                </FormItem>
+                <FormItem style={{ margin: 6 }} label={"End " + label} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan }}>
+                    <Tooltip title={"Insert end value"}>
+                        {getFieldDecorator(endName, {
+                            rules: [{
+                                required: true, message: "Field required!"
+                            }, {
+                                validator: this.validateEntryModule
+                            }],
+                            initialValue: endHolder
+                        })(
+                            <Input style={{ width: inputFieldWidth, textAlign: 'center' }}
+                                   parametername={endName}
+                                   placeholder={endHolder}
+                                   onChange={this.handleEntryInputChange} />
+                        )}
+                    </Tooltip>
+                </FormItem>
                 <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                     <InputGroup compact>
                         <Select style={{ width: inputFieldWidth/2}}
@@ -149,9 +149,9 @@ class FormGenerator extends React.Component {
                                 initialValue: this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault
                             })(
                                 <Input style={{ width: inputFieldWidth/2 }}
-                                    name={pointNoName}
-                                    placeholder={this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault}
-                                    onChange={this.handleEntryInputChange} />
+                                       parametername={pointNoName}
+                                       placeholder={this.state.formData.intervalType === stepValue ? stepDefault : pointsDefault}
+                                       onChange={this.handleEntryInputChange} />
                             )}
                         </Tooltip>
                     </InputGroup>
@@ -236,7 +236,7 @@ class FormGenerator extends React.Component {
 
     handleEntryInputChange = (event) => {
         let newFormData = this.state.formData;
-        newFormData[event.target.parametername] = parseFloat(event.target.value);
+        newFormData[event.target.getAttribute('parametername')] = parseFloat(event.target.value);
         this.setState({
             formData: newFormData
         });
@@ -274,6 +274,9 @@ class FormGenerator extends React.Component {
             const regObj = RegExp(pattern);
             const fValue = parseFloat(value);
 
+            const startValue = rule.field === startName ? parseFloat(value) : this.state.formData[startName];
+            const endValue = rule.field === endName ? parseFloat(value) : this.state.formData[endName];
+
             if (!regObj.test(value)) {
                 callback("Incorrect format!");
             }
@@ -284,6 +287,12 @@ class FormGenerator extends React.Component {
 
             if (validationRules.max && fValue > parseFloat(validationRules.max)) {
                 callback("Bad value!");
+            }
+
+            if ( startValue > endValue){
+                callback("Start bigger than end value!");
+            } else {
+                this.props.form.validateFields([rule.field === startName ? endName : startName], { force: true });
             }
         }
 
@@ -316,6 +325,7 @@ class FormGenerator extends React.Component {
             if (validationRules.max && fValue > parseFloat(validationRules.max)) {
                 callback("Maximum value is: " + validationRules.max);
             }
+
         }
 
         callback();

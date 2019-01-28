@@ -13,8 +13,7 @@ class MainPage extends React.Component {
     state = {
         applicationTile: "",
         introText: "",
-        footerText: "",
-        deployInfo: "",
+        footer: "",
         categories: [],
         funs: [],
         rows: "",
@@ -34,6 +33,7 @@ class MainPage extends React.Component {
                             selectedKey={category.name.replace(/ /g, '') + fun.name.replace(/ /g, '')}
                             jsonPath={'static/json/' + fun.jsonConfigPath}
                             allFunctions={this.state.funs}
+                            footer={this.state.footer}
                             dictionaryData={this.state.dictionaryData}
                         />
                     } />)
@@ -67,9 +67,14 @@ class MainPage extends React.Component {
                     this.state.applicationTile = confData.applicationTile;
                     this.state.categories = confData.categories;
                     this.state.introText = confData.introText;
-                    this.state.footerText = confData.footerText;
-                    this.state.deployInfo = "Deploy date: " + confData.deployDate + " from branch: "
-                        + confData.deployBranch + " and commit number: " + confData.deployCommit;
+
+                    this.state.footer =
+                    <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
+                        <Row>{confData.footerText}</Row>
+                        <Row>{"Deploy date: " + confData.deployDate + " from branch: "
+                            + confData.deployBranch + " and commit number: " + confData.deployCommit}</Row>
+                    </Footer>;
+
                     this.state.dictionariesPaths = confData.dictionaries;
                 })
             .then(this.getDictionaries)
@@ -150,10 +155,7 @@ class MainPage extends React.Component {
                         <Content key={"mainPageContent"} style={{ padding: '0 20px 20px 10px', background: '#fff' }}>
                             {this.state.rows}
                         </Content>
-                        <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
-                            <Row>{this.state.footerText}</Row>
-                            <Row>{this.state.deployInfo}</Row>
-                        </Footer>
+                        {this.state.footer}
                     </Layout>
                 )} />
                 {this.state.routes}
