@@ -6,72 +6,71 @@
     <meta name="theme-color" content="#000000">
     <link rel="shortcut icon" href="static/img/favicon.ico">
     <title>LibamtrackWeb</title>
-</head>
-<script type="text/javascript">
-    let loadScript = function (src, callbackfn) {
-        let newScript = document.createElement("script");
-        newScript.type = "text/javascript";
-        newScript.setAttribute("async", "true");
-        newScript.setAttribute("src", src);
+    <script>
+        let loadScript = function (src, callbackfn) {
+            let newScript = document.createElement("script");
+            newScript.setAttribute("async", "true");
+            newScript.setAttribute("src", src);
 
-        if (newScript.readyState) {
-            newScript.onreadystatechange = function () {
-                if (/loaded|complete/.test(newScript.readyState)) callbackfn();
+            if (newScript.readyState) {
+                newScript.onreadystatechange = function () {
+                    if (/loaded|complete/.test(newScript.readyState)) callbackfn();
+                }
+            } else {
+                newScript.addEventListener("load", callbackfn, false);
             }
-        } else {
-            newScript.addEventListener("load", callbackfn, false);
+
+            document.documentElement.firstChild.appendChild(newScript);
+        };
+
+        function detectBrowserSupport() {
+            let loadedLib = false;
+            let someRandomString = "forSureCantFindThis";
+            detectBrowserVersionAndLoadLib("Chrome", "Chromium", 57, 41) ? loadedLib = true : loadedLib;
+            detectBrowserVersionAndLoadLib("Chromium", someRandomString, 57, 41) ? loadedLib = true : loadedLib;
+            detectBrowserVersionAndLoadLib("Trident", someRandomString, 100, 7) ? loadedLib = true : loadedLib; //100 - some random number grater than 7 ( last IE version )
+            detectBrowserVersionAndLoadLib("Edge", someRandomString, 16, 0) ? loadedLib = true : loadedLib;
+            detectBrowserVersionAndLoadLib("Firefox", "Seamonkey", 52, 0) ? loadedLib = true : loadedLib;
+            detectBrowserVersionAndLoadLib("Safari", "Chrom", 11, 0) ? loadedLib = true : loadedLib;
+            detectBrowserVersionAndLoadLib("Opera", someRandomString, 44, 0) ? loadedLib = true : loadedLib;
+            if(!loadedLib){
+                // If we didn't recognise any browser let's try load withoutwasm anyway.
+                loadScript('static/js/libatwithoutwasm.js', null);
+
+                console.log("We didn't recognise your browser, let us know on https://github.com/libamtrack/web " +
+                    "what browser you are using by creating issue");
+
+                let footer = document.getElementsByClassName("ant-layout-footer")[0];
+                let div = document.createElement('div');
+                div.innerHTML = "We didn't recognise your browser, let us know on <a href=\"https://github.com/libamtrack/web\">GitHub</a> what browser you are using by creating issue";
+                div.setAttribute('class', 'ant-row');
+                footer.appendChild(div);
+            }
         }
 
-        document.documentElement.firstChild.appendChild(newScript);
-    };
+        function detectBrowserVersionAndLoadLib(browserName, notContainsThisString,minBrowserVersionWasm, minBrowserVersionGeneral) {
+            if(navigator.userAgent.indexOf(browserName) !== -1 && navigator.userAgent.indexOf(notContainsThisString) === -1){
+                let notSupportedMsg = "You browser is not supported";
+                let libatPath = 'static/js/libat.js';
+                let libatWithoutWasmPath = 'static/js/libatwithoutwasm.js';
 
-    function detectBrowserSupport() {
-        let loadedLib = false;
-        let someRandomString = "forSureCantFindThis";
-        detectBrowserVersionAndLoadLib("Chrome", "Chromium", 57, 41) ? loadedLib = true : loadedLib;
-        detectBrowserVersionAndLoadLib("Chromium", someRandomString, 57, 41) ? loadedLib = true : loadedLib;
-        detectBrowserVersionAndLoadLib("Trident", someRandomString, 100, 7) ? loadedLib = true : loadedLib; //100 - some random number grater than 7 ( last IE version )
-        detectBrowserVersionAndLoadLib("Edge", someRandomString, 16, 0) ? loadedLib = true : loadedLib;
-        detectBrowserVersionAndLoadLib("Firefox", "Seamonkey", 52, 0) ? loadedLib = true : loadedLib;
-        detectBrowserVersionAndLoadLib("Safari", "Chrom", 11, 0) ? loadedLib = true : loadedLib;
-        detectBrowserVersionAndLoadLib("Opera", someRandomString, 44, 0) ? loadedLib = true : loadedLib;
-        if(!loadedLib){
-            // If we didn't recognise any browser let's try load withoutwasm anyway.
-            loadScript('static/js/libatwithoutwasm.js', null);
+                let regex = new RegExp( browserName + "\/([0-9]+)\\.");
+                let version = parseInt(window.navigator.userAgent.match(regex)[1]);
 
-            console.log("We didn't recognise your browser, let us know on https://github.com/libamtrack/web " +
-                "what browser you are using by creating issue");
+                console.log("Browser: " + browserName + " version: " + version);
+                if(version >= minBrowserVersionWasm)
+                    loadScript(libatPath, null);
+                else if (version >= minBrowserVersionGeneral)
+                    loadScript(libatWithoutWasmPath, null);
+                else
+                    window.alert(notSupportedMsg);
 
-            let footer = document.getElementsByClassName("ant-layout-footer")[0];
-            let div = document.createElement('div');
-            div.innerHTML = "We didn't recognise your browser, let us know on <a href=\"https://github.com/libamtrack/web\">GitHub</a> what browser you are using by creating issue";
-            div.setAttribute('class', 'ant-row');
-            footer.appendChild(div);
+                return true;
+            }
+            return false;
         }
-    }
-
-    function detectBrowserVersionAndLoadLib(browserName, notContainsThisString,minBrowserVersionWasm, minBrowserVersionGeneral) {
-        if(navigator.userAgent.indexOf(browserName) !== -1 && navigator.userAgent.indexOf(notContainsThisString) === -1){
-            let notSupportedMsg = "You browser is not supported";
-            let libatPath = 'static/js/libat.js';
-            let libatWithoutWasmPath = 'static/js/libatwithoutwasm.js';
-
-            let regex = new RegExp( browserName + "\/([0-9]+)\\.");
-            let version = parseInt(window.navigator.userAgent.match(regex)[1]);
-
-            console.log("Browser: " + browserName + " version: " + version);
-            if(version >= minBrowserVersionWasm)
-                loadScript(libatPath, null);
-            else if (version >= minBrowserVersionGeneral)
-                loadScript(libatWithoutWasmPath, null);
-            else
-                window.alert(notSupportedMsg);
-
-            return true;
-        }
-        return false;
-    }
-</script>
+    </script>
+</head>
 <body onload="detectBrowserSupport()">
 <div id="index"></div>
 <script type="text/javascript" src="bundle.js"></script></body>
