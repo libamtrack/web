@@ -8,9 +8,9 @@ const Option = Select.Option;
 const floatPattern = /^\d+\.?\d*$/;
 const intPattern = /^\d+$/;
 
-const inputFieldWidth = 175;
-const textLabelForInputSpan = 8;
-const inputFieldSpan = 6;
+const inputFieldWidth = 170;
+const textLabelForInputSpan = 13;
+const inputFieldSpan = 11;
 
 const inputIdPrefix = "input-id-";
 
@@ -22,7 +22,8 @@ class FormGenerator extends React.Component {
         toRender: "",
         formData: {},
         formItemsCounters: new Set(),
-        items: []
+        items: [],
+        validateEntryModuleFlag: true
     };
 
     //GENERATORS --------------------------------------------------------------------
@@ -130,7 +131,7 @@ class FormGenerator extends React.Component {
                         )}
                     </Tooltip>
                 </FormItem>
-                <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+                <FormItem style={{ margin: 6 }} label={'Generate'} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan }}>
                     <InputGroup compact>
                         <Select style={{ width: inputFieldWidth/2}}
                             defaultValue={this.state.formData.intervalType === "points" ? "points" : "step"}
@@ -292,7 +293,13 @@ class FormGenerator extends React.Component {
             if ( startValue > endValue){
                 callback("Start bigger than end value!");
             } else {
-                this.props.form.validateFields([rule.field === startName ? endName : startName], { force: true });
+                if(this.state.validateEntryModuleFlag) {
+                    this.state.validateEntryModuleFlag = false;
+                    this.props.form.validateFields([rule.field === startName ? endName : startName], {force: true});
+                } else {
+                    this.state.validateEntryModuleFlag = true;
+
+                }
             }
         }
 
