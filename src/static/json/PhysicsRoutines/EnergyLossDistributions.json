@@ -9,6 +9,7 @@
     {
       "type": "entry_module",
       "parameterName": "energy_loss_keV",
+      "label" : "energy [keV]",
       "startholder": "0.0",
       "endholder": "1000.0",
       "intervalType": "points",

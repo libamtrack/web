@@ -9,6 +9,7 @@
     {
       "type": "entry_module",
       "parameterName": "gamma",
+      "label": "γ",
       "startholder": "1.01",
       "endholder": "1.5",
       "intervalType": "points",
