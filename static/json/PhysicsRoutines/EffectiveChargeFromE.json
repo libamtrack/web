@@ -9,6 +9,7 @@
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
+      "label": "energy [MeV/amu]",
       "startholder": "0.01",
       "endholder": "100",
       "intervalType": "points",
