@@ -1,6 +1,9 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
+const webpack = require('webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const htmlPlugin = new HtmlWebPackPlugin({
     template: "./src/index.html",
@@ -12,12 +15,15 @@ const copyStatic = new CopyWebpackPlugin([
         to: "static/"
     }
 ]);
-const copyWasm = new CopyWebpackPlugin([
-    {
-        from: 'src/libat.wasm',
-        to: ""
-    }
-]);
+
+const compresionPlugin = new CompressionPlugin({
+    filename: "[path].gz[query]",
+    algorithm: "gzip",
+    test: /\.js$|\.css$|\.html$/,
+    deleteOriginalAssets: true,
+    threshold: 10240,
+    minRatio: 0.8
+});
 
 module.exports = {
     entry: ['@babel/polyfill', './src/index.js'],
@@ -53,5 +59,8 @@ module.exports = {
             },
         ]
     },
-    plugins: [htmlPlugin, copyStatic, copyWasm]
+    plugins: [htmlPlugin, copyStatic, compresionPlugin,
+        new webpack.DefinePlugin({
+        'process.env.NODE_ENV': '"production"'
+    }), ]
 };
