@@ -1,33 +1,23 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
-const webpack = require('webpack');
-const CompressionPlugin = require('compression-webpack-plugin');
-const HtmlWebpackChangeAssetsExtensionPlugin = require('html-webpack-change-assets-extension-plugin');
 
 const htmlPlugin = new HtmlWebPackPlugin({
     template: "./src/index.html",
-    filename: "./index.html",
-    jsExtension: ".gz"
+    filename: "./index.html"
 });
-
-
 const copyStatic = new CopyWebpackPlugin([
     {
         from: 'src/static/',
         to: "static/"
     }
 ]);
-
-const compresionPlugin = new CompressionPlugin({
-    filename: "[path].gz[query]",
-    algorithm: "gzip",
-    include: "bundle.js",
-    deleteOriginalAssets: true,
-    threshold: 10240,
-    minRatio: 0.8
-});
+const copyWasm = new CopyWebpackPlugin([
+    {
+        from: 'src/libat.wasm',
+        to: ""
+    }
+]);
 
 module.exports = {
     entry: ['@babel/polyfill', './src/index.js'],
@@ -38,9 +28,6 @@ module.exports = {
     output: {
         path: path.join(__dirname, "dist"),
         filename: "bundle.js"
-    },
-    devServer: {
-        compress: true
     },
     module: {
         rules: [
@@ -66,8 +53,5 @@ module.exports = {
             },
         ]
     },
-    plugins: [htmlPlugin, copyStatic, compresionPlugin,
-        new webpack.DefinePlugin({
-        'process.env.NODE_ENV': '"production"'
-    }),new HtmlWebpackChangeAssetsExtensionPlugin() ]
+    plugins: [htmlPlugin, copyStatic, copyWasm]
 };
