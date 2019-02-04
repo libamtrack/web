@@ -4,7 +4,6 @@ const path = require('path');
 const webpack = require("webpack");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var Visualizer = require('webpack-visualizer-plugin');
-var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const htmlPlugin = new HtmlWebPackPlugin({
     template: "./src/index.html",
@@ -58,8 +57,8 @@ module.exports = {
             },
         ]
     },
-    plugins: [htmlPlugin, copyStatic, copyWasm, new BundleAnalyzerPlugin({"openAnalyzer":false}),
+    plugins: [htmlPlugin, copyStatic, copyWasm, new BundleAnalyzerPlugin({"openAnalyzer":false, "analyzerMode":"static"}),
         new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production')
-    }), new Visualizer()]
+    }), new Visualizer({"filename":"report.html"})]
 };
