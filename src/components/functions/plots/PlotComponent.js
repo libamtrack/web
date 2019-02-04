@@ -1,5 +1,6 @@
 import React from 'react';
-import Plot from 'react-plotly.js/react-plotly';
+import createPlotlyComponent from 'react-plotly.js/factory';
+const Plot = createPlotlyComponent(Plotly);
 
 const PlotComponent = (props) => {
         return (
@@ -34,6 +35,6 @@ const PlotComponent = (props) => {
                 /><br/>
             </div>
         );
-}
+};
 
 export default PlotComponent;
