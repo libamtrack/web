@@ -1,11 +1,15 @@
 import React from "react";
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
-import {Link, Route} from 'react-router-dom';
-import {Col, ListGroup, ListGroupItem} from 'react-bootstrap';
 import logo from '../../static/img/logo.png'
 import FunctionsView from '../layouts/FunctionsView.js';
 import SearchBox from "../functions/utils/SearchBox";
-import {Layout, Row} from "antd";
+import Layout from "antd/es/layout/layout";
+import Row from "antd/es/row/index";
+import Col from "react-bootstrap/es/Col";
+import ListGroup from "react-bootstrap/es/ListGroup";
+import ListGroupItem from "react-bootstrap/es/ListGroupItem";
+import Route from "react-router-dom/es/Route";
+import Link from "react-router-dom/es/Link";
 
 const { Header, Content, Footer } = Layout;
 

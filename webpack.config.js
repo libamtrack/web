@@ -1,6 +1,10 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require('path');
+const webpack = require("webpack");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var Visualizer = require('webpack-visualizer-plugin');
+var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const htmlPlugin = new HtmlWebPackPlugin({
     template: "./src/index.html",
@@ -29,6 +33,7 @@ module.exports = {
         path: path.join(__dirname, "dist"),
         filename: "bundle.js"
     },
+
     module: {
         rules: [
             {
@@ -53,5 +58,8 @@ module.exports = {
             },
         ]
     },
-    plugins: [htmlPlugin, copyStatic, copyWasm]
+    plugins: [htmlPlugin, copyStatic, copyWasm, new BundleAnalyzerPlugin({"openAnalyzer":false}),
+        new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production')
+    }), new Visualizer()]
 };

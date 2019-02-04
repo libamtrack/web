@@ -1,4 +1,6 @@
 import React from 'react';
+
+const Plotly = require('plotly.js-basic-dist');
 import createPlotlyComponent from 'react-plotly.js/factory';
 const Plot = createPlotlyComponent(Plotly);
 
