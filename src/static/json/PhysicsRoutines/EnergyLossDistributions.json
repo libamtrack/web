@@ -1,7 +1,7 @@
 {
   "visibleName": "Energy Loss distributions",
   "functionName": "AT_energy_loss_distributions",
-  "description": ["Landau and Vavilov energy loss distributions"],
+  "description": ["Landau, Vavilov and Gauss energy loss distributions"],
   "xTitle": "Energy [keV]",
   "yTitle": "PDF [a.u.]",
   "plot": true,
@@ -42,7 +42,7 @@
       "parameterName": "energy_loss_model",
       "label": "Model",
       "values": "energy_loss_distributions",
-      "defaultValue": 1,
+      "defaultValue": 4,
       "description": "Choose energy loss model"
     },
     {
