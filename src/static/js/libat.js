@@ -5689,6 +5689,12 @@ var real__AT_Gauss_PDF = asm["_AT_Gauss_PDF"]; asm["_AT_Gauss_PDF"] = function()
   return real__AT_Gauss_PDF.apply(null, arguments);
 };
 
+var real__AT_Gauss_energy_loss_distribution = asm["_AT_Gauss_energy_loss_distribution"]; asm["_AT_Gauss_energy_loss_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_Gauss_energy_loss_distribution.apply(null, arguments);
+};
+
 var real__AT_Highland_angle = asm["_AT_Highland_angle"]; asm["_AT_Highland_angle"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -7989,6 +7995,10 @@ var _AT_Gauss_PDF = Module["_AT_Gauss_PDF"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["_AT_Gauss_PDF"].apply(null, arguments) };
+var _AT_Gauss_energy_loss_distribution = Module["_AT_Gauss_energy_loss_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_Gauss_energy_loss_distribution"].apply(null, arguments) };
 var _AT_Highland_angle = Module["_AT_Highland_angle"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
