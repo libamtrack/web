@@ -59,14 +59,14 @@
     },
     {
       "type": "input",
-      "parameterName": "slab_thickness_um",
-      "label": "Slab thickness [um]",
-      "placeholder": "1000.0",
-      "defaultValue": 1000.0,
+      "parameterName": "slab_thickness_mm",
+      "label": "Slab thickness [mm]",
+      "placeholder": "1.0",
+      "defaultValue": 1.0,
       "validations": {
         "type": "float",
         "min": "0.000001",
-        "max": "1000000.0"
+        "max": "100000.0"
       }
     }
   ],

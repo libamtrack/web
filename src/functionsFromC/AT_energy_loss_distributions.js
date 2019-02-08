@@ -47,11 +47,13 @@ export default function AT_energy_loss_distributions(parameters) {
     let material_no = parameters.material_no;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.slab_thickness_um === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER slab_thickness_um IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.slab_thickness_mm === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER slab_thickness_mm IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let slab_thickness_um = parameters.slab_thickness_um;
+    
+    // convert mm to um
+    let slab_thickness_um = parameters.slab_thickness_mm * 1000.0;
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.energy_loss_model === "undefined"){
