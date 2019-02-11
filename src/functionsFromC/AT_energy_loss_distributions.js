@@ -2,6 +2,9 @@ export default function AT_energy_loss_distributions(parameters) {
 
     let at_landau_energy_loss_distribution = Module.cwrap('AT_Landau_energy_loss_distribution', 'null', ['number', 'array', 'number', 'number', 'number', 'number', 'number']);
     let at_vavilov_energy_loss_distribution = Module.cwrap('AT_Vavilov_energy_loss_distribution', 'null', ['number', 'array', 'number', 'number', 'number', 'number', 'number']);
+    /* the one below needs to be implemented */
+    let at_gauss_energy_loss_distribution = Module.cwrap('AT_Gauss_energy_loss_distribution', 'null', ['number', 'array', 'number', 'number', 'number', 'number', 'number']);
+    let at_energy_loss_distribution = Module.cwrap('AT_energy_loss_distribution', 'null', ['number', 'array', 'number', 'number', 'number', 'number', 'number']);
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.n === "undefined"){
@@ -44,11 +47,13 @@ export default function AT_energy_loss_distributions(parameters) {
     let material_no = parameters.material_no;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.slab_thickness_um === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER slab_thickness_um IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.slab_thickness_mm === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER slab_thickness_mm IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let slab_thickness_um = parameters.slab_thickness_um;
+    
+    // convert mm to um
+    let slab_thickness_um = parameters.slab_thickness_mm * 1000.0;
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.energy_loss_model === "undefined"){
@@ -67,8 +72,12 @@ export default function AT_energy_loss_distributions(parameters) {
 
     if( energy_loss_model === 1 ){ // Vavilov
         let result = at_vavilov_energy_loss_distribution(n, energy_loss_keVHeap, E_MeV_u, particle_no, material_no, slab_thickness_um, fDdDReturnHeap.byteOffset);
-    } else { // Landau
+    } else if (energy_loss_model === 2) { // Landau
         let result = at_landau_energy_loss_distribution(n, energy_loss_keVHeap, E_MeV_u, particle_no, material_no, slab_thickness_um, fDdDReturnHeap.byteOffset);
+    } else if (energy_loss_model === 3) { // Gauss
+        let result = at_gauss_energy_loss_distribution(n, energy_loss_keVHeap, E_MeV_u, particle_no, material_no, slab_thickness_um, fDdDReturnHeap.byteOffset);
+    } else { // auto
+        let result = at_energy_loss_distribution(n, energy_loss_keVHeap, E_MeV_u, particle_no, material_no, slab_thickness_um, fDdDReturnHeap.byteOffset);
     }
 
     let resultFromArray = new Float64Array(fDdDReturnHeap.buffer, fDdDReturnHeap.byteOffset, fDdDReturnData.length);
