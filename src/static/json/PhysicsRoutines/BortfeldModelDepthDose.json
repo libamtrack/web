@@ -1,0 +1,96 @@
+{
+  "visibleName": "Depth dose TODO",
+  "functionName": "AT_dose_Bortfeld_Gy",
+  "description": "TODO.",
+  "xTitle": "Depth [cm]",
+  "yTitle": "Dose [Gy]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "z_cm",
+      "label": "Depth [cm]",
+      "startholder": "0.0",
+      "endholder": "30.0",
+      "intervalType": "points",
+      "stepDefaultValue": "0.1",
+      "pointsDefaultNumber": "300",
+      "validations": {
+        "type": "float",
+        "min": "0.0",
+        "max": "1000000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy [MeV]",
+      "placeholder": "150.0",
+      "defaultValue": 150.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "sigma_E_MeV_u",
+      "label": "Energy sigma [MeV]",
+      "placeholder": "1.5",
+      "defaultValue": 1.5,
+      "validations": {
+        "type": "float",
+        "min": "0.0",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "fluence_cm2",
+      "label": "Fluence [1/cm2]",
+      "placeholder": "1000000000",
+      "defaultValue": 1000000000,
+      "description": "fluence in 1/cm2",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "10000000000000000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose material type"
+    },
+    {
+      "type": "input",
+      "parameterName": "eps",
+      "label": "eps",
+      "placeholder": "0.01",
+      "defaultValue": 0.01,
+      "description": "TODO",
+      "validations": {
+        "type": "float",
+        "min": "0.00",
+        "max": "10000000000000000"
+      }
+    }
+  ],
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear",
+    "plotType": "lines"
+  },
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
