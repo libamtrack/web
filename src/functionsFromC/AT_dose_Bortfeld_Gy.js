@@ -48,12 +48,8 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     }
     let material_no = parameters.material_no;
 
-    /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.eps === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER eps IN OBJECT PASSED TO THIS FUNCTIONS");
-        return "error";
-    }
-    let eps = parameters.eps;
+    /*** default value of eps parameter ***/
+    let eps = -1;
 
     /*********************OUTPUT ARRAY*******************************/
     let dose_GyReturnData = new Float64Array(new Array(n));
