@@ -9557,6 +9557,207 @@ function _AT_run_IGK_method($0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$1
  (_fclose($421)|0);
  STACKTOP = sp;return;
 }
+function _AT_dose_Bortfeld_Gy_single($0,$1,$2,$3,$4,$5) {
+ $0 = +$0;
+ $1 = +$1;
+ $2 = +$2;
+ $3 = +$3;
+ $4 = $4|0;
+ $5 = +$5;
+ var $10 = 0, $100 = 0.0, $101 = 0.0, $102 = 0.0, $103 = 0.0, $104 = 0.0, $105 = 0.0, $106 = 0.0, $107 = 0.0, $108 = 0.0, $109 = 0.0, $11 = 0.0, $110 = 0.0, $111 = 0.0, $112 = 0.0, $113 = 0.0, $114 = 0.0, $115 = 0.0, $116 = 0.0, $117 = 0.0;
+ var $118 = 0.0, $119 = 0.0, $12 = 0.0, $120 = 0.0, $121 = 0.0, $13 = 0.0, $14 = 0.0, $15 = 0.0, $16 = 0.0, $17 = 0, $18 = 0, $19 = 0.0, $20 = 0.0, $21 = 0.0, $22 = 0.0, $23 = 0.0, $24 = 0.0, $25 = 0.0, $26 = 0, $27 = 0;
+ var $28 = 0, $29 = 0.0, $30 = 0, $31 = 0.0, $32 = 0.0, $33 = 0.0, $34 = 0.0, $35 = 0.0, $36 = 0.0, $37 = 0.0, $38 = 0.0, $39 = 0.0, $40 = 0.0, $41 = 0.0, $42 = 0.0, $43 = 0.0, $44 = 0, $45 = 0.0, $46 = 0.0, $47 = 0.0;
+ var $48 = 0.0, $49 = 0, $50 = 0.0, $51 = 0.0, $52 = 0.0, $53 = 0.0, $54 = 0.0, $55 = 0.0, $56 = 0.0, $57 = 0.0, $58 = 0.0, $59 = 0.0, $6 = 0.0, $60 = 0.0, $61 = 0.0, $62 = 0.0, $63 = 0.0, $64 = 0.0, $65 = 0.0, $66 = 0.0;
+ var $67 = 0.0, $68 = 0.0, $69 = 0.0, $7 = 0.0, $70 = 0.0, $71 = 0.0, $72 = 0.0, $73 = 0.0, $74 = 0.0, $75 = 0.0, $76 = 0.0, $77 = 0.0, $78 = 0.0, $79 = 0.0, $8 = 0.0, $80 = 0.0, $81 = 0.0, $82 = 0.0, $83 = 0.0, $84 = 0.0;
+ var $85 = 0.0, $86 = 0.0, $87 = 0.0, $88 = 0.0, $89 = 0.0, $9 = 0.0, $90 = 0.0, $91 = 0.0, $92 = 0.0, $93 = 0.0, $94 = 0.0, $95 = 0.0, $96 = 0.0, $97 = 0.0, $98 = 0, $99 = 0.0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 176|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(176|0);
+ $17 = sp + 80|0;
+ $18 = sp + 72|0;
+ $26 = sp + 8|0;
+ $27 = sp;
+ $6 = $0;
+ $7 = $1;
+ $8 = $2;
+ $9 = $3;
+ $10 = $4;
+ $11 = $5;
+ $12 = 0.012;
+ $13 = 0.59999999999999998;
+ $28 = $10;
+ $29 = (+_AT_p_MeV_from_material_no($28));
+ $14 = $29;
+ $30 = $10;
+ $31 = (+_AT_alpha_g_cm2_MeV_from_material_no($30));
+ $15 = $31;
+ $32 = $15;
+ $33 = $8;
+ $34 = $14;
+ $35 = (+Math_pow((+$33),(+$34)));
+ $36 = $32 * $35;
+ $16 = $36;
+ $37 = $14;
+ $38 = 1.0 / $37;
+ HEAPF64[$17>>3] = $38;
+ $39 = $14;
+ $40 = 1.0 / $39;
+ $41 = 1.0 + $40;
+ HEAPF64[$18>>3] = $41;
+ $42 = $9;
+ $19 = $42;
+ $43 = $9;
+ $44 = $43 < 0.0;
+ if ($44) {
+  $45 = $8;
+  $46 = 0.01 * $45;
+  $19 = $46;
+ }
+ $47 = $11;
+ $20 = $47;
+ $48 = $11;
+ $49 = $48 < 0.0;
+ if ($49) {
+  $20 = 0.029999999999999999;
+ }
+ $50 = $16;
+ $51 = (+Math_pow((+$50),0.93500000000000005));
+ $52 = 0.012 * $51;
+ $21 = $52;
+ $53 = $21;
+ $54 = $21;
+ $55 = $53 * $54;
+ $56 = $19;
+ $57 = $15;
+ $58 = $56 * $57;
+ $59 = $14;
+ $60 = $58 * $59;
+ $61 = $8;
+ $62 = $14;
+ $63 = $62 - 1.0;
+ $64 = (+Math_pow((+$61),(+$63)));
+ $65 = $60 * $64;
+ $66 = (+Math_pow((+$65),2.0));
+ $67 = $55 + $66;
+ $68 = (+Math_sqrt((+$67)));
+ $22 = $68;
+ $69 = $7;
+ $23 = $69;
+ $70 = $6;
+ $71 = $16;
+ $72 = $22;
+ $73 = +HEAPF64[$17>>3];
+ $74 = (+_AT_range_straggling_convolution($70,$71,$72,$73));
+ $24 = $74;
+ $75 = $6;
+ $76 = $16;
+ $77 = $22;
+ $78 = +HEAPF64[$18>>3];
+ $79 = (+_AT_range_straggling_convolution($75,$76,$77,$78));
+ $25 = $79;
+ $80 = $14;
+ $81 = 0.012 / $80;
+ $82 = $81 + 0.0071999999999999998;
+ $83 = $20;
+ $84 = $16;
+ $85 = $83 / $84;
+ $86 = $82 + $85;
+ $87 = $25;
+ $88 = $87 * $86;
+ $25 = $88;
+ $89 = $22;
+ $90 = $25;
+ $91 = $90 * $89;
+ $25 = $91;
+ (_AT_gamma_($17,$26)|0);
+ $92 = +HEAPF64[$26>>3];
+ $93 = $25;
+ $94 = $93 * $92;
+ $25 = $94;
+ (_AT_gamma_($18,$27)|0);
+ $95 = +HEAPF64[$27>>3];
+ $96 = $25;
+ $97 = $96 / $95;
+ $25 = $97;
+ $98 = $10;
+ $99 = (+_AT_density_g_cm3_from_material_no($98));
+ $100 = $23;
+ $101 = $100 / $99;
+ $23 = $101;
+ $102 = $14;
+ $103 = $15;
+ $104 = +HEAPF64[$17>>3];
+ $105 = (+Math_pow((+$103),(+$104)));
+ $106 = $102 * $105;
+ $107 = $23;
+ $108 = $107 / $106;
+ $23 = $108;
+ $109 = $16;
+ $110 = 0.012 * $109;
+ $111 = 1.0 + $110;
+ $112 = $23;
+ $113 = $112 / $111;
+ $23 = $113;
+ $114 = $24;
+ $115 = $25;
+ $116 = $114 + $115;
+ $117 = $23;
+ $118 = $117 * $116;
+ $23 = $118;
+ $119 = $23;
+ $120 = $119 * 1.6021766000000001E-10;
+ $23 = $120;
+ $121 = $23;
+ STACKTOP = sp;return (+$121);
+}
+function _AT_dose_Bortfeld_Gy_multi($0,$1,$2,$3,$4,$5,$6,$7) {
+ $0 = $0|0;
+ $1 = $1|0;
+ $2 = +$2;
+ $3 = +$3;
+ $4 = +$4;
+ $5 = $5|0;
+ $6 = +$6;
+ $7 = $7|0;
+ var $10 = 0.0, $11 = 0.0, $12 = 0.0, $13 = 0, $14 = 0.0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0.0, $24 = 0.0, $25 = 0.0, $26 = 0.0, $27 = 0, $28 = 0.0, $29 = 0.0;
+ var $30 = 0, $31 = 0, $32 = 0, $33 = 0, $34 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 64|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(64|0);
+ $8 = $0;
+ $9 = $1;
+ $10 = $2;
+ $11 = $3;
+ $12 = $4;
+ $13 = $5;
+ $14 = $6;
+ $15 = $7;
+ $16 = 0;
+ while(1) {
+  $17 = $16;
+  $18 = $8;
+  $19 = ($17|0)<($18|0);
+  if (!($19)) {
+   break;
+  }
+  $20 = $9;
+  $21 = $16;
+  $22 = (($20) + ($21<<3)|0);
+  $23 = +HEAPF64[$22>>3];
+  $24 = $11;
+  $25 = $10;
+  $26 = $12;
+  $27 = $13;
+  $28 = $14;
+  $29 = (+_AT_dose_Bortfeld_Gy_single($23,$24,$25,$26,$27,$28));
+  $30 = $15;
+  $31 = $16;
+  $32 = (($30) + ($31<<3)|0);
+  HEAPF64[$32>>3] = $29;
+  $33 = $16;
+  $34 = (($33) + 1)|0;
+  $16 = $34;
+ }
+ STACKTOP = sp;return;
+}
 function _AT_material_index_from_material_number($0) {
  $0 = $0|0;
  var $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, label = 0, sp = 0;
@@ -41655,7 +41856,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
  $69 = $17;
  $70 = $12;
  $71 = $13;
- _initialise_1139($69,$70,$71);
+ _initialise_1143($69,$70,$71);
  $72 = $18;
  HEAPF64[$72>>3] = 0.0;
  $73 = $19;
@@ -41693,7 +41894,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
  $88 = $17;
  $89 = +HEAPF64[$25>>3];
  $90 = +HEAPF64[$26>>3];
- _set_initial_result_1143($88,$89,$90);
+ _set_initial_result_1147($88,$89,$90);
  $91 = $14;
  $92 = $15;
  $93 = +HEAPF64[$25>>3];
@@ -41766,9 +41967,9 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
   $390 = $10;
   STACKTOP = sp;return ($390|0);
  }
- _initialise_table_1146($45);
+ _initialise_table_1150($45);
  $126 = +HEAPF64[$25>>3];
- _append_table_1147($45,$126);
+ _append_table_1151($45,$126);
  $127 = +HEAPF64[$25>>3];
  $21 = $127;
  $128 = +HEAPF64[$26>>3];
@@ -41778,7 +41979,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
  $24 = 1.7976931348623157E+308;
  $130 = +HEAPF64[$25>>3];
  $131 = +HEAPF64[$27>>3];
- $132 = (_test_positivity_1148($130,$131)|0);
+ $132 = (_test_positivity_1152($130,$131)|0);
  $42 = $132;
  $41 = 1;
  L26: while(1) {
@@ -41789,7 +41990,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
   HEAPF64[$59>>3] = 0.0;
   $60 = 0.0;
   $133 = $17;
-  _retrieve_1149($133,$51,$52,$53,$54);
+  _retrieve_1153($133,$51,$52,$53,$54);
   $134 = $17;
   $135 = ((($134)) + 40|0);
   $136 = HEAP32[$135>>2]|0;
@@ -41926,7 +42127,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
   $223 = $47;
   $224 = $49;
   $225 = $50;
-  $226 = (_subinterval_too_small_1150($223,$224,$225)|0);
+  $226 = (_subinterval_too_small_1154($223,$224,$225)|0);
   $227 = ($226|0)!=(0);
   if ($227) {
    $39 = 4;
@@ -41940,7 +42141,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
   $234 = $50;
   $235 = +HEAPF64[$56>>3];
   $236 = +HEAPF64[$59>>3];
-  _update_1151($228,$229,$230,$231,$232,$233,$234,$235,$236);
+  _update_1155($228,$229,$230,$231,$232,$233,$234,$235,$236);
   $237 = $22;
   $238 = $29;
   $239 = $237 <= $238;
@@ -41971,7 +42172,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
     $249 = $29;
     $30 = $249;
     $250 = $21;
-    _append_table_1147($45,$250);
+    _append_table_1151($45,$250);
    } else {
     $251 = $44;
     $252 = ($251|0)!=(0);
@@ -41996,7 +42197,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
      $266 = ($265|0)!=(0);
      if (!($266)) {
       $267 = $17;
-      $268 = (_large_interval_1152($267)|0);
+      $268 = (_large_interval_1156($267)|0);
       $269 = ($268|0)!=(0);
       if ($269) {
        break;
@@ -42017,7 +42218,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
         break;
        }
        $277 = $17;
-       $278 = (_increase_nrmax_1153($277)|0);
+       $278 = (_increase_nrmax_1157($277)|0);
        $279 = ($278|0)!=(0);
        if ($279) {
         break L53;
@@ -42025,8 +42226,8 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
       }
      } while(0);
      $280 = $21;
-     _append_table_1147($45,$280);
-     _qelg_1154($45,$32,$33);
+     _append_table_1151($45,$280);
+     _qelg_1158($45,$32,$33);
      $281 = $35;
      $282 = (($281) + 1)|0;
      $35 = $282;
@@ -42082,7 +42283,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
       break L26;
      }
      $308 = $17;
-     _reset_nrmax_1155($308);
+     _reset_nrmax_1159($308);
      $43 = 0;
      $309 = $22;
      $31 = $309;
@@ -42210,7 +42411,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
  } while(0);
  if ((label|0) == 72) {
   $369 = $17;
-  $370 = (+_sum_results_1156($369));
+  $370 = (+_sum_results_1160($369));
   $371 = $18;
   HEAPF64[$371>>3] = $370;
   $372 = $22;
@@ -42278,7 +42479,7 @@ function _qags($0,$1,$2,$3,$4,$5,$6,$7,$8,$9) {
  }
  return (0)|0;
 }
-function _initialise_1139($0,$1,$2) {
+function _initialise_1143($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = +$2;
@@ -42329,7 +42530,7 @@ function _initialise_1139($0,$1,$2) {
  HEAP32[$33>>2] = 0;
  STACKTOP = sp;return;
 }
-function _set_initial_result_1143($0,$1,$2) {
+function _set_initial_result_1147($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = +$2;
@@ -42354,7 +42555,7 @@ function _set_initial_result_1143($0,$1,$2) {
  HEAPF64[$15>>3] = $12;
  STACKTOP = sp;return;
 }
-function _initialise_table_1146($0) {
+function _initialise_table_1150($0) {
  $0 = $0|0;
  var $1 = 0, $2 = 0, $3 = 0, $4 = 0, label = 0, sp = 0;
  sp = STACKTOP;
@@ -42367,7 +42568,7 @@ function _initialise_table_1146($0) {
  HEAP32[$4>>2] = 0;
  STACKTOP = sp;return;
 }
-function _append_table_1147($0,$1) {
+function _append_table_1151($0,$1) {
  $0 = $0|0;
  $1 = +$1;
  var $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $2 = 0, $3 = 0.0, $4 = 0, $5 = 0, $6 = 0, $7 = 0.0, $8 = 0, $9 = 0, label = 0, sp = 0;
@@ -42390,7 +42591,7 @@ function _append_table_1147($0,$1) {
  HEAP32[$12>>2] = $14;
  STACKTOP = sp;return;
 }
-function _test_positivity_1148($0,$1) {
+function _test_positivity_1152($0,$1) {
  $0 = +$0;
  $1 = +$1;
  var $10 = 0, $11 = 0, $2 = 0.0, $3 = 0.0, $4 = 0, $5 = 0.0, $6 = 0.0, $7 = 0.0, $8 = 0.0, $9 = 0, label = 0, sp = 0;
@@ -42408,7 +42609,7 @@ function _test_positivity_1148($0,$1) {
  $11 = $4;
  STACKTOP = sp;return ($11|0);
 }
-function _retrieve_1149($0,$1,$2,$3,$4) {
+function _retrieve_1153($0,$1,$2,$3,$4) {
  $0 = $0|0;
  $1 = $1|0;
  $2 = $2|0;
@@ -42470,7 +42671,7 @@ function _retrieve_1149($0,$1,$2,$3,$4) {
  HEAPF64[$49>>3] = $48;
  STACKTOP = sp;return;
 }
-function _subinterval_too_small_1150($0,$1,$2) {
+function _subinterval_too_small_1154($0,$1,$2) {
  $0 = +$0;
  $1 = +$1;
  $2 = +$2;
@@ -42509,7 +42710,7 @@ function _subinterval_too_small_1150($0,$1,$2) {
  $24 = $9;
  STACKTOP = sp;return ($24|0);
 }
-function _update_1151($0,$1,$2,$3,$4,$5,$6,$7,$8) {
+function _update_1155($0,$1,$2,$3,$4,$5,$6,$7,$8) {
  $0 = $0|0;
  $1 = +$1;
  $2 = +$2;
@@ -42681,7 +42882,7 @@ function _update_1151($0,$1,$2,$3,$4,$5,$6,$7,$8) {
  $137 = ($133>>>0)>($136>>>0);
  if (!($137)) {
   $141 = $9;
-  _qpsrt_1163($141);
+  _qpsrt_1167($141);
   STACKTOP = sp;return;
  }
  $138 = $25;
@@ -42689,10 +42890,10 @@ function _update_1151($0,$1,$2,$3,$4,$5,$6,$7,$8) {
  $140 = ((($139)) + 16|0);
  HEAP32[$140>>2] = $138;
  $141 = $9;
- _qpsrt_1163($141);
+ _qpsrt_1167($141);
  STACKTOP = sp;return;
 }
-function _large_interval_1152($0) {
+function _large_interval_1156($0) {
  $0 = $0|0;
  var $1 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0;
  var sp = 0;
@@ -42726,7 +42927,7 @@ function _large_interval_1152($0) {
  }
  return (0)|0;
 }
-function _increase_nrmax_1153($0) {
+function _increase_nrmax_1157($0) {
  $0 = $0|0;
  var $1 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $25 = 0, $26 = 0, $27 = 0;
  var $28 = 0, $29 = 0, $3 = 0, $30 = 0, $31 = 0, $32 = 0, $33 = 0, $34 = 0, $35 = 0, $36 = 0, $37 = 0, $38 = 0, $39 = 0, $4 = 0, $40 = 0, $41 = 0, $42 = 0, $43 = 0, $44 = 0, $45 = 0;
@@ -42824,7 +43025,7 @@ function _increase_nrmax_1153($0) {
  }
  return (0)|0;
 }
-function _qelg_1154($0,$1,$2) {
+function _qelg_1158($0,$1,$2) {
  $0 = $0|0;
  $1 = $1|0;
  $2 = $2|0;
@@ -43286,7 +43487,7 @@ function _qelg_1154($0,$1,$2) {
  HEAPF64[$335>>3] = $334;
  STACKTOP = sp;return;
 }
-function _reset_nrmax_1155($0) {
+function _reset_nrmax_1159($0) {
  $0 = $0|0;
  var $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
  sp = STACKTOP;
@@ -43304,7 +43505,7 @@ function _reset_nrmax_1155($0) {
  HEAP32[$9>>2] = $7;
  STACKTOP = sp;return;
 }
-function _sum_results_1156($0) {
+function _sum_results_1160($0) {
  $0 = $0|0;
  var $1 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0.0, $19 = 0.0, $2 = 0, $20 = 0.0, $21 = 0, $22 = 0, $23 = 0.0, $3 = 0, $4 = 0, $5 = 0.0, $6 = 0;
  var $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
@@ -43342,7 +43543,7 @@ function _sum_results_1156($0) {
  $23 = $5;
  STACKTOP = sp;return (+$23);
 }
-function _qpsrt_1163($0) {
+function _qpsrt_1167($0) {
  $0 = $0|0;
  var $1 = 0, $10 = 0, $100 = 0, $101 = 0, $102 = 0, $103 = 0, $104 = 0, $105 = 0, $106 = 0, $107 = 0, $108 = 0.0, $109 = 0, $11 = 0, $110 = 0, $111 = 0, $112 = 0, $113 = 0, $114 = 0, $115 = 0.0, $116 = 0;
  var $117 = 0, $118 = 0, $119 = 0, $12 = 0, $120 = 0, $121 = 0, $122 = 0.0, $123 = 0, $124 = 0, $125 = 0, $126 = 0, $127 = 0, $128 = 0, $129 = 0, $13 = 0, $130 = 0, $131 = 0, $132 = 0, $133 = 0, $134 = 0;
@@ -46897,7 +47098,7 @@ function _gsl_sf_bessel_I0_scaled_e($0,$1) {
   $31 = $29 * $30;
   $32 = $31 / 4.5;
   $33 = $32 - 1.0;
-  (_cheb_eval_e_3581(70240,$33,$7)|0);
+  (_cheb_eval_e_3585(70240,$33,$7)|0);
   $34 = $6;
   $35 = +HEAPF64[$7>>3];
   $36 = 2.75 + $35;
@@ -46929,7 +47130,7 @@ function _gsl_sf_bessel_I0_scaled_e($0,$1) {
   $54 = 48.0 / $53;
   $55 = $54 - 11.0;
   $56 = $55 / 5.0;
-  (_cheb_eval_e_3581(70272,$56,$9)|0);
+  (_cheb_eval_e_3585(70272,$56,$9)|0);
   $57 = +HEAPF64[$9>>3];
   $58 = 0.375 + $57;
   $59 = $8;
@@ -46971,7 +47172,7 @@ function _gsl_sf_bessel_I0_scaled_e($0,$1) {
   $86 = $5;
   $87 = 16.0 / $86;
   $88 = $87 - 1.0;
-  (_cheb_eval_e_3581(70304,$88,$11)|0);
+  (_cheb_eval_e_3585(70304,$88,$11)|0);
   $89 = +HEAPF64[$11>>3];
   $90 = 0.375 + $89;
   $91 = $10;
@@ -47011,7 +47212,7 @@ function _gsl_sf_bessel_I0_scaled_e($0,$1) {
  }
  return (0)|0;
 }
-function _cheb_eval_e_3581($0,$1,$2) {
+function _cheb_eval_e_3585($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -47218,7 +47419,7 @@ function _gsl_sf_bessel_I1_scaled_e($0,$1) {
   $44 = $42 * $43;
   $45 = $44 / 4.5;
   $46 = $45 - 1.0;
-  (_cheb_eval_e_3588(70336,$46,$9)|0);
+  (_cheb_eval_e_3592(70336,$46,$9)|0);
   $47 = $3;
   $48 = $8;
   $49 = $47 * $48;
@@ -47263,7 +47464,7 @@ function _gsl_sf_bessel_I1_scaled_e($0,$1) {
   $79 = 48.0 / $78;
   $80 = $79 - 11.0;
   $81 = $80 / 5.0;
-  (_cheb_eval_e_3588(70368,$81,$11)|0);
+  (_cheb_eval_e_3592(70368,$81,$11)|0);
   $82 = +HEAPF64[$11>>3];
   $83 = 0.375 + $82;
   $84 = $10;
@@ -47302,7 +47503,7 @@ function _gsl_sf_bessel_I1_scaled_e($0,$1) {
   $107 = $7;
   $108 = 16.0 / $107;
   $109 = $108 - 1.0;
-  (_cheb_eval_e_3588(70400,$109,$15)|0);
+  (_cheb_eval_e_3592(70400,$109,$15)|0);
   $110 = +HEAPF64[$15>>3];
   $111 = 0.375 + $110;
   $112 = $14;
@@ -47339,7 +47540,7 @@ function _gsl_sf_bessel_I1_scaled_e($0,$1) {
  }
  return (0)|0;
 }
-function _cheb_eval_e_3588($0,$1,$2) {
+function _cheb_eval_e_3592($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -48122,7 +48323,7 @@ function _gsl_sf_bessel_J1_e($0,$1) {
   $39 = $5;
   $40 = $38 * $39;
   $41 = $40 - 1.0;
-  (_cheb_eval_e_3606(70432,$41,$6)|0);
+  (_cheb_eval_e_3610(70432,$41,$6)|0);
   $42 = $3;
   $43 = +HEAPF64[$6>>3];
   $44 = 0.25 + $43;
@@ -48147,10 +48348,10 @@ function _gsl_sf_bessel_J1_e($0,$1) {
  $57 = $56 - 1.0;
  $7 = $57;
  $58 = $7;
- $59 = (_cheb_eval_e_3606(70528,$58,$8)|0);
+ $59 = (_cheb_eval_e_3610(70528,$58,$8)|0);
  $11 = $59;
  $60 = $7;
- $61 = (_cheb_eval_e_3606(70560,$60,$9)|0);
+ $61 = (_cheb_eval_e_3610(70560,$60,$9)|0);
  $12 = $61;
  $62 = $5;
  $63 = +HEAPF64[$9>>3];
@@ -48227,7 +48428,7 @@ function _gsl_sf_bessel_J1_e($0,$1) {
  $115 = $2;
  STACKTOP = sp;return ($115|0);
 }
-function _cheb_eval_e_3606($0,$1,$2) {
+function _cheb_eval_e_3610($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -48450,7 +48651,7 @@ function _gsl_sf_bessel_K0_scaled_e($0,$1) {
   $62 = 16.0 / $61;
   $63 = $62 - 9.0;
   $64 = $63 / 7.0;
-  (_cheb_eval_e_3618(70464,$64,$9)|0);
+  (_cheb_eval_e_3622(70464,$64,$9)|0);
   $65 = +HEAPF64[$9>>3];
   $66 = 1.203125 + $65;
   $67 = $8;
@@ -48481,7 +48682,7 @@ function _gsl_sf_bessel_K0_scaled_e($0,$1) {
   $84 = $3;
   $85 = 16.0 / $84;
   $86 = $85 - 1.0;
-  (_cheb_eval_e_3618(70496,$86,$11)|0);
+  (_cheb_eval_e_3622(70496,$86,$11)|0);
   $87 = +HEAPF64[$11>>3];
   $88 = 1.25 + $87;
   $89 = $10;
@@ -48511,7 +48712,7 @@ function _gsl_sf_bessel_K0_scaled_e($0,$1) {
  }
  return (0)|0;
 }
-function _cheb_eval_e_3618($0,$1,$2) {
+function _cheb_eval_e_3622($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -48994,9 +49195,9 @@ function _gsl_sf_temme_gamma($0,$1,$2,$3,$4) {
  $18 = $17 - 1.0;
  $11 = $18;
  $19 = $11;
- (_cheb_eval_e_3706(70592,$19,$12)|0);
+ (_cheb_eval_e_3710(70592,$19,$12)|0);
  $20 = $11;
- (_cheb_eval_e_3706(70624,$20,$13)|0);
+ (_cheb_eval_e_3710(70624,$20,$13)|0);
  $21 = +HEAPF64[$12>>3];
  $22 = $8;
  HEAPF64[$22>>3] = $21;
@@ -49021,7 +49222,7 @@ function _gsl_sf_temme_gamma($0,$1,$2,$3,$4) {
  HEAPF64[$38>>3] = $37;
  STACKTOP = sp;return 0;
 }
-function _cheb_eval_e_3706($0,$1,$2) {
+function _cheb_eval_e_3710($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -50095,7 +50296,7 @@ function _gsl_sf_erfc_e($0,$1) {
    $21 = $20 - 1.0;
    $7 = $21;
    $22 = $7;
-   (_cheb_eval_e_3797(70656,$22,$8)|0);
+   (_cheb_eval_e_3801(70656,$22,$8)|0);
    $23 = +HEAPF64[$8>>3];
    $5 = $23;
    $24 = ((($8)) + 8|0);
@@ -50115,7 +50316,7 @@ function _gsl_sf_erfc_e($0,$1) {
     $34 = 0.5 * $33;
     $10 = $34;
     $35 = $10;
-    (_cheb_eval_e_3797(70688,$35,$11)|0);
+    (_cheb_eval_e_3801(70688,$35,$11)|0);
     $36 = $9;
     $37 = +HEAPF64[$11>>3];
     $38 = $36 * $37;
@@ -50149,7 +50350,7 @@ function _gsl_sf_erfc_e($0,$1) {
     $60 = $59 / 5.0;
     $13 = $60;
     $61 = $13;
-    (_cheb_eval_e_3797(70720,$61,$14)|0);
+    (_cheb_eval_e_3801(70720,$61,$14)|0);
     $62 = $12;
     $63 = +HEAPF64[$14>>3];
     $64 = $62 * $63;
@@ -50224,7 +50425,7 @@ function _gsl_sf_erfc_e($0,$1) {
  }
  return (0)|0;
 }
-function _cheb_eval_e_3797($0,$1,$2) {
+function _cheb_eval_e_3801($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -52331,7 +52532,7 @@ function _expint_E1_impl($0,$1,$2) {
   $45 = $4;
   $46 = 20.0 / $45;
   $47 = $46 + 1.0;
-  (_cheb_eval_e_3833(70752,$47,$10)|0);
+  (_cheb_eval_e_3837(70752,$47,$10)|0);
   $48 = $9;
   $49 = +HEAPF64[$10>>3];
   $50 = 1.0 + $49;
@@ -52382,7 +52583,7 @@ function _expint_E1_impl($0,$1,$2) {
   $82 = 40.0 / $81;
   $83 = $82 + 7.0;
   $84 = $83 / 3.0;
-  (_cheb_eval_e_3833(70784,$84,$12)|0);
+  (_cheb_eval_e_3837(70784,$84,$12)|0);
   $85 = $11;
   $86 = +HEAPF64[$12>>3];
   $87 = 1.0 + $86;
@@ -52426,7 +52627,7 @@ function _expint_E1_impl($0,$1,$2) {
   $115 = 2.0 * $114;
   $116 = $115 + 5.0;
   $117 = $116 / 3.0;
-  (_cheb_eval_e_3833(70816,$117,$15)|0);
+  (_cheb_eval_e_3837(70816,$117,$15)|0);
   $118 = $14;
   $119 = $13;
   $120 = +HEAPF64[$15>>3];
@@ -52485,7 +52686,7 @@ function _expint_E1_impl($0,$1,$2) {
   $156 = $153 ? $155 : 1.0;
   $17 = $156;
   $157 = $4;
-  (_cheb_eval_e_3833(70848,$157,$18)|0);
+  (_cheb_eval_e_3837(70848,$157,$18)|0);
   $158 = $17;
   $159 = $16;
   $160 = $159 - 0.6875;
@@ -52540,7 +52741,7 @@ function _expint_E1_impl($0,$1,$2) {
   $196 = 8.0 / $195;
   $197 = $196 - 5.0;
   $198 = $197 / 3.0;
-  (_cheb_eval_e_3833(70880,$198,$20)|0);
+  (_cheb_eval_e_3837(70880,$198,$20)|0);
   $199 = $19;
   $200 = +HEAPF64[$20>>3];
   $201 = 1.0 + $200;
@@ -52600,7 +52801,7 @@ function _expint_E1_impl($0,$1,$2) {
  $231 = $4;
  $232 = 8.0 / $231;
  $233 = $232 - 1.0;
- (_cheb_eval_e_3833(70912,$233,$22)|0);
+ (_cheb_eval_e_3837(70912,$233,$22)|0);
  $234 = $21;
  $235 = +HEAPF64[$22>>3];
  $236 = 1.0 + $235;
@@ -52648,7 +52849,7 @@ function _expint_E1_impl($0,$1,$2) {
  }
  return (0)|0;
 }
-function _cheb_eval_e_3833($0,$1,$2) {
+function _cheb_eval_e_3837($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -54225,7 +54426,7 @@ function _gamma_xgthalf($0,$1) {
   $142 = $141 / 5.0;
   $25 = $142;
   $143 = $25;
-  (_cheb_eval_e_3874(70944,$143,$26)|0);
+  (_cheb_eval_e_3878(70944,$143,$26)|0);
   $144 = +HEAPF64[$26>>3];
   $145 = (+Math_exp((+$144)));
   $146 = $145 * 5040.0;
@@ -54309,7 +54510,7 @@ function _gamma_xgthalf($0,$1) {
  }
  return (0)|0;
 }
-function _cheb_eval_e_3874($0,$1,$2) {
+function _cheb_eval_e_3878($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -54597,7 +54798,7 @@ function _gsl_sf_gammastar_e($0,$1) {
   $12 = $62;
   $63 = $12;
   $64 = $4;
-  $65 = (_cheb_eval_e_3874(70976,$63,$64)|0);
+  $65 = (_cheb_eval_e_3878(70976,$63,$64)|0);
   $2 = $65;
   $132 = $2;
   STACKTOP = sp;return ($132|0);
@@ -54610,7 +54811,7 @@ function _gsl_sf_gammastar_e($0,$1) {
   $70 = $69 - 1.0;
   $13 = $70;
   $71 = $13;
-  (_cheb_eval_e_3874(71008,$71,$14)|0);
+  (_cheb_eval_e_3878(71008,$71,$14)|0);
   $72 = +HEAPF64[$14>>3];
   $73 = $3;
   $74 = $3;
@@ -73330,7 +73531,7 @@ function _gsl_sf_log_1plusx_e($0,$1) {
   $71 = $68 / $70;
   $15 = $71;
   $72 = $15;
-  (_cheb_eval_e_4050(71040,$72,$16)|0);
+  (_cheb_eval_e_4054(71040,$72,$16)|0);
   $73 = $3;
   $74 = +HEAPF64[$16>>3];
   $75 = $73 * $74;
@@ -73365,7 +73566,7 @@ function _gsl_sf_log_1plusx_e($0,$1) {
  }
  return (0)|0;
 }
-function _cheb_eval_e_4050($0,$1,$2) {
+function _cheb_eval_e_4054($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -73595,7 +73796,7 @@ function _gsl_sf_log_1plusx_mx_e($0,$1) {
   $71 = $68 / $70;
   $15 = $71;
   $72 = $15;
-  (_cheb_eval_e_4050(71072,$72,$16)|0);
+  (_cheb_eval_e_4054(71072,$72,$16)|0);
   $73 = $3;
   $74 = $3;
   $75 = $73 * $74;
@@ -75292,7 +75493,7 @@ function _psi_x($0,$1) {
   $37 = $36 - 1.0;
   $6 = $37;
   $38 = $6;
-  (_cheb_eval_e_4126(71104,$38,$7)|0);
+  (_cheb_eval_e_4130(71104,$38,$7)|0);
   $39 = $3;
   $40 = $39 < 0.0;
   if (!($40)) {
@@ -75410,7 +75611,7 @@ function _psi_x($0,$1) {
   $121 = $11;
   $122 = 2.0 * $121;
   $123 = $122 - 1.0;
-  (_cheb_eval_e_4126(71136,$123,$10)|0);
+  (_cheb_eval_e_4130(71136,$123,$10)|0);
   $124 = $12;
   $125 = $13;
   $126 = $124 + $125;
@@ -75475,7 +75676,7 @@ function _psi_x($0,$1) {
   $173 = $15;
   $174 = 2.0 * $173;
   $175 = $174 - 1.0;
-  (_cheb_eval_e_4126(71136,$175,$10)|0);
+  (_cheb_eval_e_4130(71136,$175,$10)|0);
   $176 = $16;
   $177 = $17;
   $178 = $176 + $177;
@@ -75525,7 +75726,7 @@ function _psi_x($0,$1) {
   $212 = $3;
   $213 = 2.0 * $212;
   $214 = $213 - 1.0;
-  (_cheb_eval_e_4126(71136,$214,$10)|0);
+  (_cheb_eval_e_4130(71136,$214,$10)|0);
   $215 = $18;
   $216 = - $215;
   $217 = +HEAPF64[$10>>3];
@@ -75563,14 +75764,14 @@ function _psi_x($0,$1) {
   $240 = 2.0 * $239;
   $241 = $240 - 1.0;
   $242 = $4;
-  $243 = (_cheb_eval_e_4126(71136,$241,$242)|0);
+  $243 = (_cheb_eval_e_4130(71136,$241,$242)|0);
   $2 = $243;
   $244 = $2;
   STACKTOP = sp;return ($244|0);
  }
  return (0)|0;
 }
-function _cheb_eval_e_4126($0,$1,$2) {
+function _cheb_eval_e_4130($0,$1,$2) {
  $0 = $0|0;
  $1 = +$1;
  $2 = $2|0;
@@ -76409,7 +76610,7 @@ function _gsl_finite($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $2 = $1;
- $3 = (___DOUBLE_BITS_4543($2)|0);
+ $3 = (___DOUBLE_BITS_4547($2)|0);
  $4 = (getTempRet0() | 0);
  $5 = $4 & 2147483647;
  $6 = ($5>>>0)<(2146435072);
@@ -76420,7 +76621,7 @@ function _gsl_finite($0) {
  $11 = $10&1;
  STACKTOP = sp;return ($11|0);
 }
-function ___DOUBLE_BITS_4543($0) {
+function ___DOUBLE_BITS_4547($0) {
  $0 = +$0;
  var $1 = 0.0, $2 = 0, $3 = 0.0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
  sp = STACKTOP;
@@ -91275,7 +91476,7 @@ var FUNCTION_TABLE_vii = [b7,_taus_set];
 var FUNCTION_TABLE_viiii = [b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,b8,_no_error_handler,b8,b8
 ,b8,b8,b8];
 
-  return { _AT_A_from_particle_no: _AT_A_from_particle_no, _AT_A_from_particle_no_single: _AT_A_from_particle_no_single, _AT_Bethe_Stopping_Number: _AT_Bethe_Stopping_Number, _AT_Bethe_energy_loss_MeV_cm2_g: _AT_Bethe_energy_loss_MeV_cm2_g, _AT_Bethe_energy_loss_MeV_cm2_g_single: _AT_Bethe_energy_loss_MeV_cm2_g_single, _AT_Bethe_wrapper: _AT_Bethe_wrapper, _AT_CSDA_energy_after_slab_E_MeV_u_multi: _AT_CSDA_energy_after_slab_E_MeV_u_multi, _AT_CSDA_energy_after_slab_E_MeV_u_single: _AT_CSDA_energy_after_slab_E_MeV_u_single, _AT_CSDA_range_difference_solver: _AT_CSDA_range_difference_solver, _AT_CSDA_range_g_cm2_multi: _AT_CSDA_range_g_cm2_multi, _AT_CSDA_range_g_cm2_single: _AT_CSDA_range_g_cm2_single, _AT_D_RDD_Gy: _AT_D_RDD_Gy, _AT_D_RDD_Gy_int: _AT_D_RDD_Gy_int, _AT_Dyx: _AT_Dyx, _AT_ER_AM_RadDiff_range_g_cm2: _AT_ER_AM_RadDiff_range_g_cm2, _AT_ER_ButtsKatz_range_g_cm2: _AT_ER_ButtsKatz_range_g_cm2, _AT_ER_Edmund_range_g_cm2: _AT_ER_Edmund_range_g_cm2, _AT_ER_Geiss_range_g_cm2: _AT_ER_Geiss_range_g_cm2, _AT_ER_PowerLaw_alpha: _AT_ER_PowerLaw_alpha, _AT_ER_Scholz_new_range_g_cm2: _AT_ER_Scholz_new_range_g_cm2, _AT_ER_Scholz_range_g_cm2: _AT_ER_Scholz_range_g_cm2, _AT_ER_Tabata_constants: _AT_ER_Tabata_constants, _AT_ER_Tabata_range_g_cm2: _AT_ER_Tabata_range_g_cm2, _AT_ER_Waligorski_range_g_cm2: _AT_ER_Waligorski_range_g_cm2, _AT_E_MeV_u_from_momentum_MeV_c_u: _AT_E_MeV_u_from_momentum_MeV_c_u, _AT_E_MeV_u_from_momentum_single: _AT_E_MeV_u_from_momentum_single, _AT_E_RadicalDiffusion_MeV_u: _AT_E_RadicalDiffusion_MeV_u, _AT_E_from_beta: _AT_E_from_beta, _AT_E_from_beta_single: _AT_E_from_beta_single, _AT_E_from_gamma: _AT_E_from_gamma, _AT_E_from_gamma_single: _AT_E_from_gamma_single, _AT_Energy_MeV_u_from_Stopping_Power_single: _AT_Energy_MeV_u_from_Stopping_Power_single, _AT_FromFile_wrapper: _AT_FromFile_wrapper, _AT_GSM_dose_grid_from_particles_positions: _AT_GSM_dose_grid_from_particles_positions, _AT_GSM_local_dose_distrib: _AT_GSM_local_dose_distrib, _AT_GSM_local_dose_distrib_from_dose_grid: _AT_GSM_local_dose_distrib_from_dose_grid, _AT_GSM_multiple_local_dose_distrib: _AT_GSM_multiple_local_dose_distrib, _AT_GSM_response_grid_from_dose_grid: _AT_GSM_response_grid_from_dose_grid, _AT_GSM_sample_particle_positions: _AT_GSM_sample_particle_positions, _AT_Gamma_index_from_material_number: _AT_Gamma_index_from_material_number, _AT_Gamma_name_from_number: _AT_Gamma_name_from_number, _AT_Gamma_number_of_parameters: _AT_Gamma_number_of_parameters, _AT_Gauss_FWHM: _AT_Gauss_FWHM, _AT_Gauss_IDF: _AT_Gauss_IDF, _AT_Gauss_Mean: _AT_Gauss_Mean, _AT_Gauss_Mode: _AT_Gauss_Mode, _AT_Gauss_PDF: _AT_Gauss_PDF, _AT_Gauss_energy_loss_distribution: _AT_Gauss_energy_loss_distribution, _AT_Highland_angle: _AT_Highland_angle, _AT_Highland_angle_single: _AT_Highland_angle_single, _AT_ICRU_wrapper: _AT_ICRU_wrapper, _AT_I_eV_from_composition: _AT_I_eV_from_composition, _AT_I_eV_from_element_acronym: _AT_I_eV_from_element_acronym, _AT_I_eV_from_element_acronym_single: _AT_I_eV_from_element_acronym_single, _AT_I_eV_from_material_no: _AT_I_eV_from_material_no, _AT_I_eV_from_particle_no: _AT_I_eV_from_particle_no, _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m: _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m, _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2: _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2, _AT_KatzModel_CucinottaExtTarget_inactivation_probability: _AT_KatzModel_CucinottaExtTarget_inactivation_probability, _AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth: _AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth, _AT_KatzModel_KatzExtTarget_Zhang_TrackWidth: _AT_KatzModel_KatzExtTarget_Zhang_TrackWidth, _AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m: _AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m, _AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2: _AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2, _AT_KatzModel_KatzExtTarget_inactivation_probability: _AT_KatzModel_KatzExtTarget_inactivation_probability, _AT_KatzModel_inactivation_cross_section_approximation_m2: _AT_KatzModel_inactivation_cross_section_approximation_m2, _AT_KatzModel_inactivation_cross_section_m2: _AT_KatzModel_inactivation_cross_section_m2, _AT_KatzModel_inactivation_probability: _AT_KatzModel_inactivation_probability, _AT_KatzModel_mixed_field_survival: _AT_KatzModel_mixed_field_survival, _AT_KatzModel_single_field_survival: _AT_KatzModel_single_field_survival, _AT_KatzModel_single_field_survival_from_inactivation_cross_section: _AT_KatzModel_single_field_survival_from_inactivation_cross_section, _AT_KatzModel_single_field_survival_optimized_for_fluence_vector: _AT_KatzModel_single_field_survival_optimized_for_fluence_vector, _AT_Kellerer_folding: _AT_Kellerer_folding, _AT_Kellerer_interpolation: _AT_Kellerer_interpolation, _AT_Kellerer_normalize: _AT_Kellerer_normalize, _AT_Kellerer_reset: _AT_Kellerer_reset, _AT_Kellerer_shrink: _AT_Kellerer_shrink, _AT_Kellerer_zero: _AT_Kellerer_zero, _AT_Landau_IDF: _AT_Landau_IDF, _AT_Landau_PDF: _AT_Landau_PDF, _AT_Landau_energy_loss_distribution: _AT_Landau_energy_loss_distribution, _AT_Mass_Stopping_Power: _AT_Mass_Stopping_Power, _AT_Mass_Stopping_Power_with_no: _AT_Mass_Stopping_Power_with_no, _AT_Moliere_function_f0: _AT_Moliere_function_f0, _AT_Moliere_function_f1: _AT_Moliere_function_f1, _AT_Moliere_function_f2: _AT_Moliere_function_f2, _AT_N2_to_step: _AT_N2_to_step, _AT_PSTAR_wrapper: _AT_PSTAR_wrapper, _AT_P_RDD: _AT_P_RDD, _AT_RDD_CucinottaPoint_Gy: _AT_RDD_CucinottaPoint_Gy, _AT_RDD_Cucinotta_Cnorm: _AT_RDD_Cucinotta_Cnorm, _AT_RDD_Cucinotta_Ddelta_Gy: _AT_RDD_Cucinotta_Ddelta_Gy, _AT_RDD_Cucinotta_Ddelta_average_Gy: _AT_RDD_Cucinotta_Ddelta_average_Gy, _AT_RDD_Cucinotta_Ddelta_average_integrand_m: _AT_RDD_Cucinotta_Ddelta_average_integrand_m, _AT_RDD_Cucinotta_Dexc_Gy: _AT_RDD_Cucinotta_Dexc_Gy, _AT_RDD_Cucinotta_Dexc_average_Gy: _AT_RDD_Cucinotta_Dexc_average_Gy, _AT_RDD_Cucinotta_f_longRange: _AT_RDD_Cucinotta_f_longRange, _AT_RDD_Cucinotta_f_shortRange: _AT_RDD_Cucinotta_f_shortRange, _AT_RDD_ExtendedTarget_CucinottaPoint_Gy: _AT_RDD_ExtendedTarget_CucinottaPoint_Gy, _AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration: _AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration, _AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy: _AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy, _AT_RDD_ExtendedTarget_KatzPoint_Gy: _AT_RDD_ExtendedTarget_KatzPoint_Gy, _AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration: _AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration, _AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy: _AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy, _AT_RDD_Geiss_Gy: _AT_RDD_Geiss_Gy, _AT_RDD_Geiss_average_Gy: _AT_RDD_Geiss_average_Gy, _AT_RDD_KatzPoint_Gy: _AT_RDD_KatzPoint_Gy, _AT_RDD_KatzSite_Gy: _AT_RDD_KatzSite_Gy, _AT_RDD_Katz_LinearER_DSite_Gy: _AT_RDD_Katz_LinearER_DSite_Gy, _AT_RDD_Katz_LinearER_Daverage_Gy: _AT_RDD_Katz_LinearER_Daverage_Gy, _AT_RDD_Katz_LinearER_Dpoint_Gy: _AT_RDD_Katz_LinearER_Dpoint_Gy, _AT_RDD_Katz_LinearER_dEdx_J_m: _AT_RDD_Katz_LinearER_dEdx_J_m, _AT_RDD_Katz_PowerLawER_DSite_Gy: _AT_RDD_Katz_PowerLawER_DSite_Gy, _AT_RDD_Katz_PowerLawER_DaverageKernel: _AT_RDD_Katz_PowerLawER_DaverageKernel, _AT_RDD_Katz_PowerLawER_DaverageKernel_approx: _AT_RDD_Katz_PowerLawER_DaverageKernel_approx, _AT_RDD_Katz_PowerLawER_Daverage_Gy: _AT_RDD_Katz_PowerLawER_Daverage_Gy, _AT_RDD_Katz_PowerLawER_Dpoint_Gy: _AT_RDD_Katz_PowerLawER_Dpoint_Gy, _AT_RDD_Katz_PowerLawER_dEdx_J_m: _AT_RDD_Katz_PowerLawER_dEdx_J_m, _AT_RDD_Katz_coeff_Gy: _AT_RDD_Katz_coeff_Gy, _AT_RDD_Katz_coeff_Gy_general: _AT_RDD_Katz_coeff_Gy_general, _AT_RDD_RadicalDiffusion_Gy: _AT_RDD_RadicalDiffusion_Gy, _AT_RDD_RadicalDiffusion_get_energy_idx: _AT_RDD_RadicalDiffusion_get_energy_idx, _AT_RDD_Test_Gy: _AT_RDD_Test_Gy, _AT_RDD_a0_m: _AT_RDD_a0_m, _AT_RDD_d_max_Gy: _AT_RDD_d_max_Gy, _AT_RDD_d_min_Gy: _AT_RDD_d_min_Gy, _AT_RDD_f1_parameters_mixed_field: _AT_RDD_f1_parameters_mixed_field, _AT_RDD_f1_parameters_single_field: _AT_RDD_f1_parameters_single_field, _AT_RDD_index_from_RDD_number: _AT_RDD_index_from_RDD_number, _AT_RDD_name_from_number: _AT_RDD_name_from_number, _AT_RDD_number_from_name: _AT_RDD_number_from_name, _AT_RDD_number_of_parameters: _AT_RDD_number_of_parameters, _AT_RDD_precalculated_constant_Gy: _AT_RDD_precalculated_constant_Gy, _AT_RDD_r_min_m: _AT_RDD_r_min_m, _AT_Rutherford_SDCS: _AT_Rutherford_SDCS, _AT_Rutherford_scatter_cross_section: _AT_Rutherford_scatter_cross_section, _AT_SPC_decompose_data: _AT_SPC_decompose_data, _AT_SPC_decompose_header: _AT_SPC_decompose_header, _AT_SPC_decompose_size: _AT_SPC_decompose_size, _AT_SPC_fast_read_buffer: _AT_SPC_fast_read_buffer, _AT_SPC_get_number_of_bins_from_filename_fast: _AT_SPC_get_number_of_bins_from_filename_fast, _AT_SPC_get_number_of_bytes_in_file: _AT_SPC_get_number_of_bytes_in_file, _AT_SPC_number_of_bins_at_range: _AT_SPC_number_of_bins_at_range, _AT_SPC_read_data_from_filename_fast: _AT_SPC_read_data_from_filename_fast, _AT_SPC_read_from_filename_fast: _AT_SPC_read_from_filename_fast, _AT_SPC_read_header_from_filename_fast: _AT_SPC_read_header_from_filename_fast, _AT_SPC_spectrum_at_range: _AT_SPC_spectrum_at_range, _AT_Stopping_Power: _AT_Stopping_Power, _AT_Stopping_Power_Mass_MeV_cm2_g_int: _AT_Stopping_Power_Mass_MeV_cm2_g_int, _AT_Stopping_Power_with_no: _AT_Stopping_Power_with_no, _AT_SuccessiveConvolutions: _AT_SuccessiveConvolutions, _AT_Vavilov_IDF: _AT_Vavilov_IDF, _AT_Vavilov_PDF: _AT_Vavilov_PDF, _AT_Vavilov_energy_loss_distribution: _AT_Vavilov_energy_loss_distribution, _AT_WEPL_multi: _AT_WEPL_multi, _AT_WEPL_single: _AT_WEPL_single, _AT_Z_from_element_acronym: _AT_Z_from_element_acronym, _AT_Z_from_element_acronym_single: _AT_Z_from_element_acronym_single, _AT_Z_from_particle_no: _AT_Z_from_particle_no, _AT_Z_from_particle_no_single: _AT_Z_from_particle_no_single, _AT_alpha_g_cm2_MeV_from_material_no: _AT_alpha_g_cm2_MeV_from_material_no, _AT_atomic_weight_from_Z: _AT_atomic_weight_from_Z, _AT_atomic_weight_from_element_acronym: _AT_atomic_weight_from_element_acronym, _AT_atomic_weight_from_element_acronym_single: _AT_atomic_weight_from_element_acronym_single, _AT_atomic_weight_from_particle_no: _AT_atomic_weight_from_particle_no, _AT_average_A_from_composition: _AT_average_A_from_composition, _AT_average_A_from_material_no: _AT_average_A_from_material_no, _AT_average_Z_from_composition: _AT_average_Z_from_composition, _AT_average_Z_from_material_no: _AT_average_Z_from_material_no, _AT_beam_par_physical_to_technical: _AT_beam_par_physical_to_technical, _AT_beam_par_technical_to_physical: _AT_beam_par_technical_to_physical, _AT_beta_from_E: _AT_beta_from_E, _AT_beta_from_E_single: _AT_beta_from_E_single, _AT_characteristic_multiple_scattering_angle: _AT_characteristic_multiple_scattering_angle, _AT_characteristic_multiple_scattering_angle_single: _AT_characteristic_multiple_scattering_angle_single, _AT_characteristic_single_scattering_angle: _AT_characteristic_single_scattering_angle, _AT_characteristic_single_scattering_angle_single: _AT_characteristic_single_scattering_angle_single, _AT_check_energy_range_single_field: _AT_check_energy_range_single_field, _AT_check_energy_range_single_particle: _AT_check_energy_range_single_particle, _AT_check_particle_no_single_field: _AT_check_particle_no_single_field, _AT_check_particle_no_single_particle: _AT_check_particle_no_single_particle, _AT_d_max_RadicalDiffusion_Gy: _AT_d_max_RadicalDiffusion_Gy, _AT_d_min_RadicalDiffusion_Gy: _AT_d_min_RadicalDiffusion_Gy, _AT_density_g_cm3_from_element_acronym: _AT_density_g_cm3_from_element_acronym, _AT_density_g_cm3_from_element_acronym_single: _AT_density_g_cm3_from_element_acronym_single, _AT_density_g_cm3_from_material_no: _AT_density_g_cm3_from_material_no, _AT_dose_Gy_from_fluence_cm2: _AT_dose_Gy_from_fluence_cm2, _AT_dose_Gy_from_fluence_cm2_single: _AT_dose_Gy_from_fluence_cm2_single, _AT_dose_weighted_E_MeV_u: _AT_dose_weighted_E_MeV_u, _AT_dose_weighted_LET_MeV_cm2_g: _AT_dose_weighted_LET_MeV_cm2_g, _AT_effective_Z_from_composition: _AT_effective_Z_from_composition, _AT_effective_charge_from_E_MeV_u: _AT_effective_charge_from_E_MeV_u, _AT_effective_charge_from_E_MeV_u_single: _AT_effective_charge_from_E_MeV_u_single, _AT_effective_charge_from_beta: _AT_effective_charge_from_beta, _AT_effective_charge_from_beta_single: _AT_effective_charge_from_beta_single, _AT_effective_collision_number: _AT_effective_collision_number, _AT_effective_collision_number_single: _AT_effective_collision_number_single, _AT_el_energy_loss_leading_term_MeV_cm2_g: _AT_el_energy_loss_leading_term_MeV_cm2_g, _AT_electron_density_cm3_from_element_acronym: _AT_electron_density_cm3_from_element_acronym, _AT_electron_density_cm3_from_element_acronym_single: _AT_electron_density_cm3_from_element_acronym_single, _AT_electron_density_m3_from_composition: _AT_electron_density_m3_from_composition, _AT_electron_density_m3_from_material_no_multi: _AT_electron_density_m3_from_material_no_multi, _AT_electron_density_m3_from_material_no_single: _AT_electron_density_m3_from_material_no_single, _AT_electron_density_m3_multi: _AT_electron_density_m3_multi, _AT_electron_density_m3_single: _AT_electron_density_m3_single, _AT_element_acronym_from_Z: _AT_element_acronym_from_Z, _AT_element_acronym_from_Z_single: _AT_element_acronym_from_Z_single, _AT_energy_loss_FWHM: _AT_energy_loss_FWHM, _AT_energy_loss_distribution: _AT_energy_loss_distribution, _AT_energy_loss_from_lambda_gauss_multi: _AT_energy_loss_from_lambda_gauss_multi, _AT_energy_loss_from_lambda_landau_multi: _AT_energy_loss_from_lambda_landau_multi, _AT_energy_loss_from_lambda_landau_single: _AT_energy_loss_from_lambda_landau_single, _AT_energy_loss_from_lambda_vavilov_multi: _AT_energy_loss_from_lambda_vavilov_multi, _AT_energy_loss_keV_Landau_FWHM: _AT_energy_loss_keV_Landau_FWHM, _AT_energy_loss_keV_Landau_Mode: _AT_energy_loss_keV_Landau_Mode, _AT_energy_loss_keV_Vavilov_FWHM: _AT_energy_loss_keV_Vavilov_FWHM, _AT_energy_loss_mode: _AT_energy_loss_mode, _AT_energy_straggling_MeV2_cm2_g: _AT_energy_straggling_MeV2_cm2_g, _AT_energy_straggling_after_slab_E_MeV_u: _AT_energy_straggling_after_slab_E_MeV_u, _AT_fluence_cm2_from_dose_Gy: _AT_fluence_cm2_from_dose_Gy, _AT_fluence_cm2_from_dose_Gy_single: _AT_fluence_cm2_from_dose_Gy_single, _AT_fluence_weighted_E_MeV_u: _AT_fluence_weighted_E_MeV_u, _AT_fluence_weighted_LET_MeV_cm2_g: _AT_fluence_weighted_LET_MeV_cm2_g, _AT_gamma_: _AT_gamma_, _AT_gamma_from_E: _AT_gamma_from_E, _AT_gamma_from_E_single: _AT_gamma_from_E_single, _AT_gamma_response: _AT_gamma_response, _AT_get_DSB_distribution: _AT_get_DSB_distribution, _AT_get_error_msg: _AT_get_error_msg, _AT_get_gamma_response: _AT_get_gamma_response, _AT_get_gamma_response_for_average_dose: _AT_get_gamma_response_for_average_dose, _AT_get_interpolated_x_from_input_2d_table: _AT_get_interpolated_x_from_input_2d_table, _AT_get_interpolated_y_from_input_2d_table: _AT_get_interpolated_y_from_input_2d_table, _AT_get_interpolated_y_from_input_table: _AT_get_interpolated_y_from_input_table, _AT_get_interpolated_y_from_interval: _AT_get_interpolated_y_from_interval, _AT_get_ion_efficiency_from_dose_distribution: _AT_get_ion_efficiency_from_dose_distribution, _AT_get_ion_efficiency_from_response_distribution: _AT_get_ion_efficiency_from_response_distribution, _AT_get_ion_response_from_dose_distribution: _AT_get_ion_response_from_dose_distribution, _AT_get_ion_response_from_response_distribution: _AT_get_ion_response_from_response_distribution, _AT_get_material_data: _AT_get_material_data, _AT_get_materials_data: _AT_get_materials_data, _AT_get_response_distribution_from_dose_distribution: _AT_get_response_distribution_from_dose_distribution, _AT_gyroradius_m: _AT_gyroradius_m, _AT_histoOld_bin_no: _AT_histoOld_bin_no, _AT_histoOld_get_bin_width: _AT_histoOld_get_bin_width, _AT_histoOld_get_bin_widths: _AT_histoOld_get_bin_widths, _AT_histoOld_log_bin_width: _AT_histoOld_log_bin_width, _AT_histoOld_lower_bin_limit: _AT_histoOld_lower_bin_limit, _AT_histoOld_upper_bin_limit: _AT_histoOld_upper_bin_limit, _AT_histo_add_multi: _AT_histo_add_multi, _AT_histo_add_single: _AT_histo_add_single, _AT_histo_bin_no: _AT_histo_bin_no, _AT_histo_bin_width: _AT_histo_bin_width, _AT_histo_bin_widths: _AT_histo_bin_widths, _AT_histo_left_limit: _AT_histo_left_limit, _AT_histo_left_limits: _AT_histo_left_limits, _AT_histo_linear_bin_no: _AT_histo_linear_bin_no, _AT_histo_linear_bin_width: _AT_histo_linear_bin_width, _AT_histo_linear_left_limit: _AT_histo_linear_left_limit, _AT_histo_linear_midpoint: _AT_histo_linear_midpoint, _AT_histo_linear_n_bins: _AT_histo_linear_n_bins, _AT_histo_linear_step: _AT_histo_linear_step, _AT_histo_logarithmic_bin_no: _AT_histo_logarithmic_bin_no, _AT_histo_logarithmic_bin_width: _AT_histo_logarithmic_bin_width, _AT_histo_logarithmic_left_limit: _AT_histo_logarithmic_left_limit, _AT_histo_logarithmic_midpoint: _AT_histo_logarithmic_midpoint, _AT_histo_logarithmic_n_bins: _AT_histo_logarithmic_n_bins, _AT_histo_logarithmic_step: _AT_histo_logarithmic_step, _AT_histo_midpoint: _AT_histo_midpoint, _AT_histo_midpoints: _AT_histo_midpoints, _AT_histo_n_bins: _AT_histo_n_bins, _AT_histo_normalize: _AT_histo_normalize, _AT_histo_step: _AT_histo_step, _AT_histo_sum: _AT_histo_sum, _AT_interparticleDistance_m: _AT_interparticleDistance_m, _AT_inv_interparticleDistance_Gy: _AT_inv_interparticleDistance_Gy, _AT_inverse_RDD_Cucinotta_m: _AT_inverse_RDD_Cucinotta_m, _AT_inverse_RDD_Cucinotta_solver_function_Gy: _AT_inverse_RDD_Cucinotta_solver_function_Gy, _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m: _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m, _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy: _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy, _AT_inverse_RDD_ExtendedTarget_KatzPoint_m: _AT_inverse_RDD_ExtendedTarget_KatzPoint_m, _AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy: _AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy, _AT_inverse_RDD_Geiss_m: _AT_inverse_RDD_Geiss_m, _AT_inverse_RDD_KatzPoint_LinearER_m: _AT_inverse_RDD_KatzPoint_LinearER_m, _AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy: _AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy, _AT_inverse_RDD_KatzPoint_m: _AT_inverse_RDD_KatzPoint_m, _AT_inverse_RDD_KatzSite_m: _AT_inverse_RDD_KatzSite_m, _AT_inverse_RDD_Test_m: _AT_inverse_RDD_Test_m, _AT_inverse_RadicalDiffusion_m: _AT_inverse_RadicalDiffusion_m, _AT_kappa_multi: _AT_kappa_multi, _AT_kappa_single: _AT_kappa_single, _AT_kinetic_variable_single: _AT_kinetic_variable_single, _AT_lambda_Landau_FWHM: _AT_lambda_Landau_FWHM, _AT_lambda_Landau_FWHM_left: _AT_lambda_Landau_FWHM_left, _AT_lambda_Landau_FWHM_right: _AT_lambda_Landau_FWHM_right, _AT_lambda_Landau_Mean: _AT_lambda_Landau_Mean, _AT_lambda_Landau_Mode: _AT_lambda_Landau_Mode, _AT_lambda_Vavilov_FWHM: _AT_lambda_Vavilov_FWHM, _AT_lambda_Vavilov_FWHM_left: _AT_lambda_Vavilov_FWHM_left, _AT_lambda_Vavilov_FWHM_right: _AT_lambda_Vavilov_FWHM_right, _AT_lambda_Vavilov_Mean: _AT_lambda_Vavilov_Mean, _AT_lambda_Vavilov_Mode: _AT_lambda_Vavilov_Mode, _AT_lambda_Vavilov_Skewness: _AT_lambda_Vavilov_Skewness, _AT_lambda_Vavilov_Variance: _AT_lambda_Vavilov_Variance, _AT_lambda_landau_from_energy_loss_multi: _AT_lambda_landau_from_energy_loss_multi, _AT_lambda_landau_from_energy_loss_single: _AT_lambda_landau_from_energy_loss_single, _AT_lambda_max_multi: _AT_lambda_max_multi, _AT_lambda_max_single: _AT_lambda_max_single, _AT_lambda_mean_multi: _AT_lambda_mean_multi, _AT_lambda_mean_single: _AT_lambda_mean_single, _AT_lambda_vavilov_from_energy_loss_multi: _AT_lambda_vavilov_from_energy_loss_multi, _AT_lambda_vavilov_from_energy_loss_single: _AT_lambda_vavilov_from_energy_loss_single, _AT_low_fluence_local_dose_distribution: _AT_low_fluence_local_dose_distribution, _AT_m_g_cm2_from_material_no: _AT_m_g_cm2_from_material_no, _AT_mass_correction_terms: _AT_mass_correction_terms, _AT_mass_correction_terms_new: _AT_mass_correction_terms_new, _AT_material_index_from_material_number: _AT_material_index_from_material_number, _AT_material_name_from_number: _AT_material_name_from_number, _AT_material_number_from_name: _AT_material_number_from_name, _AT_max_E_transfer_MeV: _AT_max_E_transfer_MeV, _AT_max_E_transfer_MeV_new: _AT_max_E_transfer_MeV_new, _AT_max_E_transfer_MeV_new_single: _AT_max_E_transfer_MeV_new_single, _AT_max_E_transfer_MeV_single: _AT_max_E_transfer_MeV_single, _AT_max_classic_E_transfer_MeV_new_single: _AT_max_classic_E_transfer_MeV_new_single, _AT_max_classic_E_transfer_MeV_single: _AT_max_classic_E_transfer_MeV_single, _AT_max_electron_range_m: _AT_max_electron_range_m, _AT_max_electron_ranges_m: _AT_max_electron_ranges_m, _AT_max_relativistic_E_transfer_MeV_new_single: _AT_max_relativistic_E_transfer_MeV_new_single, _AT_max_relativistic_E_transfer_MeV_single: _AT_max_relativistic_E_transfer_MeV_single, _AT_mean_energy_loss_keV: _AT_mean_energy_loss_keV, _AT_mean_excitation_energy_eV_from_Z: _AT_mean_excitation_energy_eV_from_Z, _AT_mean_excitation_energy_eV_from_Z_single: _AT_mean_excitation_energy_eV_from_Z_single, _AT_mean_number_of_tracks_contrib: _AT_mean_number_of_tracks_contrib, _AT_momentum_MeV_c_u_from_E_MeV_u: _AT_momentum_MeV_c_u_from_E_MeV_u, _AT_momentum_from_E_MeV_c_u_single: _AT_momentum_from_E_MeV_c_u_single, _AT_n_bins_RadicalDiffusion: _AT_n_bins_RadicalDiffusion, _AT_n_bins_for_DSB_distribution: _AT_n_bins_for_DSB_distribution, _AT_n_bins_for_low_fluence_local_dose_distribution: _AT_n_bins_for_low_fluence_local_dose_distribution, _AT_n_bins_for_single_impact_local_dose_distrib: _AT_n_bins_for_single_impact_local_dose_distrib, _AT_normalize: _AT_normalize, _AT_nuclear_spin_from_Z_and_A: _AT_nuclear_spin_from_Z_and_A, _AT_nuclear_spin_from_particle_no_multi: _AT_nuclear_spin_from_particle_no_multi, _AT_nuclear_spin_from_particle_no_single: _AT_nuclear_spin_from_particle_no_single, _AT_p_MeV_from_material_no: _AT_p_MeV_from_material_no, _AT_particle_name_from_particle_no: _AT_particle_name_from_particle_no, _AT_particle_name_from_particle_no_single: _AT_particle_name_from_particle_no_single, _AT_particle_no_from_Z_and_A: _AT_particle_no_from_Z_and_A, _AT_particle_no_from_Z_and_A_single: _AT_particle_no_from_Z_and_A_single, _AT_particle_no_from_particle_name: _AT_particle_no_from_particle_name, _AT_particle_no_from_particle_name_single: _AT_particle_no_from_particle_name_single, _AT_phase_from_material_no: _AT_phase_from_material_no, _AT_plasma_energy_J_from_material_no: _AT_plasma_energy_J_from_material_no, _AT_plasma_energy_J_single: _AT_plasma_energy_J_single, _AT_r_RDD_m: _AT_r_RDD_m, _AT_r_max_RadicalDiffusion_m: _AT_r_max_RadicalDiffusion_m, _AT_r_min_RadicalDiffusion_m: _AT_r_min_RadicalDiffusion_m, _AT_range_straggling_convolution: _AT_range_straggling_convolution, _AT_reduced_target_thickness: _AT_reduced_target_thickness, _AT_reduced_target_thickness_single: _AT_reduced_target_thickness_single, _AT_run_CPPSC_method: _AT_run_CPPSC_method, _AT_run_CPPSS_method: _AT_run_CPPSS_method, _AT_run_GSM_method: _AT_run_GSM_method, _AT_run_IGK_method: _AT_run_IGK_method, _AT_sI_int: _AT_sI_int, _AT_scattering_angle_distribution: _AT_scattering_angle_distribution, _AT_scattering_angle_distribution_single: _AT_scattering_angle_distribution_single, _AT_screening_angle: _AT_screening_angle, _AT_screening_angle_single: _AT_screening_angle_single, _AT_set_user_material: _AT_set_user_material, _AT_set_user_material_from_composition: _AT_set_user_material_from_composition, _AT_single_impact_dose_Gy: _AT_single_impact_dose_Gy, _AT_single_impact_dose_Gy_single: _AT_single_impact_dose_Gy_single, _AT_single_impact_fluence_cm2: _AT_single_impact_fluence_cm2, _AT_single_impact_fluence_cm2_single: _AT_single_impact_fluence_cm2_single, _AT_single_impact_local_dose_distrib: _AT_single_impact_local_dose_distrib, _AT_step_to_N2: _AT_step_to_N2, _AT_stopping_power_ratio: _AT_stopping_power_ratio, _AT_stopping_power_source_model_name_from_number: _AT_stopping_power_source_model_name_from_number, _AT_stopping_power_source_model_number_from_name: _AT_stopping_power_source_model_number_from_name, _AT_sum: _AT_sum, _AT_test_fun: _AT_test_fun, _AT_total_D_Gy: _AT_total_D_Gy, _AT_total_fluence_cm2: _AT_total_fluence_cm2, _AT_translate_dose_into_DSB_distribution: _AT_translate_dose_into_DSB_distribution, _AT_xi_keV: _AT_xi_keV, ___emscripten_environ_constructor: ___emscripten_environ_constructor, ___errno_location: ___errno_location, ___muldi3: ___muldi3, ___udivdi3: ___udivdi3, __get_daylight: __get_daylight, __get_environ: __get_environ, __get_timezone: __get_timezone, __get_tzname: __get_tzname, _bitshift64Lshr: _bitshift64Lshr, _bitshift64Shl: _bitshift64Shl, _fflush: _fflush, _free: _free, _i64Add: _i64Add, _i64Subtract: _i64Subtract, _llvm_bswap_i32: _llvm_bswap_i32, _malloc: _malloc, _memcpy: _memcpy, _memset: _memset, _sbrk: _sbrk, dynCall_ddi: dynCall_ddi, dynCall_di: dynCall_di, dynCall_ii: dynCall_ii, dynCall_iii: dynCall_iii, dynCall_iiii: dynCall_iiii, dynCall_iiiiiii: dynCall_iiiiiii, dynCall_viddiiii: dynCall_viddiiii, dynCall_vii: dynCall_vii, dynCall_viiii: dynCall_viiii, establishStackSpace: establishStackSpace, setThrew: setThrew, stackAlloc: stackAlloc, stackRestore: stackRestore, stackSave: stackSave };
+  return { _AT_A_from_particle_no: _AT_A_from_particle_no, _AT_A_from_particle_no_single: _AT_A_from_particle_no_single, _AT_Bethe_Stopping_Number: _AT_Bethe_Stopping_Number, _AT_Bethe_energy_loss_MeV_cm2_g: _AT_Bethe_energy_loss_MeV_cm2_g, _AT_Bethe_energy_loss_MeV_cm2_g_single: _AT_Bethe_energy_loss_MeV_cm2_g_single, _AT_Bethe_wrapper: _AT_Bethe_wrapper, _AT_CSDA_energy_after_slab_E_MeV_u_multi: _AT_CSDA_energy_after_slab_E_MeV_u_multi, _AT_CSDA_energy_after_slab_E_MeV_u_single: _AT_CSDA_energy_after_slab_E_MeV_u_single, _AT_CSDA_range_difference_solver: _AT_CSDA_range_difference_solver, _AT_CSDA_range_g_cm2_multi: _AT_CSDA_range_g_cm2_multi, _AT_CSDA_range_g_cm2_single: _AT_CSDA_range_g_cm2_single, _AT_D_RDD_Gy: _AT_D_RDD_Gy, _AT_D_RDD_Gy_int: _AT_D_RDD_Gy_int, _AT_Dyx: _AT_Dyx, _AT_ER_AM_RadDiff_range_g_cm2: _AT_ER_AM_RadDiff_range_g_cm2, _AT_ER_ButtsKatz_range_g_cm2: _AT_ER_ButtsKatz_range_g_cm2, _AT_ER_Edmund_range_g_cm2: _AT_ER_Edmund_range_g_cm2, _AT_ER_Geiss_range_g_cm2: _AT_ER_Geiss_range_g_cm2, _AT_ER_PowerLaw_alpha: _AT_ER_PowerLaw_alpha, _AT_ER_Scholz_new_range_g_cm2: _AT_ER_Scholz_new_range_g_cm2, _AT_ER_Scholz_range_g_cm2: _AT_ER_Scholz_range_g_cm2, _AT_ER_Tabata_constants: _AT_ER_Tabata_constants, _AT_ER_Tabata_range_g_cm2: _AT_ER_Tabata_range_g_cm2, _AT_ER_Waligorski_range_g_cm2: _AT_ER_Waligorski_range_g_cm2, _AT_E_MeV_u_from_momentum_MeV_c_u: _AT_E_MeV_u_from_momentum_MeV_c_u, _AT_E_MeV_u_from_momentum_single: _AT_E_MeV_u_from_momentum_single, _AT_E_RadicalDiffusion_MeV_u: _AT_E_RadicalDiffusion_MeV_u, _AT_E_from_beta: _AT_E_from_beta, _AT_E_from_beta_single: _AT_E_from_beta_single, _AT_E_from_gamma: _AT_E_from_gamma, _AT_E_from_gamma_single: _AT_E_from_gamma_single, _AT_Energy_MeV_u_from_Stopping_Power_single: _AT_Energy_MeV_u_from_Stopping_Power_single, _AT_FromFile_wrapper: _AT_FromFile_wrapper, _AT_GSM_dose_grid_from_particles_positions: _AT_GSM_dose_grid_from_particles_positions, _AT_GSM_local_dose_distrib: _AT_GSM_local_dose_distrib, _AT_GSM_local_dose_distrib_from_dose_grid: _AT_GSM_local_dose_distrib_from_dose_grid, _AT_GSM_multiple_local_dose_distrib: _AT_GSM_multiple_local_dose_distrib, _AT_GSM_response_grid_from_dose_grid: _AT_GSM_response_grid_from_dose_grid, _AT_GSM_sample_particle_positions: _AT_GSM_sample_particle_positions, _AT_Gamma_index_from_material_number: _AT_Gamma_index_from_material_number, _AT_Gamma_name_from_number: _AT_Gamma_name_from_number, _AT_Gamma_number_of_parameters: _AT_Gamma_number_of_parameters, _AT_Gauss_FWHM: _AT_Gauss_FWHM, _AT_Gauss_IDF: _AT_Gauss_IDF, _AT_Gauss_Mean: _AT_Gauss_Mean, _AT_Gauss_Mode: _AT_Gauss_Mode, _AT_Gauss_PDF: _AT_Gauss_PDF, _AT_Gauss_energy_loss_distribution: _AT_Gauss_energy_loss_distribution, _AT_Highland_angle: _AT_Highland_angle, _AT_Highland_angle_single: _AT_Highland_angle_single, _AT_ICRU_wrapper: _AT_ICRU_wrapper, _AT_I_eV_from_composition: _AT_I_eV_from_composition, _AT_I_eV_from_element_acronym: _AT_I_eV_from_element_acronym, _AT_I_eV_from_element_acronym_single: _AT_I_eV_from_element_acronym_single, _AT_I_eV_from_material_no: _AT_I_eV_from_material_no, _AT_I_eV_from_particle_no: _AT_I_eV_from_particle_no, _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m: _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m, _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2: _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2, _AT_KatzModel_CucinottaExtTarget_inactivation_probability: _AT_KatzModel_CucinottaExtTarget_inactivation_probability, _AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth: _AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth, _AT_KatzModel_KatzExtTarget_Zhang_TrackWidth: _AT_KatzModel_KatzExtTarget_Zhang_TrackWidth, _AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m: _AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m, _AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2: _AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2, _AT_KatzModel_KatzExtTarget_inactivation_probability: _AT_KatzModel_KatzExtTarget_inactivation_probability, _AT_KatzModel_inactivation_cross_section_approximation_m2: _AT_KatzModel_inactivation_cross_section_approximation_m2, _AT_KatzModel_inactivation_cross_section_m2: _AT_KatzModel_inactivation_cross_section_m2, _AT_KatzModel_inactivation_probability: _AT_KatzModel_inactivation_probability, _AT_KatzModel_mixed_field_survival: _AT_KatzModel_mixed_field_survival, _AT_KatzModel_single_field_survival: _AT_KatzModel_single_field_survival, _AT_KatzModel_single_field_survival_from_inactivation_cross_section: _AT_KatzModel_single_field_survival_from_inactivation_cross_section, _AT_KatzModel_single_field_survival_optimized_for_fluence_vector: _AT_KatzModel_single_field_survival_optimized_for_fluence_vector, _AT_Kellerer_folding: _AT_Kellerer_folding, _AT_Kellerer_interpolation: _AT_Kellerer_interpolation, _AT_Kellerer_normalize: _AT_Kellerer_normalize, _AT_Kellerer_reset: _AT_Kellerer_reset, _AT_Kellerer_shrink: _AT_Kellerer_shrink, _AT_Kellerer_zero: _AT_Kellerer_zero, _AT_Landau_IDF: _AT_Landau_IDF, _AT_Landau_PDF: _AT_Landau_PDF, _AT_Landau_energy_loss_distribution: _AT_Landau_energy_loss_distribution, _AT_Mass_Stopping_Power: _AT_Mass_Stopping_Power, _AT_Mass_Stopping_Power_with_no: _AT_Mass_Stopping_Power_with_no, _AT_Moliere_function_f0: _AT_Moliere_function_f0, _AT_Moliere_function_f1: _AT_Moliere_function_f1, _AT_Moliere_function_f2: _AT_Moliere_function_f2, _AT_N2_to_step: _AT_N2_to_step, _AT_PSTAR_wrapper: _AT_PSTAR_wrapper, _AT_P_RDD: _AT_P_RDD, _AT_RDD_CucinottaPoint_Gy: _AT_RDD_CucinottaPoint_Gy, _AT_RDD_Cucinotta_Cnorm: _AT_RDD_Cucinotta_Cnorm, _AT_RDD_Cucinotta_Ddelta_Gy: _AT_RDD_Cucinotta_Ddelta_Gy, _AT_RDD_Cucinotta_Ddelta_average_Gy: _AT_RDD_Cucinotta_Ddelta_average_Gy, _AT_RDD_Cucinotta_Ddelta_average_integrand_m: _AT_RDD_Cucinotta_Ddelta_average_integrand_m, _AT_RDD_Cucinotta_Dexc_Gy: _AT_RDD_Cucinotta_Dexc_Gy, _AT_RDD_Cucinotta_Dexc_average_Gy: _AT_RDD_Cucinotta_Dexc_average_Gy, _AT_RDD_Cucinotta_f_longRange: _AT_RDD_Cucinotta_f_longRange, _AT_RDD_Cucinotta_f_shortRange: _AT_RDD_Cucinotta_f_shortRange, _AT_RDD_ExtendedTarget_CucinottaPoint_Gy: _AT_RDD_ExtendedTarget_CucinottaPoint_Gy, _AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration: _AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration, _AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy: _AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy, _AT_RDD_ExtendedTarget_KatzPoint_Gy: _AT_RDD_ExtendedTarget_KatzPoint_Gy, _AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration: _AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration, _AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy: _AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy, _AT_RDD_Geiss_Gy: _AT_RDD_Geiss_Gy, _AT_RDD_Geiss_average_Gy: _AT_RDD_Geiss_average_Gy, _AT_RDD_KatzPoint_Gy: _AT_RDD_KatzPoint_Gy, _AT_RDD_KatzSite_Gy: _AT_RDD_KatzSite_Gy, _AT_RDD_Katz_LinearER_DSite_Gy: _AT_RDD_Katz_LinearER_DSite_Gy, _AT_RDD_Katz_LinearER_Daverage_Gy: _AT_RDD_Katz_LinearER_Daverage_Gy, _AT_RDD_Katz_LinearER_Dpoint_Gy: _AT_RDD_Katz_LinearER_Dpoint_Gy, _AT_RDD_Katz_LinearER_dEdx_J_m: _AT_RDD_Katz_LinearER_dEdx_J_m, _AT_RDD_Katz_PowerLawER_DSite_Gy: _AT_RDD_Katz_PowerLawER_DSite_Gy, _AT_RDD_Katz_PowerLawER_DaverageKernel: _AT_RDD_Katz_PowerLawER_DaverageKernel, _AT_RDD_Katz_PowerLawER_DaverageKernel_approx: _AT_RDD_Katz_PowerLawER_DaverageKernel_approx, _AT_RDD_Katz_PowerLawER_Daverage_Gy: _AT_RDD_Katz_PowerLawER_Daverage_Gy, _AT_RDD_Katz_PowerLawER_Dpoint_Gy: _AT_RDD_Katz_PowerLawER_Dpoint_Gy, _AT_RDD_Katz_PowerLawER_dEdx_J_m: _AT_RDD_Katz_PowerLawER_dEdx_J_m, _AT_RDD_Katz_coeff_Gy: _AT_RDD_Katz_coeff_Gy, _AT_RDD_Katz_coeff_Gy_general: _AT_RDD_Katz_coeff_Gy_general, _AT_RDD_RadicalDiffusion_Gy: _AT_RDD_RadicalDiffusion_Gy, _AT_RDD_RadicalDiffusion_get_energy_idx: _AT_RDD_RadicalDiffusion_get_energy_idx, _AT_RDD_Test_Gy: _AT_RDD_Test_Gy, _AT_RDD_a0_m: _AT_RDD_a0_m, _AT_RDD_d_max_Gy: _AT_RDD_d_max_Gy, _AT_RDD_d_min_Gy: _AT_RDD_d_min_Gy, _AT_RDD_f1_parameters_mixed_field: _AT_RDD_f1_parameters_mixed_field, _AT_RDD_f1_parameters_single_field: _AT_RDD_f1_parameters_single_field, _AT_RDD_index_from_RDD_number: _AT_RDD_index_from_RDD_number, _AT_RDD_name_from_number: _AT_RDD_name_from_number, _AT_RDD_number_from_name: _AT_RDD_number_from_name, _AT_RDD_number_of_parameters: _AT_RDD_number_of_parameters, _AT_RDD_precalculated_constant_Gy: _AT_RDD_precalculated_constant_Gy, _AT_RDD_r_min_m: _AT_RDD_r_min_m, _AT_Rutherford_SDCS: _AT_Rutherford_SDCS, _AT_Rutherford_scatter_cross_section: _AT_Rutherford_scatter_cross_section, _AT_SPC_decompose_data: _AT_SPC_decompose_data, _AT_SPC_decompose_header: _AT_SPC_decompose_header, _AT_SPC_decompose_size: _AT_SPC_decompose_size, _AT_SPC_fast_read_buffer: _AT_SPC_fast_read_buffer, _AT_SPC_get_number_of_bins_from_filename_fast: _AT_SPC_get_number_of_bins_from_filename_fast, _AT_SPC_get_number_of_bytes_in_file: _AT_SPC_get_number_of_bytes_in_file, _AT_SPC_number_of_bins_at_range: _AT_SPC_number_of_bins_at_range, _AT_SPC_read_data_from_filename_fast: _AT_SPC_read_data_from_filename_fast, _AT_SPC_read_from_filename_fast: _AT_SPC_read_from_filename_fast, _AT_SPC_read_header_from_filename_fast: _AT_SPC_read_header_from_filename_fast, _AT_SPC_spectrum_at_range: _AT_SPC_spectrum_at_range, _AT_Stopping_Power: _AT_Stopping_Power, _AT_Stopping_Power_Mass_MeV_cm2_g_int: _AT_Stopping_Power_Mass_MeV_cm2_g_int, _AT_Stopping_Power_with_no: _AT_Stopping_Power_with_no, _AT_SuccessiveConvolutions: _AT_SuccessiveConvolutions, _AT_Vavilov_IDF: _AT_Vavilov_IDF, _AT_Vavilov_PDF: _AT_Vavilov_PDF, _AT_Vavilov_energy_loss_distribution: _AT_Vavilov_energy_loss_distribution, _AT_WEPL_multi: _AT_WEPL_multi, _AT_WEPL_single: _AT_WEPL_single, _AT_Z_from_element_acronym: _AT_Z_from_element_acronym, _AT_Z_from_element_acronym_single: _AT_Z_from_element_acronym_single, _AT_Z_from_particle_no: _AT_Z_from_particle_no, _AT_Z_from_particle_no_single: _AT_Z_from_particle_no_single, _AT_alpha_g_cm2_MeV_from_material_no: _AT_alpha_g_cm2_MeV_from_material_no, _AT_atomic_weight_from_Z: _AT_atomic_weight_from_Z, _AT_atomic_weight_from_element_acronym: _AT_atomic_weight_from_element_acronym, _AT_atomic_weight_from_element_acronym_single: _AT_atomic_weight_from_element_acronym_single, _AT_atomic_weight_from_particle_no: _AT_atomic_weight_from_particle_no, _AT_average_A_from_composition: _AT_average_A_from_composition, _AT_average_A_from_material_no: _AT_average_A_from_material_no, _AT_average_Z_from_composition: _AT_average_Z_from_composition, _AT_average_Z_from_material_no: _AT_average_Z_from_material_no, _AT_beam_par_physical_to_technical: _AT_beam_par_physical_to_technical, _AT_beam_par_technical_to_physical: _AT_beam_par_technical_to_physical, _AT_beta_from_E: _AT_beta_from_E, _AT_beta_from_E_single: _AT_beta_from_E_single, _AT_characteristic_multiple_scattering_angle: _AT_characteristic_multiple_scattering_angle, _AT_characteristic_multiple_scattering_angle_single: _AT_characteristic_multiple_scattering_angle_single, _AT_characteristic_single_scattering_angle: _AT_characteristic_single_scattering_angle, _AT_characteristic_single_scattering_angle_single: _AT_characteristic_single_scattering_angle_single, _AT_check_energy_range_single_field: _AT_check_energy_range_single_field, _AT_check_energy_range_single_particle: _AT_check_energy_range_single_particle, _AT_check_particle_no_single_field: _AT_check_particle_no_single_field, _AT_check_particle_no_single_particle: _AT_check_particle_no_single_particle, _AT_d_max_RadicalDiffusion_Gy: _AT_d_max_RadicalDiffusion_Gy, _AT_d_min_RadicalDiffusion_Gy: _AT_d_min_RadicalDiffusion_Gy, _AT_density_g_cm3_from_element_acronym: _AT_density_g_cm3_from_element_acronym, _AT_density_g_cm3_from_element_acronym_single: _AT_density_g_cm3_from_element_acronym_single, _AT_density_g_cm3_from_material_no: _AT_density_g_cm3_from_material_no, _AT_dose_Bortfeld_Gy_multi: _AT_dose_Bortfeld_Gy_multi, _AT_dose_Bortfeld_Gy_single: _AT_dose_Bortfeld_Gy_single, _AT_dose_Gy_from_fluence_cm2: _AT_dose_Gy_from_fluence_cm2, _AT_dose_Gy_from_fluence_cm2_single: _AT_dose_Gy_from_fluence_cm2_single, _AT_dose_weighted_E_MeV_u: _AT_dose_weighted_E_MeV_u, _AT_dose_weighted_LET_MeV_cm2_g: _AT_dose_weighted_LET_MeV_cm2_g, _AT_effective_Z_from_composition: _AT_effective_Z_from_composition, _AT_effective_charge_from_E_MeV_u: _AT_effective_charge_from_E_MeV_u, _AT_effective_charge_from_E_MeV_u_single: _AT_effective_charge_from_E_MeV_u_single, _AT_effective_charge_from_beta: _AT_effective_charge_from_beta, _AT_effective_charge_from_beta_single: _AT_effective_charge_from_beta_single, _AT_effective_collision_number: _AT_effective_collision_number, _AT_effective_collision_number_single: _AT_effective_collision_number_single, _AT_el_energy_loss_leading_term_MeV_cm2_g: _AT_el_energy_loss_leading_term_MeV_cm2_g, _AT_electron_density_cm3_from_element_acronym: _AT_electron_density_cm3_from_element_acronym, _AT_electron_density_cm3_from_element_acronym_single: _AT_electron_density_cm3_from_element_acronym_single, _AT_electron_density_m3_from_composition: _AT_electron_density_m3_from_composition, _AT_electron_density_m3_from_material_no_multi: _AT_electron_density_m3_from_material_no_multi, _AT_electron_density_m3_from_material_no_single: _AT_electron_density_m3_from_material_no_single, _AT_electron_density_m3_multi: _AT_electron_density_m3_multi, _AT_electron_density_m3_single: _AT_electron_density_m3_single, _AT_element_acronym_from_Z: _AT_element_acronym_from_Z, _AT_element_acronym_from_Z_single: _AT_element_acronym_from_Z_single, _AT_energy_loss_FWHM: _AT_energy_loss_FWHM, _AT_energy_loss_distribution: _AT_energy_loss_distribution, _AT_energy_loss_from_lambda_gauss_multi: _AT_energy_loss_from_lambda_gauss_multi, _AT_energy_loss_from_lambda_landau_multi: _AT_energy_loss_from_lambda_landau_multi, _AT_energy_loss_from_lambda_landau_single: _AT_energy_loss_from_lambda_landau_single, _AT_energy_loss_from_lambda_vavilov_multi: _AT_energy_loss_from_lambda_vavilov_multi, _AT_energy_loss_keV_Landau_FWHM: _AT_energy_loss_keV_Landau_FWHM, _AT_energy_loss_keV_Landau_Mode: _AT_energy_loss_keV_Landau_Mode, _AT_energy_loss_keV_Vavilov_FWHM: _AT_energy_loss_keV_Vavilov_FWHM, _AT_energy_loss_mode: _AT_energy_loss_mode, _AT_energy_straggling_MeV2_cm2_g: _AT_energy_straggling_MeV2_cm2_g, _AT_energy_straggling_after_slab_E_MeV_u: _AT_energy_straggling_after_slab_E_MeV_u, _AT_fluence_cm2_from_dose_Gy: _AT_fluence_cm2_from_dose_Gy, _AT_fluence_cm2_from_dose_Gy_single: _AT_fluence_cm2_from_dose_Gy_single, _AT_fluence_weighted_E_MeV_u: _AT_fluence_weighted_E_MeV_u, _AT_fluence_weighted_LET_MeV_cm2_g: _AT_fluence_weighted_LET_MeV_cm2_g, _AT_gamma_: _AT_gamma_, _AT_gamma_from_E: _AT_gamma_from_E, _AT_gamma_from_E_single: _AT_gamma_from_E_single, _AT_gamma_response: _AT_gamma_response, _AT_get_DSB_distribution: _AT_get_DSB_distribution, _AT_get_error_msg: _AT_get_error_msg, _AT_get_gamma_response: _AT_get_gamma_response, _AT_get_gamma_response_for_average_dose: _AT_get_gamma_response_for_average_dose, _AT_get_interpolated_x_from_input_2d_table: _AT_get_interpolated_x_from_input_2d_table, _AT_get_interpolated_y_from_input_2d_table: _AT_get_interpolated_y_from_input_2d_table, _AT_get_interpolated_y_from_input_table: _AT_get_interpolated_y_from_input_table, _AT_get_interpolated_y_from_interval: _AT_get_interpolated_y_from_interval, _AT_get_ion_efficiency_from_dose_distribution: _AT_get_ion_efficiency_from_dose_distribution, _AT_get_ion_efficiency_from_response_distribution: _AT_get_ion_efficiency_from_response_distribution, _AT_get_ion_response_from_dose_distribution: _AT_get_ion_response_from_dose_distribution, _AT_get_ion_response_from_response_distribution: _AT_get_ion_response_from_response_distribution, _AT_get_material_data: _AT_get_material_data, _AT_get_materials_data: _AT_get_materials_data, _AT_get_response_distribution_from_dose_distribution: _AT_get_response_distribution_from_dose_distribution, _AT_gyroradius_m: _AT_gyroradius_m, _AT_histoOld_bin_no: _AT_histoOld_bin_no, _AT_histoOld_get_bin_width: _AT_histoOld_get_bin_width, _AT_histoOld_get_bin_widths: _AT_histoOld_get_bin_widths, _AT_histoOld_log_bin_width: _AT_histoOld_log_bin_width, _AT_histoOld_lower_bin_limit: _AT_histoOld_lower_bin_limit, _AT_histoOld_upper_bin_limit: _AT_histoOld_upper_bin_limit, _AT_histo_add_multi: _AT_histo_add_multi, _AT_histo_add_single: _AT_histo_add_single, _AT_histo_bin_no: _AT_histo_bin_no, _AT_histo_bin_width: _AT_histo_bin_width, _AT_histo_bin_widths: _AT_histo_bin_widths, _AT_histo_left_limit: _AT_histo_left_limit, _AT_histo_left_limits: _AT_histo_left_limits, _AT_histo_linear_bin_no: _AT_histo_linear_bin_no, _AT_histo_linear_bin_width: _AT_histo_linear_bin_width, _AT_histo_linear_left_limit: _AT_histo_linear_left_limit, _AT_histo_linear_midpoint: _AT_histo_linear_midpoint, _AT_histo_linear_n_bins: _AT_histo_linear_n_bins, _AT_histo_linear_step: _AT_histo_linear_step, _AT_histo_logarithmic_bin_no: _AT_histo_logarithmic_bin_no, _AT_histo_logarithmic_bin_width: _AT_histo_logarithmic_bin_width, _AT_histo_logarithmic_left_limit: _AT_histo_logarithmic_left_limit, _AT_histo_logarithmic_midpoint: _AT_histo_logarithmic_midpoint, _AT_histo_logarithmic_n_bins: _AT_histo_logarithmic_n_bins, _AT_histo_logarithmic_step: _AT_histo_logarithmic_step, _AT_histo_midpoint: _AT_histo_midpoint, _AT_histo_midpoints: _AT_histo_midpoints, _AT_histo_n_bins: _AT_histo_n_bins, _AT_histo_normalize: _AT_histo_normalize, _AT_histo_step: _AT_histo_step, _AT_histo_sum: _AT_histo_sum, _AT_interparticleDistance_m: _AT_interparticleDistance_m, _AT_inv_interparticleDistance_Gy: _AT_inv_interparticleDistance_Gy, _AT_inverse_RDD_Cucinotta_m: _AT_inverse_RDD_Cucinotta_m, _AT_inverse_RDD_Cucinotta_solver_function_Gy: _AT_inverse_RDD_Cucinotta_solver_function_Gy, _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m: _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m, _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy: _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy, _AT_inverse_RDD_ExtendedTarget_KatzPoint_m: _AT_inverse_RDD_ExtendedTarget_KatzPoint_m, _AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy: _AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy, _AT_inverse_RDD_Geiss_m: _AT_inverse_RDD_Geiss_m, _AT_inverse_RDD_KatzPoint_LinearER_m: _AT_inverse_RDD_KatzPoint_LinearER_m, _AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy: _AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy, _AT_inverse_RDD_KatzPoint_m: _AT_inverse_RDD_KatzPoint_m, _AT_inverse_RDD_KatzSite_m: _AT_inverse_RDD_KatzSite_m, _AT_inverse_RDD_Test_m: _AT_inverse_RDD_Test_m, _AT_inverse_RadicalDiffusion_m: _AT_inverse_RadicalDiffusion_m, _AT_kappa_multi: _AT_kappa_multi, _AT_kappa_single: _AT_kappa_single, _AT_kinetic_variable_single: _AT_kinetic_variable_single, _AT_lambda_Landau_FWHM: _AT_lambda_Landau_FWHM, _AT_lambda_Landau_FWHM_left: _AT_lambda_Landau_FWHM_left, _AT_lambda_Landau_FWHM_right: _AT_lambda_Landau_FWHM_right, _AT_lambda_Landau_Mean: _AT_lambda_Landau_Mean, _AT_lambda_Landau_Mode: _AT_lambda_Landau_Mode, _AT_lambda_Vavilov_FWHM: _AT_lambda_Vavilov_FWHM, _AT_lambda_Vavilov_FWHM_left: _AT_lambda_Vavilov_FWHM_left, _AT_lambda_Vavilov_FWHM_right: _AT_lambda_Vavilov_FWHM_right, _AT_lambda_Vavilov_Mean: _AT_lambda_Vavilov_Mean, _AT_lambda_Vavilov_Mode: _AT_lambda_Vavilov_Mode, _AT_lambda_Vavilov_Skewness: _AT_lambda_Vavilov_Skewness, _AT_lambda_Vavilov_Variance: _AT_lambda_Vavilov_Variance, _AT_lambda_landau_from_energy_loss_multi: _AT_lambda_landau_from_energy_loss_multi, _AT_lambda_landau_from_energy_loss_single: _AT_lambda_landau_from_energy_loss_single, _AT_lambda_max_multi: _AT_lambda_max_multi, _AT_lambda_max_single: _AT_lambda_max_single, _AT_lambda_mean_multi: _AT_lambda_mean_multi, _AT_lambda_mean_single: _AT_lambda_mean_single, _AT_lambda_vavilov_from_energy_loss_multi: _AT_lambda_vavilov_from_energy_loss_multi, _AT_lambda_vavilov_from_energy_loss_single: _AT_lambda_vavilov_from_energy_loss_single, _AT_low_fluence_local_dose_distribution: _AT_low_fluence_local_dose_distribution, _AT_m_g_cm2_from_material_no: _AT_m_g_cm2_from_material_no, _AT_mass_correction_terms: _AT_mass_correction_terms, _AT_mass_correction_terms_new: _AT_mass_correction_terms_new, _AT_material_index_from_material_number: _AT_material_index_from_material_number, _AT_material_name_from_number: _AT_material_name_from_number, _AT_material_number_from_name: _AT_material_number_from_name, _AT_max_E_transfer_MeV: _AT_max_E_transfer_MeV, _AT_max_E_transfer_MeV_new: _AT_max_E_transfer_MeV_new, _AT_max_E_transfer_MeV_new_single: _AT_max_E_transfer_MeV_new_single, _AT_max_E_transfer_MeV_single: _AT_max_E_transfer_MeV_single, _AT_max_classic_E_transfer_MeV_new_single: _AT_max_classic_E_transfer_MeV_new_single, _AT_max_classic_E_transfer_MeV_single: _AT_max_classic_E_transfer_MeV_single, _AT_max_electron_range_m: _AT_max_electron_range_m, _AT_max_electron_ranges_m: _AT_max_electron_ranges_m, _AT_max_relativistic_E_transfer_MeV_new_single: _AT_max_relativistic_E_transfer_MeV_new_single, _AT_max_relativistic_E_transfer_MeV_single: _AT_max_relativistic_E_transfer_MeV_single, _AT_mean_energy_loss_keV: _AT_mean_energy_loss_keV, _AT_mean_excitation_energy_eV_from_Z: _AT_mean_excitation_energy_eV_from_Z, _AT_mean_excitation_energy_eV_from_Z_single: _AT_mean_excitation_energy_eV_from_Z_single, _AT_mean_number_of_tracks_contrib: _AT_mean_number_of_tracks_contrib, _AT_momentum_MeV_c_u_from_E_MeV_u: _AT_momentum_MeV_c_u_from_E_MeV_u, _AT_momentum_from_E_MeV_c_u_single: _AT_momentum_from_E_MeV_c_u_single, _AT_n_bins_RadicalDiffusion: _AT_n_bins_RadicalDiffusion, _AT_n_bins_for_DSB_distribution: _AT_n_bins_for_DSB_distribution, _AT_n_bins_for_low_fluence_local_dose_distribution: _AT_n_bins_for_low_fluence_local_dose_distribution, _AT_n_bins_for_single_impact_local_dose_distrib: _AT_n_bins_for_single_impact_local_dose_distrib, _AT_normalize: _AT_normalize, _AT_nuclear_spin_from_Z_and_A: _AT_nuclear_spin_from_Z_and_A, _AT_nuclear_spin_from_particle_no_multi: _AT_nuclear_spin_from_particle_no_multi, _AT_nuclear_spin_from_particle_no_single: _AT_nuclear_spin_from_particle_no_single, _AT_p_MeV_from_material_no: _AT_p_MeV_from_material_no, _AT_particle_name_from_particle_no: _AT_particle_name_from_particle_no, _AT_particle_name_from_particle_no_single: _AT_particle_name_from_particle_no_single, _AT_particle_no_from_Z_and_A: _AT_particle_no_from_Z_and_A, _AT_particle_no_from_Z_and_A_single: _AT_particle_no_from_Z_and_A_single, _AT_particle_no_from_particle_name: _AT_particle_no_from_particle_name, _AT_particle_no_from_particle_name_single: _AT_particle_no_from_particle_name_single, _AT_phase_from_material_no: _AT_phase_from_material_no, _AT_plasma_energy_J_from_material_no: _AT_plasma_energy_J_from_material_no, _AT_plasma_energy_J_single: _AT_plasma_energy_J_single, _AT_r_RDD_m: _AT_r_RDD_m, _AT_r_max_RadicalDiffusion_m: _AT_r_max_RadicalDiffusion_m, _AT_r_min_RadicalDiffusion_m: _AT_r_min_RadicalDiffusion_m, _AT_range_straggling_convolution: _AT_range_straggling_convolution, _AT_reduced_target_thickness: _AT_reduced_target_thickness, _AT_reduced_target_thickness_single: _AT_reduced_target_thickness_single, _AT_run_CPPSC_method: _AT_run_CPPSC_method, _AT_run_CPPSS_method: _AT_run_CPPSS_method, _AT_run_GSM_method: _AT_run_GSM_method, _AT_run_IGK_method: _AT_run_IGK_method, _AT_sI_int: _AT_sI_int, _AT_scattering_angle_distribution: _AT_scattering_angle_distribution, _AT_scattering_angle_distribution_single: _AT_scattering_angle_distribution_single, _AT_screening_angle: _AT_screening_angle, _AT_screening_angle_single: _AT_screening_angle_single, _AT_set_user_material: _AT_set_user_material, _AT_set_user_material_from_composition: _AT_set_user_material_from_composition, _AT_single_impact_dose_Gy: _AT_single_impact_dose_Gy, _AT_single_impact_dose_Gy_single: _AT_single_impact_dose_Gy_single, _AT_single_impact_fluence_cm2: _AT_single_impact_fluence_cm2, _AT_single_impact_fluence_cm2_single: _AT_single_impact_fluence_cm2_single, _AT_single_impact_local_dose_distrib: _AT_single_impact_local_dose_distrib, _AT_step_to_N2: _AT_step_to_N2, _AT_stopping_power_ratio: _AT_stopping_power_ratio, _AT_stopping_power_source_model_name_from_number: _AT_stopping_power_source_model_name_from_number, _AT_stopping_power_source_model_number_from_name: _AT_stopping_power_source_model_number_from_name, _AT_sum: _AT_sum, _AT_test_fun: _AT_test_fun, _AT_total_D_Gy: _AT_total_D_Gy, _AT_total_fluence_cm2: _AT_total_fluence_cm2, _AT_translate_dose_into_DSB_distribution: _AT_translate_dose_into_DSB_distribution, _AT_xi_keV: _AT_xi_keV, ___emscripten_environ_constructor: ___emscripten_environ_constructor, ___errno_location: ___errno_location, ___muldi3: ___muldi3, ___udivdi3: ___udivdi3, __get_daylight: __get_daylight, __get_environ: __get_environ, __get_timezone: __get_timezone, __get_tzname: __get_tzname, _bitshift64Lshr: _bitshift64Lshr, _bitshift64Shl: _bitshift64Shl, _fflush: _fflush, _free: _free, _i64Add: _i64Add, _i64Subtract: _i64Subtract, _llvm_bswap_i32: _llvm_bswap_i32, _malloc: _malloc, _memcpy: _memcpy, _memset: _memset, _sbrk: _sbrk, dynCall_ddi: dynCall_ddi, dynCall_di: dynCall_di, dynCall_ii: dynCall_ii, dynCall_iii: dynCall_iii, dynCall_iiii: dynCall_iiii, dynCall_iiiiiii: dynCall_iiiiiii, dynCall_viddiiii: dynCall_viddiiii, dynCall_vii: dynCall_vii, dynCall_viiii: dynCall_viiii, establishStackSpace: establishStackSpace, setThrew: setThrew, stackAlloc: stackAlloc, stackRestore: stackRestore, stackSave: stackSave };
 })
 // EMSCRIPTEN_END_ASM
 (Module.asmGlobalArg, Module.asmLibraryArg, buffer);
@@ -92388,6 +92589,18 @@ var real__AT_density_g_cm3_from_material_no = asm["_AT_density_g_cm3_from_materi
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real__AT_density_g_cm3_from_material_no.apply(null, arguments);
+};
+
+var real__AT_dose_Bortfeld_Gy_multi = asm["_AT_dose_Bortfeld_Gy_multi"]; asm["_AT_dose_Bortfeld_Gy_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_dose_Bortfeld_Gy_multi.apply(null, arguments);
+};
+
+var real__AT_dose_Bortfeld_Gy_single = asm["_AT_dose_Bortfeld_Gy_single"]; asm["_AT_dose_Bortfeld_Gy_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_dose_Bortfeld_Gy_single.apply(null, arguments);
 };
 
 var real__AT_dose_Gy_from_fluence_cm2 = asm["_AT_dose_Gy_from_fluence_cm2"]; asm["_AT_dose_Gy_from_fluence_cm2"] = function() {
@@ -93900,6 +94113,8 @@ var _AT_d_min_RadicalDiffusion_Gy = Module["_AT_d_min_RadicalDiffusion_Gy"] = as
 var _AT_density_g_cm3_from_element_acronym = Module["_AT_density_g_cm3_from_element_acronym"] = asm["_AT_density_g_cm3_from_element_acronym"];
 var _AT_density_g_cm3_from_element_acronym_single = Module["_AT_density_g_cm3_from_element_acronym_single"] = asm["_AT_density_g_cm3_from_element_acronym_single"];
 var _AT_density_g_cm3_from_material_no = Module["_AT_density_g_cm3_from_material_no"] = asm["_AT_density_g_cm3_from_material_no"];
+var _AT_dose_Bortfeld_Gy_multi = Module["_AT_dose_Bortfeld_Gy_multi"] = asm["_AT_dose_Bortfeld_Gy_multi"];
+var _AT_dose_Bortfeld_Gy_single = Module["_AT_dose_Bortfeld_Gy_single"] = asm["_AT_dose_Bortfeld_Gy_single"];
 var _AT_dose_Gy_from_fluence_cm2 = Module["_AT_dose_Gy_from_fluence_cm2"] = asm["_AT_dose_Gy_from_fluence_cm2"];
 var _AT_dose_Gy_from_fluence_cm2_single = Module["_AT_dose_Gy_from_fluence_cm2_single"] = asm["_AT_dose_Gy_from_fluence_cm2_single"];
 var _AT_dose_weighted_E_MeV_u = Module["_AT_dose_weighted_E_MeV_u"] = asm["_AT_dose_weighted_E_MeV_u"];
