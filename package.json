@@ -57,7 +57,7 @@
     "logspace": "1.0.1",
     "plotly.js": "1.44.4",
     "react-bootstrap": "^0.32.4",
-    "react-plotly.js": "2.2.0",
+    "react-plotly.js": "2.3.0",
     "recursive-readdir": "2.2.2",
     "style-loader": "0.23.1",
     "webpack": "4.29.5",
