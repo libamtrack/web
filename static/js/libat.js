@@ -5869,6 +5869,30 @@ var real__AT_Kellerer_zero = asm["_AT_Kellerer_zero"]; asm["_AT_Kellerer_zero"] 
   return real__AT_Kellerer_zero.apply(null, arguments);
 };
 
+var real__AT_LET_d_Wilkens_keV_um_multi = asm["_AT_LET_d_Wilkens_keV_um_multi"]; asm["_AT_LET_d_Wilkens_keV_um_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_LET_d_Wilkens_keV_um_multi.apply(null, arguments);
+};
+
+var real__AT_LET_d_Wilkens_keV_um_single = asm["_AT_LET_d_Wilkens_keV_um_single"]; asm["_AT_LET_d_Wilkens_keV_um_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_LET_d_Wilkens_keV_um_single.apply(null, arguments);
+};
+
+var real__AT_LET_t_Wilkens_keV_um_multi = asm["_AT_LET_t_Wilkens_keV_um_multi"]; asm["_AT_LET_t_Wilkens_keV_um_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_LET_t_Wilkens_keV_um_multi.apply(null, arguments);
+};
+
+var real__AT_LET_t_Wilkens_keV_um_single = asm["_AT_LET_t_Wilkens_keV_um_single"]; asm["_AT_LET_t_Wilkens_keV_um_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_LET_t_Wilkens_keV_um_single.apply(null, arguments);
+};
+
 var real__AT_Landau_IDF = asm["_AT_Landau_IDF"]; asm["_AT_Landau_IDF"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -8127,6 +8151,22 @@ var _AT_Kellerer_zero = Module["_AT_Kellerer_zero"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["_AT_Kellerer_zero"].apply(null, arguments) };
+var _AT_LET_d_Wilkens_keV_um_multi = Module["_AT_LET_d_Wilkens_keV_um_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_LET_d_Wilkens_keV_um_multi"].apply(null, arguments) };
+var _AT_LET_d_Wilkens_keV_um_single = Module["_AT_LET_d_Wilkens_keV_um_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_LET_d_Wilkens_keV_um_single"].apply(null, arguments) };
+var _AT_LET_t_Wilkens_keV_um_multi = Module["_AT_LET_t_Wilkens_keV_um_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_LET_t_Wilkens_keV_um_multi"].apply(null, arguments) };
+var _AT_LET_t_Wilkens_keV_um_single = Module["_AT_LET_t_Wilkens_keV_um_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_LET_t_Wilkens_keV_um_single"].apply(null, arguments) };
 var _AT_Landau_IDF = Module["_AT_Landau_IDF"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
