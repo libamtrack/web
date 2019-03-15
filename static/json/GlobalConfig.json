@@ -74,6 +74,10 @@
         {
           "name": "Proton depth-dose curve",
           "jsonConfigPath": "/PhysicsRoutines/BortfeldModelDepthDose.json"
+        },
+        {
+          "name": "Proton depth-LET curve",
+          "jsonConfigPath": "/PhysicsRoutines/WilkensModelDepthLET.json"
         }
       ]
     },
@@ -189,9 +193,14 @@
     {
       "name": "energy_loss_distributions",
       "jsonConfigPath": "/dictionaries/EnergyLossDistributions.json"
+    },
+    {
+      "name": "let_averaging",
+      "jsonConfigPath": "/dictionaries/LETAveraging.json"
     }
+
   ],
-  "deployDate":"Thu Mar 14 22:23:15 CET 2019",
+  "deployDate":"Fri Mar 15 15:49:46 CET 2019",
   "deployBranch":"master",
-  "deployCommit":"f3160c8"
+  "deployCommit":"b0c3a60"
 }
