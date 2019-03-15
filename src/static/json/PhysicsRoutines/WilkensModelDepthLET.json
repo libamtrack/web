@@ -1,0 +1,78 @@
+{
+  "visibleName": "Proton depth-LET curve",
+  "functionName": "AT_LET_Wilkens_keV_um",
+  "description": "\"Analytical model of proton depth-LET curve according to Wilkens model. The model assumes a pencil-beam like source, includes range straggling and initial kinetic energy spread.\",",
+  "xTitle": "Depth [cm]",
+  "yTitle": "LET [keV/um]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "z_cm",
+      "label": "Depth [cm]",
+      "startholder": "0.0",
+      "endholder": "30.0",
+      "intervalType": "points",
+      "stepDefaultValue": "0.1",
+      "pointsDefaultNumber": "300",
+      "validations": {
+        "type": "float",
+        "min": "0.0",
+        "max": "1000000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy [MeV]",
+      "placeholder": "150.0",
+      "defaultValue": 150.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "sigma_E_MeV_u",
+      "label": "Energy spread (σ) [MeV]",
+      "placeholder": "1.5",
+      "defaultValue": 1.5,
+      "validations": {
+        "type": "float",
+        "min": "0.0",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "averaging",
+      "label": "Averaging",
+      "values": "let_averaging",
+      "defaultValue": 1,
+      "description": "Choose averaging"
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose material type"
+    }
+  ],
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear",
+    "plotType": "lines"
+  },
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
