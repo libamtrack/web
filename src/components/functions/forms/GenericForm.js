@@ -1,5 +1,11 @@
 import React from 'react';
-import {Button, Form, Input, Select, Tooltip} from 'antd';
+
+import Button from "antd/es/button/button";
+import Form from "antd/es/form/Form";
+import Input from "antd/es/input/Input";
+import Tooltip from "antd/es/tooltip/index";
+import Select from "antd/es/select/index";
+
 
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
