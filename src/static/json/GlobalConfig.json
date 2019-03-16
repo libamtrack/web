@@ -15,28 +15,53 @@
       },
       "functions": [
         {
-          "name": "Relativistic β from energy",
+          "name": "Relativistic β vs energy",
           "jsonConfigPath": "/PhysicsRoutines/BetaFromE.json"
         },
         {
-          "name": "Energy from relativistic β",
+          "name": "Energy vs relativistic β",
           "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
         },
         {
-          "name": "Relativistic γ from energy",
+          "name": "Relativistic γ vs energy",
           "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
         },
         {
-          "name": "Energy from relativistic  γ",
+          "name": "Energy vs relativistic  γ",
           "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
         },
         {
-          "name": "Momentum from energy",
+          "name": "Momentum vs energy",
           "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
         },
         {
-          "name": "Energy from momentum",
+          "name": "Energy vs momentum",
           "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
+        }
+      ]
+    },
+    {
+      "name": "Proton-therapy analytical models",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
+      "functions": [
+        {
+          "name": "Dose vs depth",
+          "jsonConfigPath": "/ProtonTherapyModels/BortfeldModelDepthDose.json"
+        },
+        {
+          "name": "LET vs depth",
+          "jsonConfigPath": "/ProtonTherapyModels/WilkensModelDepthLET.json"
+        },
+        {
+          "name": "RBE vs depth",
+          "jsonConfigPath": "/ProtonTherapyModels/ProtonRBEModels.json"
         }
       ]
     },
@@ -60,7 +85,7 @@
           "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabMulti.json"
         },
         {
-          "name": "Stopping power from energy",
+          "name": "Stopping power vs energy",
           "jsonConfigPath": "/StoppingPower/StoppingPowerWithNo.json"
         },
         {
@@ -70,18 +95,6 @@
         {
           "name": "Energy loss distribution",
           "jsonConfigPath": "/PhysicsRoutines/EnergyLossDistributions.json"
-        },
-        {
-          "name": "Proton depth-dose curve",
-          "jsonConfigPath": "/PhysicsRoutines/BortfeldModelDepthDose.json"
-        },
-        {
-          "name": "Proton depth-LET curve",
-          "jsonConfigPath": "/PhysicsRoutines/WilkensModelDepthLET.json"
-        },
-        {
-          "name": "Proton depth-RBE curve",
-          "jsonConfigPath": "/PhysicsRoutines/ProtonRBEModels.json"
         }
       ]
     },
