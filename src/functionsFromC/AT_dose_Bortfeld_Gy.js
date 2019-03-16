@@ -1,5 +1,7 @@
 export default function AT_dose_Bortfeld_Gy(parameters) {
     let at_dose_bortfeld_gy_multi = Module.cwrap('AT_dose_Bortfeld_Gy_multi', 'null', ['number', 'array', 'number', 'number', 'number', 'number', 'number', 'number']);
+    let at_dose_bortfeld_gy_single = Module.cwrap('AT_dose_Bortfeld_Gy_single', 'number', ['number', 'number', 'number', 'number', 'number', 'number']);
+
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.n === "undefined"){
@@ -28,11 +30,11 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     let E_MeV_u = parameters.E_MeV_u;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.fluence_cm2 === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER fluence_cm2 IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.entrance_dose_Gy === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER entrance_dose_Gy IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let fluence_cm2 = parameters.fluence_cm2;
+    let entrance_dose_Gy = parameters.entrance_dose_Gy;
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.sigma_E_MeV_u === "undefined"){
@@ -58,6 +60,10 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     let dose_GyReturnHeap = new Uint8Array(Module.HEAPF64.buffer, dose_GyReturnDataPointer, dose_GyReturnDataBytesNumber);
 
     /*********************CALL FUNCTION******************************/
+
+    let entrance_dose_for_unit_fluence_Gy = at_dose_bortfeld_gy_single(0.0, 1.0, E_MeV_u, sigma_E_MeV_u, material_no, eps);
+    let fluence_cm2 = entrance_dose_Gy / entrance_dose_for_unit_fluence_Gy;
+
     let result = at_dose_bortfeld_gy_multi(n, z_cmHeap, E_MeV_u, fluence_cm2, sigma_E_MeV_u, material_no, eps, dose_GyReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(dose_GyReturnHeap.buffer, dose_GyReturnHeap.byteOffset, dose_GyReturnData.length);
 
