@@ -1,9 +1,9 @@
 {
-  "visibleName": "Proton depth-dose curve",
-  "functionName": "AT_dose_Bortfeld_Gy",
-  "description": "Analytical model of proton depth-dose curve (Bragg curve) according to Bortfeld model (DOI 10.1118/1.598116). The model assumes a pencil-beam like source, includes range straggling and initial kinetic energy spread.",
+  "visibleName": "Proton depth-RBE curve",
+  "functionName": "AT_RBE_proton",
+  "description": "Analytical models of proton depth-RBE curve. The models assumes Bortfeld depth-dose model and Wilkens depth-LET model.",
   "xTitle": "Depth [cm]",
-  "yTitle": "Dose [Gy]",
+  "yTitle": "RBE",
   "plot": true,
   "formItems": [
     {
@@ -19,6 +19,30 @@
         "type": "float",
         "min": "0.0",
         "max": "1000000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "entrance_dose_Gy",
+      "label": "Entrance dose [Gy]",
+      "placeholder": "2.0",
+      "defaultValue": 2.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "ref_alpha_beta_ratio",
+      "label": "reference α/β",
+      "placeholder": "2.0",
+      "defaultValue": 2.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
       }
     },
     {
@@ -46,26 +70,13 @@
       }
     },
     {
-      "type": "input",
-      "parameterName": "fluence_cm2",
-      "label": "Fluence [1/cm2]",
-      "placeholder": "1000000000",
-      "defaultValue": 1000000000,
-      "description": "fluence in 1/cm2",
-      "validations": {
-        "type": "float",
-        "min": "0.000001",
-        "max": "10000000000000000"
-      }
-    },
-    {
       "type": "select",
-      "parameterName": "material_no",
-      "label": "Material",
-      "values": "materials",
+      "parameterName": "rbe_model_no",
+      "label": "Model",
+      "values": "rbe_models",
       "asManyAsPoints": false,
-      "defaultValue": 1,
-      "description": "Choose material type"
+      "defaultValue": 4,
+      "description": "Choose RBE model"
     }
   ],
   "moreOptions": {
