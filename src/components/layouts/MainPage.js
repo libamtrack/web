@@ -77,6 +77,7 @@ class MainPage extends React.Component {
                         <Row>{confData.footerText}</Row>
                         <Row>{"Deploy date: " + confData.deployDate + " from branch: "
                             + confData.deployBranch + " and commit number: " + confData.deployCommit}</Row>
+                        <Row><a href="report.html" target="_blank">{"See the bundle.js analyze"}</a></Row>
                     </Footer>;
 
                     this.state.dictionariesPaths = confData.dictionaries;

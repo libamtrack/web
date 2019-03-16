@@ -12,6 +12,7 @@ import {Link} from "react-router-dom";
 import ErrorModal from "./modals/ErrorModal";
 import Script from 'react-load-script'
 import {Col, Row} from "react-bootstrap";
+import FormItem from "antd/es/form/FormItem";
 
 export default class FunctionsController extends Component {
     state = {
@@ -362,12 +363,17 @@ export default class FunctionsController extends Component {
                 </Col>
             </Row>
         ) : (
-                <div style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
+            <Row>
+                <Col lg={4} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                     {this.state.toRender}
-                    <div style={{ fontSize: 24 }}>
-                        Result: {parseFloat(this.state.singleResult.toFixed(prec))} {unit}
-                    </div>
-                </div>
+                    <FormItem style={{margin: 6, fontSize: 24}} label={"Result"} labelCol={{span: 13}}
+                              wrapperCol={{span: 11}} colon={true}>
+                        {parseFloat(this.state.singleResult.toFixed(prec))} {unit}
+                    </FormItem>
+                </Col>
+                <Col lg={7}>
+                </Col>
+            </Row>
             );
         return (
             <div>
