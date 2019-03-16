@@ -47,11 +47,11 @@
     },
     {
       "type": "input",
-      "parameterName": "fluence_cm2",
-      "label": "Fluence [1/cm2]",
-      "placeholder": "1000000000",
-      "defaultValue": 1000000000,
-      "description": "fluence in 1/cm2",
+      "parameterName": "entrance_dose_Gy",
+      "label": "Entrance dose [Gy]",
+      "placeholder": "2.0",
+      "defaultValue": 2,
+      "description": "dose in Gy",
       "validations": {
         "type": "float",
         "min": "0.000001",
