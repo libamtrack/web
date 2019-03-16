@@ -7555,6 +7555,18 @@ var real__AT_plasma_energy_J_single = asm["_AT_plasma_energy_J_single"]; asm["_A
   return real__AT_plasma_energy_J_single.apply(null, arguments);
 };
 
+var real__AT_proton_RBE_multi = asm["_AT_proton_RBE_multi"]; asm["_AT_proton_RBE_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_proton_RBE_multi.apply(null, arguments);
+};
+
+var real__AT_proton_RBE_single = asm["_AT_proton_RBE_single"]; asm["_AT_proton_RBE_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_proton_RBE_single.apply(null, arguments);
+};
+
 var real__AT_r_RDD_m = asm["_AT_r_RDD_m"]; asm["_AT_r_RDD_m"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -9275,6 +9287,14 @@ var _AT_plasma_energy_J_single = Module["_AT_plasma_energy_J_single"] = function
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["_AT_plasma_energy_J_single"].apply(null, arguments) };
+var _AT_proton_RBE_multi = Module["_AT_proton_RBE_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_proton_RBE_multi"].apply(null, arguments) };
+var _AT_proton_RBE_single = Module["_AT_proton_RBE_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_proton_RBE_single"].apply(null, arguments) };
 var _AT_r_RDD_m = Module["_AT_r_RDD_m"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
