@@ -10,6 +10,7 @@ import ListGroup from "react-bootstrap/es/ListGroup";
 import ListGroupItem from "react-bootstrap/es/ListGroupItem";
 import Route from "react-router-dom/es/Route";
 import Link from "react-router-dom/es/Link";
+import packageJson from '../../../package.json';
 
 const { Header, Content, Footer } = Layout;
 
@@ -72,11 +73,14 @@ class MainPage extends React.Component {
                     this.state.categories = confData.categories;
                     this.state.introText = confData.introText;
 
+                    let bundleAnalyzeReportOnlyAtWebDev = packageJson.homepage.indexOf("web_dev") === -1 ? "" : <Row><a href="report.html" target="_blank">{"See the bundle.js analyze"}</a></Row>;
+
                     this.state.footer =
                     <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
                         <Row>{confData.footerText}</Row>
                         <Row>{"Deploy date: " + confData.deployDate + " from branch: "
                             + confData.deployBranch + " and commit number: " + confData.deployCommit}</Row>
+                        {bundleAnalyzeReportOnlyAtWebDev}
                     </Footer>;
 
                     this.state.dictionariesPaths = confData.dictionaries;

@@ -103,7 +103,7 @@ export default class ModalController extends React.Component {
         return (
             <div>
                 {this.props.modals ? (
-                    <Collapse bordered={false}>
+                    <Collapse bordered={false} defaultActiveKey={["2"]}>
                         <Panel header={<h6>Data series options</h6>} key="2" style={customPanelStyle}>
                             <div style={{ margin: 6 }} align="right">
                                 {this.props.modals.dataSeries ? (
