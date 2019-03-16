@@ -73,7 +73,7 @@ class MainPage extends React.Component {
                     this.state.categories = confData.categories;
                     this.state.introText = confData.introText;
 
-                    let bundleAnalyzeReportOnlyAtWebDev = packageJson.homepage.indexOf("web_def") === -1 ? "" : "<Row><a href=\"report.html\" target=\"_blank\">{\"See the bundle.js analyze\"}</a></Row>";
+                    let bundleAnalyzeReportOnlyAtWebDev = packageJson.homepage.indexOf("web_dev") === -1 ? "" : <Row><a href="report.html" target="_blank">{"See the bundle.js analyze"}</a></Row>;
 
                     this.state.footer =
                     <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
