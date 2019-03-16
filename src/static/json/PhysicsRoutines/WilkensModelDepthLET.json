@@ -11,10 +11,10 @@
       "parameterName": "z_cm",
       "label": "Depth [cm]",
       "startholder": "0.0",
-      "endholder": "30.0",
+      "endholder": "20.0",
       "intervalType": "points",
       "stepDefaultValue": "0.1",
-      "pointsDefaultNumber": "300",
+      "pointsDefaultNumber": "500",
       "validations": {
         "type": "float",
         "min": "0.0",

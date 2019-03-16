@@ -78,6 +78,10 @@
         {
           "name": "Proton depth-LET curve",
           "jsonConfigPath": "/PhysicsRoutines/WilkensModelDepthLET.json"
+        },
+        {
+          "name": "Proton depth-RBE curve",
+          "jsonConfigPath": "/PhysicsRoutines/ProtonRBEModels.json"
         }
       ]
     },
@@ -197,6 +201,10 @@
     {
       "name": "let_averaging",
       "jsonConfigPath": "/dictionaries/LETAveraging.json"
+    },
+    {
+      "name": "rbe_models",
+      "jsonConfigPath": "/dictionaries/RBEModels.json"
     }
 
   ],
