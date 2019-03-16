@@ -73,7 +73,7 @@
     "react": "16.8.4",
     "react-dom": "16.8.4",
     "react-load-script": "0.0.6",
-    "react-router": "4.3.1",
+    "react-router": "4.4.0",
     "react-router-dom": "4.3.1"
   }
 }
