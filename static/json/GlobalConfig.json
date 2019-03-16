@@ -78,6 +78,10 @@
         {
           "name": "Proton depth-LET curve",
           "jsonConfigPath": "/PhysicsRoutines/WilkensModelDepthLET.json"
+        },
+        {
+          "name": "Proton depth-RBE curve",
+          "jsonConfigPath": "/PhysicsRoutines/ProtonRBEModels.json"
         }
       ]
     },
@@ -197,10 +201,14 @@
     {
       "name": "let_averaging",
       "jsonConfigPath": "/dictionaries/LETAveraging.json"
+    },
+    {
+      "name": "rbe_models",
+      "jsonConfigPath": "/dictionaries/RBEModels.json"
     }
 
   ],
-  "deployDate":"Sat Mar 16 13:51:49 CET 2019",
+  "deployDate":"Sat Mar 16 14:20:55 CET 2019",
   "deployBranch":"master",
-  "deployCommit":"ca5c3b5"
+  "deployCommit":"6ed4d1a"
 }
