@@ -52,7 +52,7 @@
       },
       "functions": [
         {
-          "name": "Dose vs depth",
+          "name": "Dose (physical) vs depth",
           "jsonConfigPath": "/ProtonTherapyModels/BortfeldModelDepthDose.json"
         },
         {
@@ -62,6 +62,10 @@
         {
           "name": "RBE vs depth",
           "jsonConfigPath": "/ProtonTherapyModels/ProtonRBEModels.json"
+        },
+        {
+          "name": "Biological dose vs depth",
+          "jsonConfigPath": "/ProtonTherapyModels/BiologicalDoseModels.json"
         }
       ]
     },
@@ -221,7 +225,7 @@
     }
 
   ],
-  "deployDate":"Sun Mar 17 09:06:42 CET 2019",
+  "deployDate":"Mon Mar 18 22:56:00 CET 2019",
   "deployBranch":"master",
-  "deployCommit":"c56128f"
+  "deployCommit":"35f61e1"
 }

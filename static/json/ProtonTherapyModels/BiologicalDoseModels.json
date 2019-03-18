@@ -1,0 +1,94 @@
+{
+  "visibleName": "Proton depth-RBE curve",
+  "functionName": "AT_biological_dose_proton",
+  "description": "Analytical models of proton biological dose. The models assumes Bortfeld depth-dose model and Wilkens depth-LET model.",
+  "xTitle": "Depth [cm]",
+  "yTitle": "Biological dose [GyRBE]",
+  "plot": true,
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "z_cm",
+      "label": "Depth [cm]",
+      "startholder": "0.0",
+      "endholder": "20.0",
+      "intervalType": "points",
+      "stepDefaultValue": "0.1",
+      "pointsDefaultNumber": "500",
+      "validations": {
+        "type": "float",
+        "min": "0.0",
+        "max": "1000000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "entrance_dose_Gy",
+      "label": "Entrance dose [Gy]",
+      "placeholder": "2.0",
+      "defaultValue": 2.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "ref_alpha_beta_ratio",
+      "label": "reference α/β",
+      "placeholder": "2.0",
+      "defaultValue": 2.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy [MeV]",
+      "placeholder": "150.0",
+      "defaultValue": 150.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "sigma_E_MeV_u",
+      "label": "Energy spread (σ) [MeV]",
+      "placeholder": "1.5",
+      "defaultValue": 1.5,
+      "validations": {
+        "type": "float",
+        "min": "0.0",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "rbe_model_no",
+      "label": "Model",
+      "values": "rbe_models",
+      "asManyAsPoints": false,
+      "defaultValue": 4,
+      "description": "Choose RBE model"
+    }
+  ],
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear",
+    "plotType": "lines"
+  },
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "showDataSeries": true,
+    "deleteAll": true
+  }
+}
