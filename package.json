@@ -74,7 +74,7 @@
     "babel-plugin-wildcard": "5.0.0",
     "bootstrap": "4.3.1",
     "jquery": "3.3.1",
-    "plotly.js-basic-dist": "1.44.2",
+    "plotly.js-basic-dist": "1.45.3",
     "popper.js": "1.14.7",
     "react": "16.8.4",
     "react-dom": "16.8.4",
