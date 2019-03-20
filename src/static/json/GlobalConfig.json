@@ -52,7 +52,7 @@
       },
       "functions": [
         {
-          "name": "Dose (physical) vs depth",
+          "name": "Physical dose vs depth",
           "jsonConfigPath": "/ProtonTherapyModels/BortfeldModelDepthDose.json"
         },
         {
