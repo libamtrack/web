@@ -345,36 +345,68 @@ export default class FunctionsController extends Component {
         }
     };
 
+    createFormItem = (label, value, prec, unit) => {
+        return (
+            <FormItem style={{margin: 6, fontSize: 24}} label={label} labelCol={{span: 13}}
+                      wrapperCol={{span: 11}} colon={true}>
+                {parseFloat(value.toFixed(prec))} {unit}
+            </FormItem>
+        );
+    };
+
     render() {
         const size = this.state.json.plot && this.state.json.plot === true ? 8 : 24;
         const unit = this.state.json.resultUnit ? this.state.json.resultUnit : "";
         const prec = this.state.json.resultPrecision ? this.state.json.resultPrecision : 12;
-        const resultComp = this.state.json.plot && this.state.json.plot === true ? (
-            <Row>
-                <Col lg={5} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
-                    {this.state.toRender}
-                </Col>
-                <Col lg={6}>
-                    <PlotComponent dataSeries={this.state.dataSeries}
-                        xTitle={this.state.json.xTitle}
-                        yTitle={this.state.json.yTitle}
-                        xType={this.state.plot.xType}
-                        yType={this.state.plot.yType} />
-                </Col>
-            </Row>
-        ) : (
-            <Row>
-                <Col lg={4} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
-                    {this.state.toRender}
-                    <FormItem style={{margin: 6, fontSize: 24}} label={"Result"} labelCol={{span: 13}}
-                              wrapperCol={{span: 11}} colon={true}>
-                        {parseFloat(this.state.singleResult.toFixed(prec))} {unit}
-                    </FormItem>
-                </Col>
-                <Col lg={7}>
-                </Col>
-            </Row>
-            );
+        const label = this.state.json.resultLabel ? this.state.json.resultLabel : "Result";
+
+        // assuming that no plotting is done we allocate the array of "calculator" results
+        let result_items = [];
+        if (typeof this.state.singleResult !== "number") { // multiple items returned from calculator method
+
+            for (let i = 0; i < this.state.singleResult.length; i++) {
+
+                let current_unit = unit; // the same unit for all result items
+                if (typeof current_unit !== "string") {
+                    current_unit = unit[i]; // each result item has its own unit
+                }
+
+                let current_prec = prec; // the same precision for all result items
+                if (typeof current_unit !== "number") {
+                    current_prec = prec[i]; // each result item has its own precision
+                }
+
+                let current_label = label; // the same label for all result items
+                if (typeof current_label !== "string") {
+                    current_label = label[i]; // each result item has its own label
+                }
+
+                // combine all together
+                result_items.push(this.createFormItem(current_label, this.state.singleResult[i], current_prec, current_unit));
+            }
+        } else { // single item returned from calculator method
+            result_items.push(this.createFormItem( label, this.state.singleResult, prec, unit));
+        }
+
+        const resultComp = this.state.json.plot && this.state.json.plot === true ? <Row>
+            <Col lg={5} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
+                {this.state.toRender}
+            </Col>
+            <Col lg={6}>
+                <PlotComponent dataSeries={this.state.dataSeries}
+                               xTitle={this.state.json.xTitle}
+                               yTitle={this.state.json.yTitle}
+                               xType={this.state.plot.xType}
+                               yType={this.state.plot.yType}/>
+            </Col>
+        </Row> : <Row>
+            <Col lg={4} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
+                {this.state.toRender}
+                {result_items}
+            </Col>
+            <Col lg={7}>
+            </Col>
+        </Row>;
         return (
             <div>
                 <Breadcrumb style={{marginLeft:40, marginTop: 15}}>
