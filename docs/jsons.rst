@@ -112,6 +112,7 @@ In this file user can describe all parameters which are needed to generate form 
         "plot": true,
         "resultUnit": " ",
         "resultPrecision": 12,
+        "resultLabel": "Mass stopping power",
         "isMathJaxSupported": true,
         "formItems": [],
         "moreOptions": {},
