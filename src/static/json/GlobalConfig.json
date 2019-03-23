@@ -27,10 +27,6 @@
           "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
         },
         {
-          "name": "Energy vs relativistic  γ",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
-        },
-        {
           "name": "Momentum vs energy",
           "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
         },
@@ -143,24 +139,28 @@
           "jsonConfigPath": "/DataRange/CSDARangeSingle.json"
         },
         {
-          "name": "Effective Charge from energy",
-          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
+          "name": "Dose from fluence and energy",
+          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
         },
         {
-          "name": "β from energy",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
+          "name": "Range and FWHM from energy",
+          "jsonConfigPath": "/ProtonTherapyModels/RangeFromEnergySingle.json"
+        },
+        {
+          "name": "Energy from range and FWHM",
+          "jsonConfigPath": "/ProtonTherapyModels/EnergyFromRangeSingle.json"
+        },
+        {
+          "name": "Effective Charge from energy",
+          "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
         },
         {
           "name": "Energy from β",
           "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
         },
         {
-          "name": "γ From Energy",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
-        },
-        {
-          "name": "Energy From γ",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
+          "name": "Energy to β and γ",
+          "jsonConfigPath": "/PhysicsRoutines/BetaGammaFromESingle.json"
         },
         {
           "name": "Momentum from energy",
@@ -169,10 +169,6 @@
         {
           "name": "Energy from momentum",
           "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
-        },
-        {
-          "name": "Dose from fluence and energy",
-          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
         },
         {
           "name": "CSDA Energy After Slab",

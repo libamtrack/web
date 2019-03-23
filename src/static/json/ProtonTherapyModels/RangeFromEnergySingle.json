@@ -1,0 +1,44 @@
+{
+  "visibleName": "Proton depth-dose curve",
+  "functionName": "AT_range_fwhm_Bortfeld_cm",
+  "description": "Energy and its spread from range and FWHM",
+  "plot": false,
+  "resultPrecision": [6,6,6],
+  "resultLabel": ["Range", "FWHM", "Max/entrance dose"],
+  "resultUnit": ["cm", "cm", ""],
+  "formItems": [
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy [MeV]",
+      "placeholder": "150.0",
+      "defaultValue": 150.0,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "sigma_E_MeV_u",
+      "label": "Energy spread (σ) [MeV]",
+      "placeholder": "1.5",
+      "defaultValue": 1.5,
+      "validations": {
+        "type": "float",
+        "min": "0.0",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose material type"
+    }
+  ]
+}

@@ -306,6 +306,8 @@ export default class FunctionsController extends Component {
                 this.state.formData.intervalType
             );
 
+            let singleResult = [];
+
             let data = generatedPoints.lin;
             let dataLinear = this.state.dataLinear;
             dataLinear.push(data);
@@ -315,10 +317,24 @@ export default class FunctionsController extends Component {
             dataPower.push(dataP);
 
             let res = fun(prepareDataToCalculate(this.state.entryName, data, this.state.formData, this.state.parametersRules));
+
+
+            if (res instanceof Array) {
+            } else {
+                singleResult = res["metadata"];
+                res = res["data"];
+            }
+
             let resLinear = this.state.resultLinear;
             resLinear.push(res);
 
             let resP = fun(prepareDataToCalculate(this.state.entryName, dataP, this.state.formData, this.state.parametersRules));
+            if (resP instanceof Array) {
+            } else {
+                singleResult = resP['metadata'];
+                resP = resP['data'];
+            }
+
             let resPower = this.state.resultPower;
             resPower.push(resP);
 
@@ -338,8 +354,10 @@ export default class FunctionsController extends Component {
                 dataLinear: dataLinear,
                 resultLinear: resLinear,
                 dataPower: dataPower,
-                resultPower: resPower
+                resultPower: resPower,
+                singleResult: singleResult
             });
+
         } catch (error) {
             this.setState({ isError: true });
         }
@@ -385,7 +403,18 @@ export default class FunctionsController extends Component {
                 result_items.push(this.createFormItem(current_label, this.state.singleResult[i], current_prec, current_unit));
             }
         } else { // single item returned from calculator method
-            result_items.push(this.createFormItem( label, this.state.singleResult, prec, unit));
+
+            let current_label = label;
+            if( typeof current_label !== "string"){
+                current_label = "Result";
+            }
+
+            let current_unit = unit;
+            if( typeof current_unit !== "string"){
+                current_unit = "";
+            }
+
+            result_items.push(this.createFormItem( current_label, this.state.singleResult, prec, current_unit));
         }
 
         const resultComp = this.state.json.plot && this.state.json.plot === true ? <Row>
@@ -398,6 +427,8 @@ export default class FunctionsController extends Component {
                                yTitle={this.state.json.yTitle}
                                xType={this.state.plot.xType}
                                yType={this.state.plot.yType}/>
+                Last item metadata:
+                               {result_items}
             </Col>
         </Row> : <Row>
             <Col lg={4} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
