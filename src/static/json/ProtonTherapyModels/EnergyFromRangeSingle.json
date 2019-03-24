@@ -1,10 +1,10 @@
 {
   "visibleName": "Proton depth-dose curve",
   "functionName": "AT_energy_spread_Bortfeld",
-  "description": "Range and FWHM from energy mean and spread",
+  "description": "Energy and energy spread from 1-D beam profile parameters (range, fwhm, max/plateau).",
   "plot": false,
   "resultPrecision": [3,3,6],
-  "resultLabel": ["Energy", "Energy sigma", "eps"],
+  "resultLabel": ["Energy", "Energy spread (σ)", "eps"],
   "resultUnit": ["MeV", "MeV", ""],
   "formItems": [
     {
@@ -35,7 +35,7 @@
     {
       "type": "input",
       "parameterName": "fwhm_cm",
-      "label": "FWHM [cm]",
+      "label": "FWHM (distal 50% - proximal 50%) [cm]",
       "placeholder": "1.6",
       "defaultValue": 1.6,
       "validations": {
@@ -47,7 +47,7 @@
     {
       "type": "input",
       "parameterName": "max_to_plateau",
-      "label": "max_to_plateau",
+      "label": "Max dose / entrance dose",
       "placeholder": "5.2",
       "defaultValue": 5.2,
       "validations": {
