@@ -11,8 +11,8 @@ const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
-const floatPattern = /^\d+\.?\d*$/;
-const intPattern = /^\d+$/;
+const floatPattern = /^[+-]?\d+\.?\d*([eE][+-]?\d+)?$/;
+const intPattern = /^\d+([eE][+]?\d+)?$/;
 
 const inputFieldWidth = 170;
 const textLabelForInputSpan = 13;
