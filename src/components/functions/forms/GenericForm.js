@@ -11,8 +11,12 @@ const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
-const floatPattern = /^\d+\.?\d*$/;
-const intPattern = /^\d+$/;
+// float in standard or exponential notation
+// e.g. -1.5e+2, 2, 10.2E-2, 1E4
+const floatPattern = /^[+-]?\d+\.?\d*([eE][+-]?\d+)?$/;
+// unsigned int in standard or exponential notation (negative exponent is not allowed)
+// e.g. 2, 1e3, 2e+4, 2E6
+const uintPattern = /^\d+([eE][+]?\d+)?$/;
 
 const inputFieldWidth = 170;
 const textLabelForInputSpan = 13;
@@ -149,7 +153,7 @@ class FormGenerator extends React.Component {
                         <Tooltip title={"Insert interval value or points number"} placement={"right"}>
                             {getFieldDecorator(pointNoName, {
                                 rules: [{
-                                    pattern: this.state.formData.intervalType === stepValue ? floatPattern : intPattern, message: "Incorrect value!"
+                                    pattern: this.state.formData.intervalType === stepValue ? floatPattern : uintPattern, message: "Incorrect value!"
                                 }, {
                                     required: true, message: "Please, insert a value!"
                                 }],
@@ -277,7 +281,7 @@ class FormGenerator extends React.Component {
         }
 
         if (value && validationRules) {
-            const pattern = validationRules.type && validationRules.type === "int" ? intPattern : floatPattern;
+            const pattern = validationRules.type && validationRules.type === "int" ? uintPattern : floatPattern;
             const regObj = RegExp(pattern);
             const fValue = parseFloat(value);
 
@@ -323,7 +327,7 @@ class FormGenerator extends React.Component {
         }
 
         if (value && validationRules) {
-            const pattern = validationRules.type && validationRules.type === "int" ? intPattern : floatPattern;
+            const pattern = validationRules.type && validationRules.type === "int" ? uintPattern : floatPattern;
             const regObj = RegExp(pattern);
             const fValue = parseFloat(value);
 
