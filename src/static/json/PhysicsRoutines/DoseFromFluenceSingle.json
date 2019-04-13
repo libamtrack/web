@@ -11,13 +11,13 @@
       "type": "input",
       "parameterName": "fluence_cm2",
       "label": "Fluence [1/cm2]",
-      "placeholder": "1000000000",
-      "defaultValue": 1000000000,
+      "placeholder": "1e9",
+      "defaultValue": 1e9,
       "description": "fluence in 1/cm2",
       "validations": {
         "type": "float",
-        "min": "0.000001",
-        "max": "10000000000000000"
+        "min": "1e-3",
+        "max": "1e18"
       }
     },
     {
@@ -29,8 +29,8 @@
       "description": "Energy per unit mass",
       "validations": {
         "type": "float",
-        "min": "0.000001",
-        "max": "10000000000000000"
+        "min": "1e-6",
+        "max": "1e9"
       }
     },
     {
