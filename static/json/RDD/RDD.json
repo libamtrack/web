@@ -11,14 +11,14 @@
       "type": "entry_module",
       "parameterName": "r_m",
       "label": "radius [m]",
-      "startholder": "0.0000000001",
-      "endholder": "0.00001",
+      "startholder": "1e-9",
+      "endholder": "1e-5",
       "intervalType": "points",
       "stepDefaultValue": "0.000001",
       "pointsDefaultNumber": "300",      
       "validations": {
         "type": "float",
-        "min": "0.000000000000000.1",
+        "min": "0.0",
         "max": "1000.0"
       }
     },
