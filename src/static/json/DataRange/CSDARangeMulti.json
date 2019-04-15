@@ -28,7 +28,7 @@
             "label": "Final Energy [MeV/amu]",
             "placeholder": "Final energy",
             "asManyAsPoints": true,
-            "defaultValue": 0,
+            "defaultValue": "0",
             "validations": {
                 "type": "float",
                 "min": "0",

@@ -234,7 +234,7 @@ Single input item that allows insert single number.
       "parameterName": "beta",
       "label": "Beta",
       "placeholder": "0.1",
-      "defaultValue": 0.1,
+      "defaultValue": "0.1",
       "validations": {
             "type": "float",
             "min": "0.000001",
@@ -246,7 +246,7 @@ Single input item that allows insert single number.
 
 * **placeholder** (*string*) - value visible when field is empty
 
-* **defaultValue** (*float/int*) - field initial value
+* **defaultValue** (*string*) - field initial value
 
 * **validations** (*array*) - field validation rules
     

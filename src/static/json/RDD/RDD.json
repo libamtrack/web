@@ -27,7 +27,7 @@
       "parameterName": "E_MeV_u",
       "label": "Energy [MeV/amu]",
       "placeholder": "150",
-      "defaultValue": 150,
+      "defaultValue": "150",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -65,7 +65,7 @@
       "parameterName": "rdd_parameter",
       "label": "Model params:",
       "asManyAsPoints": false,
-      "defaultValue": 0.00000001,
+      "defaultValue": "0.00000001",
       "description": "Model parameter"
     },
     {

@@ -26,7 +26,7 @@
             "parameterName": "slab_thickness_cm",
             "label": "Thickness [cm]",
             "placeholder": "Slab thickness [cm]",
-            "defaultValue": 2.0,
+            "defaultValue": "2.0",
             "description": "Thickness of a slab",
             "validations": {
                 "type": "float",
