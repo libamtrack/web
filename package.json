@@ -62,14 +62,14 @@
     "terser": "3.14.1",
     "terser-webpack-plugin": "1.2.0",
     "uglifyjs-webpack-plugin": "2.1.2",
-    "webpack": "4.29.6",
+    "webpack": "4.30.0",
     "webpack-bundle-analyzer": "3.3.2",
     "webpack-cli": "3.3.0",
     "webpack-dev-server": "3.3.1"
   },
   "dependencies": {
     "@axetroy/react-download": "1.1.1",
-    "antd": "3.16.2",
+    "antd": "3.16.3",
     "axios": "0.18.0",
     "babel-plugin-wildcard": "5.0.0",
     "bootstrap": "4.3.1",
