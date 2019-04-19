@@ -11,7 +11,7 @@
       "parameterName": "gamma",
       "label": "γ",
       "placeholder": "Gamma",
-      "defaultValue": 2,
+      "defaultValue": "2",
       "validations": {
         "type": "float",
         "min": "1.00000001",

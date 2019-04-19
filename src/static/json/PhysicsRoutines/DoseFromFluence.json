@@ -35,7 +35,7 @@
       "parameterName": "fluence_cm2",
       "label": "Fluence [1/cm2]",
       "placeholder": "1e9",
-      "defaultValue": 1e9,
+      "defaultValue": "1e9",
       "asManyAsPoints": true,
       "description": "fluence in 1/cm2",
       "validations": {
