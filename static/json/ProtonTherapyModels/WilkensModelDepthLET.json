@@ -26,7 +26,7 @@
       "parameterName": "E_MeV_u",
       "label": "Energy [MeV]",
       "placeholder": "150.0",
-      "defaultValue": 150.0,
+      "defaultValue": "150.0",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -38,7 +38,7 @@
       "parameterName": "sigma_E_MeV_u",
       "label": "Energy spread (σ) [MeV]",
       "placeholder": "1.5",
-      "defaultValue": 1.5,
+      "defaultValue": "1.5",
       "validations": {
         "type": "float",
         "min": "0.0",
