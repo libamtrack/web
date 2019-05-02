@@ -32,7 +32,8 @@ export default class FunctionsController extends Component {
             xType: "",
             yType: ""
         },
-        singleResult: 0,
+        lastResult: 0,
+        allResults: [],
         parametersRules: {},
         isError: false
     };
@@ -183,7 +184,7 @@ export default class FunctionsController extends Component {
 
     setFormData = (data) => {
         this.setState({ formData: data },
-            () => this.state.json.plot === true ? this.calculate() : this.calculateSingleResult());
+            () => this.state.json.plot === true ? this.calculate() : this.calculateLastResult());
     };
 
     renameDataSeries = (oldName, newName) => {
@@ -213,6 +214,7 @@ export default class FunctionsController extends Component {
         let newResLinear = this.state.resultLinear;
         let newDataPower = this.state.dataPower;
         let newResPower = this.state.resultPower;
+        let newAllResults = this.state.allResults;
 
         for (let i = 0; i < this.state.dataSeries.length; i++) {
             if (this.state.dataSeries[i].name === name) {
@@ -221,7 +223,7 @@ export default class FunctionsController extends Component {
                 newDataPower.splice(i, 1);
                 newResLinear.splice(i, 1);
                 newResPower.splice(i, 1);
-
+                newAllResults.splice(i, 1);
                 break;
             }
         }
@@ -237,7 +239,8 @@ export default class FunctionsController extends Component {
             dataLinear: newDataLinear,
             resultLinear: newResLinear,
             dataPower: newDataPower,
-            resultPower: newResPower
+            resultPower: newResPower,
+            allResults: newAllResults,
         });
     };
 
@@ -248,6 +251,7 @@ export default class FunctionsController extends Component {
         let nDataPower = this.state.dataPower;
         let nResultLinear = this.state.resultLinear;
         let nResultPower = this.state.resultPower;
+        let nAllResults = this.state.allResults;
 
         nDataSeries.length = 0;
         nDataSeriesNames.length = 0;
@@ -255,6 +259,7 @@ export default class FunctionsController extends Component {
         nDataPower.length = 0;
         nResultLinear.length = 0;
         nResultPower.length = 0;
+        nAllResults.length = 0;
 
         const nPlot = {
             plotType: this.state.plot.plotType,
@@ -269,11 +274,12 @@ export default class FunctionsController extends Component {
             dataPower: nDataPower,
             resultLinear: nResultLinear,
             resultPower: nResultPower,
+            AllResults: nAllResults,
             plot: nPlot
         });
     };
 
-    calculateSingleResult = () => {
+    calculateLastResult = () => {
         try {
             const fun = FunctionsFromC[this.state.json.functionName];
 
@@ -282,7 +288,7 @@ export default class FunctionsController extends Component {
                 return;
             }
 
-            this.setState({ singleResult: fun(this.state.formData) });
+            this.setState({ lastResult: fun(this.state.formData) });
         } catch (error) {
             this.setState({ isError: true });
         }
@@ -299,6 +305,8 @@ export default class FunctionsController extends Component {
 
             let newDataSeries = this.state.dataSeries;
 
+            let newAllResults = this.state.allResults;
+
             let generatedPoints = preparePoints(
                 this.state.formData.start,
                 this.state.formData.end,
@@ -306,7 +314,7 @@ export default class FunctionsController extends Component {
                 this.state.formData.intervalType
             );
 
-            let singleResult = [];
+            let lastResult = [];
 
             let data = generatedPoints.lin;
             let dataLinear = this.state.dataLinear;
@@ -321,7 +329,7 @@ export default class FunctionsController extends Component {
 
             if (res instanceof Array) {
             } else {
-                singleResult = res["metadata"];
+                lastResult = res["metadata"];
                 res = res["data"];
             }
 
@@ -331,7 +339,7 @@ export default class FunctionsController extends Component {
             let resP = fun(prepareDataToCalculate(this.state.entryName, dataP, this.state.formData, this.state.parametersRules));
             if (resP instanceof Array) {
             } else {
-                singleResult = resP['metadata'];
+                lastResult = resP['metadata'];
                 resP = resP['data'];
             }
 
@@ -349,13 +357,16 @@ export default class FunctionsController extends Component {
                 mode: this.state.plot.plotType
             });
 
+            newAllResults.push(lastResult);
+
             this.setState({
                 dataSeries: newDataSeries,
                 dataLinear: dataLinear,
                 resultLinear: resLinear,
                 dataPower: dataPower,
                 resultPower: resPower,
-                singleResult: singleResult
+                lastResult: lastResult,
+                allResults: newAllResults
             });
 
         } catch (error) {
@@ -363,9 +374,16 @@ export default class FunctionsController extends Component {
         }
     };
 
+    createNameFormItem = (name) => {
+      return (
+          <FormItem style={{margin: 6, fontSize: 18}} label={name} labelCol={{span: 5}}>
+          </FormItem>
+      )
+    };
+
     createFormItem = (label, value, prec, unit) => {
         return (
-            <FormItem style={{margin: 6, fontSize: 24}} label={label} labelCol={{span: 13}}
+            <FormItem style={{margin: 6, fontSize: 16}} label={label} labelCol={{span: 10}}
                       wrapperCol={{span: 11}} colon={true}>
                 {parseFloat(value.toFixed(prec))} {unit}
             </FormItem>
@@ -380,27 +398,32 @@ export default class FunctionsController extends Component {
 
         // assuming that no plotting is done we allocate the array of "calculator" results
         let result_items = [];
-        if (typeof this.state.singleResult !== "number") { // multiple items returned from calculator method
+        if (typeof this.state.lastResult !== "number") { // multiple items returned from calculator method
 
-            for (let i = 0; i < this.state.singleResult.length; i++) {
-
-                let current_unit = unit; // the same unit for all result items
-                if (typeof current_unit !== "string") {
-                    current_unit = unit[i]; // each result item has its own unit
+            for (let i = 0; i < this.state.allResults.length; i++) {
+                if (this.state.allResults[i].length > 0) {
+                    result_items.push(this.createNameFormItem(this.state.dataSeriesNames[i]));
                 }
+                for (let j = 0; j < this.state.allResults[i].length; j++) {
 
-                let current_prec = prec; // the same precision for all result items
-                if (typeof current_unit !== "number") {
-                    current_prec = prec[i]; // each result item has its own precision
+                    let current_unit = unit; // the same unit for all result items
+                    if (typeof current_unit !== "string") {
+                        current_unit = unit[j]; // each result item has its own unit
+                    }
+
+                    let current_prec = prec; // the same precision for all result items
+                    if (typeof current_unit !== "number") {
+                        current_prec = prec[j]; // each result item has its own precision
+                    }
+
+                    let current_label = label; // the same label for all result items
+                    if (typeof current_label !== "string") {
+                        current_label = label[j]; // each result item has its own label
+                    }
+
+                    // combine all together
+                    result_items.push(this.createFormItem(current_label, this.state.allResults[i][j], current_prec, current_unit));
                 }
-
-                let current_label = label; // the same label for all result items
-                if (typeof current_label !== "string") {
-                    current_label = label[i]; // each result item has its own label
-                }
-
-                // combine all together
-                result_items.push(this.createFormItem(current_label, this.state.singleResult[i], current_prec, current_unit));
             }
         } else { // single item returned from calculator method
 
@@ -414,7 +437,7 @@ export default class FunctionsController extends Component {
                 current_unit = "";
             }
 
-            result_items.push(this.createFormItem( current_label, this.state.singleResult, prec, current_unit));
+            result_items.push(this.createFormItem( current_label, this.state.lastResult, prec, current_unit));
         }
 
         const resultComp = this.state.json.plot && this.state.json.plot === true ? <Row>
@@ -427,7 +450,7 @@ export default class FunctionsController extends Component {
                                yTitle={this.state.json.yTitle}
                                xType={this.state.plot.xType}
                                yType={this.state.plot.yType}/>
-                Last item metadata:
+                Metadata for calculated items:
                                {result_items}
             </Col>
         </Row> : <Row>
