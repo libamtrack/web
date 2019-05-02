@@ -133,9 +133,16 @@ export default class FunctionsController extends Component {
 
     handleXChange = (event) => {
         if (this.state.formData.start === 0 && event.target.value === "log") {
+            const logStartValue = this.state.formData.end / 10000;
             alert("Logarithmic scale on X axis requested for invalid lower range value (zero).\n" +
-                "Rescaling to [" + this.state.formData.end / 10000 + "," + this.state.formData.end + "] only for logarithmic scale.\n" +
-                "Please consider setting new value to lower range border.")
+                "Rescaling to [" + logStartValue + "," + this.state.formData.end + "] only for logarithmic scale.\n" +
+                "Please consider setting new value to lower range border.");
+
+            const startInput = document.getElementById("start");
+            const nativeInputValueSetter =
+                Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+            nativeInputValueSetter.call(startInput, logStartValue);
+            startInput.dispatchEvent(new Event('change', {bubbles: true}));
         }
 
         let newDataSeries = this.state.dataSeries;
