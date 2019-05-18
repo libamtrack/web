@@ -374,12 +374,82 @@ export default class FunctionsController extends Component {
         }
     };
 
-    createNameFormItem = (name) => {
-      return (
-          <FormItem style={{margin: 6, fontSize: 18}} label={name} labelCol={{span: 5}}>
-          </FormItem>
-      )
+    createLabelsRow = (width) => {
+        let cols = []
+        let labels = this.state.json.resultLabel ? this.state.json.resultLabel : "Result";
+        if (typeof labels === "string") labels = [labels];
+
+        cols.push(
+            <Col style={{fontSize: 16, width: width}}>
+                {"Data series"}
+            </Col>
+        );
+
+        for (let i = 0; i < labels.length; i++) {
+            cols.push(
+                <Col style={{fontSize: 16, width: width}}>
+                    {labels[i]}
+                </Col>
+            );
+        }
+        return (
+            <Row className="text-center text-nowrap">
+                {cols}
+            </Row>
+        )
     };
+
+    createResultItem = (value, prec, unit, width) => {
+        return (
+            <Col style={{fontSize: 16, width: width}}>
+                {parseFloat(value.toFixed(prec))} {unit}
+            </Col>
+        );
+    };
+
+    createResultsRow = (name, results, width) => {
+        let items = [];
+
+        items.push(
+            <Col style={{fontSize: 16, width: width}}>
+                {name}
+            </Col>
+        );
+
+        for (let i = 0; i < results.length; i++) {
+            let value = results[i][0];
+            let prec = results[i][1];
+            let unit = results[i][2];
+            items.push(this.createResultItem(value, prec, unit, width))
+        }
+        return (
+            <Row className="text-center text-nowrap">
+                {items}
+            </Row>
+        )
+    };
+
+    createResultsSummary = (rows) => {
+        let result = [];
+        let num_features = rows[0].length;
+        if (num_features !== 0) {
+            let width = 100.0 / (num_features + 1) + "%";
+
+            result.push(this.createLabelsRow(width));
+    
+            for (let i = 0; i < rows.length; i++) {
+                let name = this.state.dataSeriesNames[i];
+                result.push(this.createResultsRow(name, rows[i], width));
+            }
+        } else {
+            result.push(
+                <Row className="text-center text-nowrap">
+                    {"No calculator results to show."}
+                </Row>
+            );
+        }
+        return result;
+    }
 
     createFormItem = (label, value, prec, unit) => {
         return (
@@ -390,6 +460,25 @@ export default class FunctionsController extends Component {
         );
     };
 
+    prepareResultItem = (unit, prec, label, index) => {
+        let current_unit = unit; // the same unit for all result items
+        if (typeof current_unit !== "string") {
+            current_unit = unit[index]; // each result item has its own unit
+        }
+
+        let current_prec = prec; // the same precision for all result items
+        if (typeof current_unit !== "number") {
+            current_prec = prec[index]; // each result item has its own precision
+        }
+
+        let current_label = label; // the same label for all result items
+        if (typeof current_label !== "string") {
+            current_label = label[index]; // each result item has its own label
+        }
+
+        return [current_label, current_prec, current_unit];
+    }
+
     render() {
         const size = this.state.json.plot && this.state.json.plot === true ? 8 : 24;
         const unit = this.state.json.resultUnit ? this.state.json.resultUnit : "";
@@ -399,30 +488,21 @@ export default class FunctionsController extends Component {
         // assuming that no plotting is done we allocate the array of "calculator" results
         let result_items = [];
         if (typeof this.state.lastResult !== "number") { // multiple items returned from calculator method
-
+            let rows = [];
             for (let i = 0; i < this.state.allResults.length; i++) {
-                if (this.state.allResults[i].length > 0) {
-                    result_items.push(this.createNameFormItem(this.state.dataSeriesNames[i]));
-                }
+                let items = [];
                 for (let j = 0; j < this.state.allResults[i].length; j++) {
-
-                    let current_unit = unit; // the same unit for all result items
-                    if (typeof current_unit !== "string") {
-                        current_unit = unit[j]; // each result item has its own unit
-                    }
-
-                    let current_prec = prec; // the same precision for all result items
-                    if (typeof current_unit !== "number") {
-                        current_prec = prec[j]; // each result item has its own precision
-                    }
-
-                    let current_label = label; // the same label for all result items
-                    if (typeof current_label !== "string") {
-                        current_label = label[j]; // each result item has its own label
-                    }
-
-                    // combine all together
-                    result_items.push(this.createFormItem(current_label, this.state.allResults[i][j], current_prec, current_unit));
+                    let result_item = this.prepareResultItem(unit, prec, label, j);
+                    items.push([this.state.allResults[i][j], result_item[1], result_item[2]]);
+                }
+                rows.push(items);
+            }
+            if (rows.length !== 0) {
+                result_items.push(this.createResultsSummary(rows));
+            } else { // when we don't need result data summary
+                for (let i = 0; i < this.state.lastResult.length; i++) {
+                    let result_item = this.prepareResultItem(unit, prec, label, i);
+                    result_items.push(this.createFormItem(result_item[0], this.state.lastResult[i], result_item[1], result_item[2]));
                 }
             }
         } else { // single item returned from calculator method
