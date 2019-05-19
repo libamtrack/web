@@ -189,9 +189,11 @@ export default class FunctionsController extends Component {
 
     renameDataSeries = (oldName, newName) => {
         let newDataSeries = this.state.dataSeries;
+        let newDataSeriesNames = this.state.dataSeriesNames;
         for (let i = 0; i < this.state.dataSeries.length; i++) {
             if (this.state.dataSeries[i].name === oldName) {
                 newDataSeries[i].name = newName;
+                newDataSeriesNames[i] = newName;
             }
         }
 
@@ -205,7 +207,11 @@ export default class FunctionsController extends Component {
             yType: nAxisTypeY
         }
 
-        this.setState({ dataSeries: newDataSeries, plot: nPlot });
+        this.setState({ 
+            dataSeries: newDataSeries, 
+            dataSeriesNames: newDataSeriesNames, 
+            plot: nPlot 
+        });
     }
 
     deleteDataSeries = (name) => {
@@ -251,6 +257,7 @@ export default class FunctionsController extends Component {
         let nDataPower = this.state.dataPower;
         let nResultLinear = this.state.resultLinear;
         let nResultPower = this.state.resultPower;
+        let nLastResult = this.state.lastResult;
         let nAllResults = this.state.allResults;
 
         nDataSeries.length = 0;
@@ -259,6 +266,7 @@ export default class FunctionsController extends Component {
         nDataPower.length = 0;
         nResultLinear.length = 0;
         nResultPower.length = 0;
+        nLastResult = 0;
         nAllResults.length = 0;
 
         const nPlot = {
@@ -274,6 +282,7 @@ export default class FunctionsController extends Component {
             dataPower: nDataPower,
             resultLinear: nResultLinear,
             resultPower: nResultPower,
+            lastResult: nLastResult,
             AllResults: nAllResults,
             plot: nPlot
         });
