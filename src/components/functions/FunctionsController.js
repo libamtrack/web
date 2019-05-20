@@ -221,6 +221,7 @@ export default class FunctionsController extends Component {
         let newDataPower = this.state.dataPower;
         let newResPower = this.state.resultPower;
         let newAllResults = this.state.allResults;
+        let newDataSeriesNames = this.state.dataSeriesNames;
 
         for (let i = 0; i < this.state.dataSeries.length; i++) {
             if (this.state.dataSeries[i].name === name) {
@@ -230,11 +231,11 @@ export default class FunctionsController extends Component {
                 newResLinear.splice(i, 1);
                 newResPower.splice(i, 1);
                 newAllResults.splice(i, 1);
+                newDataSeriesNames.splice(i, 1)
                 break;
             }
         }
 
-        let newDataSeriesNames = this.state.dataSeriesNames;
         if (newDataSeries.length === 0) {
             newDataSeriesNames.length = 0;
         }
