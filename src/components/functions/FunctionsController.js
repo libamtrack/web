@@ -220,6 +220,7 @@ export default class FunctionsController extends Component {
         let newResLinear = this.state.resultLinear;
         let newDataPower = this.state.dataPower;
         let newResPower = this.state.resultPower;
+        let newLastResult = this.state.lastResult;
         let newAllResults = this.state.allResults;
         let newDataSeriesNames = this.state.dataSeriesNames;
 
@@ -236,6 +237,8 @@ export default class FunctionsController extends Component {
             }
         }
 
+        newLastResult = 0;
+
         if (newDataSeries.length === 0) {
             newDataSeriesNames.length = 0;
         }
@@ -247,6 +250,7 @@ export default class FunctionsController extends Component {
             resultLinear: newResLinear,
             dataPower: newDataPower,
             resultPower: newResPower,
+            lastResult: newLastResult,
             allResults: newAllResults,
         });
     };
