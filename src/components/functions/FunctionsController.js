@@ -237,7 +237,9 @@ export default class FunctionsController extends Component {
             }
         }
 
-        newLastResult = 0;
+        if (newLastResult.name === name) {
+            newLastResult = 0;
+        }
 
         if (newDataSeries.length === 0) {
             newDataSeriesNames.length = 0;
@@ -455,12 +457,6 @@ export default class FunctionsController extends Component {
                 let name = this.state.dataSeriesNames[i];
                 result.push(this.createResultsRow(name, rows[i], width));
             }
-        } else {
-            result.push(
-                <Row className="text-center text-nowrap">
-                    {"No calculator results to show."}
-                </Row>
-            );
         }
         return result;
     }
@@ -519,7 +515,7 @@ export default class FunctionsController extends Component {
                     result_items.push(this.createFormItem(result_item[0], this.state.lastResult[i], result_item[1], result_item[2]));
                 }
             }
-        } else { // single item returned from calculator method
+        } else if (this.state.lastResult !== 0) { // single item returned from calculator method
 
             let current_label = label;
             if( typeof current_label !== "string"){
