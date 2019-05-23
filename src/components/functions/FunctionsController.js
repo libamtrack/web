@@ -451,6 +451,7 @@ export default class FunctionsController extends Component {
         if (num_features !== 0) {
             let width = 100.0 / (num_features + 1) + "%";
 
+            result.push("Metadata for calculated items:");
             result.push(this.createLabelsRow(width));
     
             for (let i = 0; i < rows.length; i++) {
@@ -540,7 +541,6 @@ export default class FunctionsController extends Component {
                                yTitle={this.state.json.yTitle}
                                xType={this.state.plot.xType}
                                yType={this.state.plot.yType}/>
-                Metadata for calculated items:
                                {result_items}
             </Col>
         </Row> : <Row>
