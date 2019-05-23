@@ -123,9 +123,16 @@ export function prepareDataToCalculate(entryName, data, formItems, parametersRul
 }
 
 export function getDataSeriesName(dataSeriesNames, parameterName) {
-    const name = parameterName;
+    let name = parameterName;
 
     let counter = dataSeriesNames.length;
+    // handling situation when data series name is taken
+    if (counter !== 0) {
+        while (dataSeriesNames.includes(name + "_" + counter)) {
+            counter += 1;
+        }
+        name = name + "_" + counter;
+    }
 
-    return counter === 0 ? name : name + "_" + counter;
+    return name;
 }
