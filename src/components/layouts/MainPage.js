@@ -77,9 +77,10 @@ class MainPage extends React.Component {
 
                     this.state.footer =
                     <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
-                        <Row>{confData.footerText}</Row>
+                        <Row>{confData.footerText1}</Row>
+                        <Row style={{  'font-size': '10px' }}>{confData.footerText2}</Row>
                         <Row>{"Deploy date: " + confData.deployDate + " from branch: "
-                            + confData.deployBranch + " and commit number: " + confData.deployCommit}</Row>
+                        + confData.deployBranch + " and commit number: " + confData.deployCommit}</Row>
                         {bundleAnalyzeReportOnlyAtWebDev}
                     </Footer>;
 
