@@ -2,6 +2,10 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     let at_dose_bortfeld_gy_multi = Module.cwrap('AT_dose_Bortfeld_Gy_multi', 'null', ['number', 'array', 'number', 'number', 'number', 'number', 'number', 'number']);
     let at_dose_bortfeld_gy_single = Module.cwrap('AT_dose_Bortfeld_Gy_single', 'number', ['number', 'number', 'number', 'number', 'number', 'number']);
 
+    let at_range_bortfeld_cm = Module.cwrap('AT_range_Bortfeld_cm', 'number', ['number', 'number', 'number', 'number', 'number', 'undefined']);
+    let at_fwhm_bortfeld_cm = Module.cwrap('AT_fwhm_Bortfeld_cm', 'number', ['number', 'number', 'number', 'number', 'number', 'undefined']);
+    let at_max_plateau_bortfeld = Module.cwrap('AT_max_plateau_Bortfeld', 'number', ['number', 'number', 'number', 'number', 'number', 'undefined']);
+
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.n === "undefined"){
@@ -50,8 +54,12 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     }
     let material_no = parameters.material_no;
 
-    /*** default value of eps parameter ***/
-    let eps = -1;
+    /*********************STANDARD PARAMETER*************************/
+    if(typeof parameters.eps === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER eps IN OBJECT PASSED TO THIS FUNCTIONS");
+        return "error";
+    }
+    let eps = parameters.eps;
 
     /*********************OUTPUT ARRAY*******************************/
     let dose_GyReturnData = new Float64Array(new Array(n));
@@ -70,5 +78,19 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     Module._free(z_cmHeap.byteOffset);
     Module._free(dose_GyReturnHeap.byteOffset);
 
-    return [].slice.call(resultFromArray);
+
+    /*********************STANDARD PARAMETER*************************/
+    let dose_drop = -1;
+
+    /*********************STANDARD PARAMETER*************************/
+    let search_direction = 1;
+
+    /*********************CALL FUNCTION******************************/
+    let range_cm = at_range_bortfeld_cm(E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_drop, search_direction);
+    let fwhm_cm = at_fwhm_bortfeld_cm(E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_drop, search_direction);
+    let max_plateau = at_max_plateau_bortfeld(E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_drop, search_direction);
+
+    let combined ={'data' : [].slice.call(resultFromArray) , 'metadata' : [range_cm,fwhm_cm,max_plateau] };
+
+    return combined;
 }
