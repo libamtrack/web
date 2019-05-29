@@ -2,14 +2,14 @@
   "visibleName": "Energy Loss distributions",
   "functionName": "AT_energy_loss_distributions",
   "description": ["Landau, Vavilov and Gauss energy loss distributions"],
-  "xTitle": "Energy [keV]",
+  "xTitle": "Energy [keV/amu]",
   "yTitle": "PDF [a.u.]",
   "plot": true,
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "energy_loss_keV",
-      "label" : "energy [keV]",
+      "label" : "energy [keV/amu]",
       "startholder": "0.0",
       "endholder": "1000.0",
       "intervalType": "points",
@@ -48,7 +48,7 @@
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy [MeV]",
+      "label": "Energy [MeV/amu]",
       "placeholder": "150.0",
       "defaultValue": "150.0",
       "validations": {
