@@ -5584,6 +5584,20 @@ asm["_AT_ER_Waligorski_range_g_cm2"] = function() {
   return real__AT_ER_Waligorski_range_g_cm2.apply(null, arguments);
 };
 
+var real__AT_E_MeV_from_E_MeV_u = asm["_AT_E_MeV_from_E_MeV_u"];
+asm["_AT_E_MeV_from_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_E_MeV_from_E_MeV_u.apply(null, arguments);
+};
+
+var real__AT_E_MeV_u_from_E_MeV = asm["_AT_E_MeV_u_from_E_MeV"];
+asm["_AT_E_MeV_u_from_E_MeV"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__AT_E_MeV_u_from_E_MeV.apply(null, arguments);
+};
+
 var real__AT_E_MeV_u_from_momentum_MeV_c_u = asm["_AT_E_MeV_u_from_momentum_MeV_c_u"];
 asm["_AT_E_MeV_u_from_momentum_MeV_c_u"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
@@ -8442,6 +8456,18 @@ var _AT_ER_Waligorski_range_g_cm2 = Module["_AT_ER_Waligorski_range_g_cm2"] = fu
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["_AT_ER_Waligorski_range_g_cm2"].apply(null, arguments)
+};
+
+var _AT_E_MeV_from_E_MeV_u = Module["_AT_E_MeV_from_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_E_MeV_from_E_MeV_u"].apply(null, arguments)
+};
+
+var _AT_E_MeV_u_from_E_MeV = Module["_AT_E_MeV_u_from_E_MeV"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_AT_E_MeV_u_from_E_MeV"].apply(null, arguments)
 };
 
 var _AT_E_MeV_u_from_momentum_MeV_c_u = Module["_AT_E_MeV_u_from_momentum_MeV_c_u"] = function() {
