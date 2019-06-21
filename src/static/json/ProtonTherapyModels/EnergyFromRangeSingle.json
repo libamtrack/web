@@ -1,0 +1,69 @@
+{
+  "visibleName": "Proton depth-dose curve",
+  "functionName": "AT_energy_spread_Bortfeld",
+  "description": "Energy and energy spread from 1-D beam profile parameters (range, fwhm, max/plateau).",
+  "plot": false,
+  "resultPrecision": [3,3,6],
+  "resultLabel": ["Energy", "Energy spread (σ)", "eps"],
+  "resultUnit": ["MeV", "MeV", ""],
+  "formItems": [
+    {
+      "type": "input",
+      "parameterName": "range_cm",
+      "label": "Range [cm]",
+      "placeholder": "15.8",
+      "defaultValue": 15.8,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "dose_drop",
+      "label": "Dose drop (range definition)",
+      "placeholder": "0.9",
+      "defaultValue": 0.9,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1.0"
+      }
+    },
+
+    {
+      "type": "input",
+      "parameterName": "fwhm_cm",
+      "label": "FWHM (distal 50% - proximal 50%) [cm]",
+      "placeholder": "1.6",
+      "defaultValue": 1.6,
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "max_to_plateau",
+      "label": "Max dose / entrance dose",
+      "placeholder": "5.2",
+      "defaultValue": 5.2,
+      "validations": {
+        "type": "float",
+        "min": "0.01",
+        "max": "100.0"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose material type"
+    }
+  ]
+}

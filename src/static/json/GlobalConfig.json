@@ -172,6 +172,10 @@
           "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
         },
         {
+          "name": "Energy from range and FWHM",
+          "jsonConfigPath": "/ProtonTherapyModels/EnergyFromRangeSingle.json"
+        },
+        {
           "name": "Dose from fluence and energy",
           "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
         },
