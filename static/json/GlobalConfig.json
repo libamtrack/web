@@ -172,6 +172,10 @@
           "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
         },
         {
+          "name": "Energy from range and FWHM",
+          "jsonConfigPath": "/ProtonTherapyModels/EnergyFromRangeSingle.json"
+        },
+        {
           "name": "Dose from fluence and energy",
           "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
         },
@@ -226,7 +230,7 @@
     }
 
   ],
-  "deployDate":"Thu Jun 20 15:44:36 CEST 2019",
+  "deployDate":"Fri Jun 21 22:31:51 CEST 2019",
   "deployBranch":"master",
-  "deployCommit":"d9878d7"
+  "deployCommit":"0a1baf4"
 }
