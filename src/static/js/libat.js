@@ -1221,11 +1221,11 @@ function updateGlobalBufferViews() {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 1300432,
+    STACK_BASE = 1300400,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 6543312,
-    DYNAMIC_BASE = 6543312,
-    DYNAMICTOP_PTR = 1300400;
+    STACK_MAX = 6543280,
+    DYNAMIC_BASE = 6543280,
+    DYNAMICTOP_PTR = 1300368;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1700,7 +1700,7 @@ var ASM_CONSTS = [];
 
 
 
-// STATICTOP = STATIC_BASE + 1299408;
+// STATICTOP = STATIC_BASE + 1299376;
 /* global initializers */  __ATINIT__.push({ func: function() { ___emscripten_environ_constructor() } });
 
 
@@ -1711,7 +1711,7 @@ var ASM_CONSTS = [];
 
 
 /* no memory initializer */
-var tempDoublePtr = 1300416
+var tempDoublePtr = 1300384
 assert(tempDoublePtr % 8 == 0);
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
@@ -5185,10 +5185,10 @@ function copyTempDouble(ptr) {
     }
 
   
-  var ___tm_current=1300256;
+  var ___tm_current=1300224;
   
   
-  var ___tm_timezone=(stringToUTF8("GMT", 1300304, 4), 1300304);
+  var ___tm_timezone=(stringToUTF8("GMT", 1300272, 4), 1300272);
   
   function _tzset() {
       // TODO: Use (malleable) environment variables instead of system settings.
