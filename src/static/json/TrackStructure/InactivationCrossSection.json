@@ -15,7 +15,7 @@
       "endholder": "500",
       "intervalType": "points",
       "stepDefaultValue": "0.01",
-      "pointsDefaultNumber": "500",
+      "pointsDefaultNumber": "5",
       "validations": {
         "type": "float",
         "min": "0.000001",
