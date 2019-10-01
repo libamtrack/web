@@ -1,0 +1,45 @@
+{
+  "visibleName": "Inactivation cross section",
+  "functionName": "AT_inactivation_cross_section_Katz_um2",
+  "description": "Inactivation cross section",
+  "xTitle": "Energy [MeV/u]",
+  "yTitle": "Cross-section [um2]",
+  "plot": true,
+  "unit": "Gy",
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "E_MeV_u",
+      "label": "energy [MeV/amu]",
+      "startholder": "0.1",
+      "endholder": "500",
+      "intervalType": "points",
+      "stepDefaultValue": "0.01",
+      "pointsDefaultNumber": "500",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": false,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    }],
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "log",
+    "defaultYAxisType": "linear",
+    "plotType": "lines"
+  },
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "deleteAll": true
+  }
+}

@@ -125,6 +125,10 @@
         {
           "name": "Ion effective charge",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
+        },
+        {
+          "name": "Inactivation cross section",
+          "jsonConfigPath": "/TrackStructure/InactivationCrossSection.json"
         }
       ]
     },
