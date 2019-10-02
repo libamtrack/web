@@ -125,6 +125,10 @@
         {
           "name": "Ion effective charge",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
+        },
+        {
+          "name": "Inactivation cross section",
+          "jsonConfigPath": "/TrackStructure/InactivationCrossSection.json"
         }
       ]
     },
@@ -227,6 +231,10 @@
     {
       "name": "rbe_models",
       "jsonConfigPath": "/dictionaries/RBEModels.json"
+    },
+    {
+      "name": "katz_rdd_er",
+      "jsonConfigPath": "/dictionaries/KatzRDDER.json"
     }
 
   ],
