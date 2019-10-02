@@ -15,7 +15,7 @@
       "endholder": "20",
       "intervalType": "points",
       "stepDefaultValue": "0.01",
-      "pointsDefaultNumber": "19",
+      "pointsDefaultNumber": "20",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -28,7 +28,7 @@
       "label": "Particle",
       "values": "particles",
       "asManyAsPoints": false,
-      "defaultValue": 6012,
+      "defaultValue": 18040,
       "description": "Choose particle type"
     },
     {
@@ -47,8 +47,8 @@
       "type": "input",
       "parameterName": "D0_Gy",
       "label": "D₀ [Gy]",
-      "placeholder": "61",
-      "defaultValue": "61",
+      "placeholder": "61.0",
+      "defaultValue": "61.0",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -59,12 +59,12 @@
       "type": "input",
       "parameterName": "m",
       "label": "m",
-      "placeholder": "1",
-      "defaultValue": "1",
+      "placeholder": "1.0",
+      "defaultValue": "1.0",
       "validations": {
         "type": "float",
-        "min": "1",
-        "max": "5"
+        "min": "1.0",
+        "max": "5.0"
       }
     },
     {

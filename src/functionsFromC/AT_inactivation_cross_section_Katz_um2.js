@@ -52,11 +52,11 @@ export default function AT_KatzModel_inactivation_cross_section_m2(parameters) {
     if( rdd_er_no === 1 ){ // Katz + Waligorski
         er_model = 3; // Waligorski
         rdd_model = 6; // Katz extended
-        rdd_parameters = [1e-10,a0_um * 1e-6,1e-10];
+        rdd_parameters = [1e-10,a0_um * 1e-6,1e-12];
     } else { // Cucinotta + Tabata
         er_model = 6; // Katz
         rdd_model = 7; // Cucinotta extended
-        rdd_parameters = [5e-11,a0_um * 1e-6,1e-10];
+        rdd_parameters = [5e-11,a0_um * 1e-6,1e-12];
     }
 
     let rdd_parametersData = new Float64Array(rdd_parameters);
