@@ -231,6 +231,10 @@
     {
       "name": "rbe_models",
       "jsonConfigPath": "/dictionaries/RBEModels.json"
+    },
+    {
+      "name": "katz_rdd_er",
+      "jsonConfigPath": "/dictionaries/KatzRDDER.json"
     }
 
   ],

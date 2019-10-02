@@ -3,19 +3,19 @@
   "functionName": "AT_inactivation_cross_section_Katz_um2",
   "description": "Inactivation cross section",
   "xTitle": "Energy [MeV/u]",
-  "yTitle": "Cross-section [um2]",
+  "yTitle": "Cross-section [um²]",
   "plot": true,
-  "unit": "Gy",
+  "unit": "um²",
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
       "label": "energy [MeV/amu]",
-      "startholder": "0.1",
-      "endholder": "500",
+      "startholder": "1",
+      "endholder": "20",
       "intervalType": "points",
       "stepDefaultValue": "0.01",
-      "pointsDefaultNumber": "5",
+      "pointsDefaultNumber": "19",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -28,14 +28,60 @@
       "label": "Particle",
       "values": "particles",
       "asManyAsPoints": false,
-      "defaultValue": 1001,
+      "defaultValue": 6012,
       "description": "Choose particle type"
-    }],
+    },
+    {
+      "type": "input",
+      "parameterName": "a0_um",
+      "label": "a₀ [um²]",
+      "placeholder": "0.2",
+      "defaultValue": "0.2",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "D0_Gy",
+      "label": "D₀ [Gy]",
+      "placeholder": "61",
+      "defaultValue": "61",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "m",
+      "label": "m",
+      "placeholder": "1",
+      "defaultValue": "1",
+      "validations": {
+        "type": "float",
+        "min": "1",
+        "max": "5"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "rdd_er_no",
+      "label": "RDD and ER model",
+      "values": "katz_rdd_er",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose RDD and ER model"
+    }
+  ],
   "moreOptions": {
     "visible": true,
-    "defaultXAxisType": "log",
+    "defaultXAxisType": "linear",
     "defaultYAxisType": "linear",
-    "plotType": "lines"
+    "plotType": "points"
   },
   "modals": {
     "dataSeries": true,
