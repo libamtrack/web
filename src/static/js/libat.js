@@ -65,13 +65,6 @@ if (Module['ENVIRONMENT']) {
 }
 
 
-// Three configurations we can be running in:
-// 1) We could be the application main() thread running in the main JS UI thread. (ENVIRONMENT_IS_WORKER == false and ENVIRONMENT_IS_PTHREAD == false)
-// 2) We could be the application main() thread proxied to worker. (with Emscripten -s PROXY_TO_WORKER=1) (ENVIRONMENT_IS_WORKER == true, ENVIRONMENT_IS_PTHREAD == false)
-// 3) We could be an application pthread running in a worker. (ENVIRONMENT_IS_WORKER == true and ENVIRONMENT_IS_PTHREAD == true)
-
-
-
 
 // `/` should be present at the end if `scriptDirectory` is not empty
 var scriptDirectory = '';
@@ -1225,12 +1218,11 @@ function updateGlobalBufferAndViews(buf) {
   Module['HEAPF64'] = HEAPF64 = new Float64Array(buf);
 }
 
-
 var STATIC_BASE = 1024,
-    STACK_BASE = 1295152,
+    STACK_BASE = 1295136,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 6538032,
-    DYNAMIC_BASE = 6538032,
+    STACK_MAX = 6538016,
+    DYNAMIC_BASE = 6538016,
     DYNAMICTOP_PTR = 1294944;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
@@ -1750,7 +1742,7 @@ var ASM_CONSTS = [];
 
 
 
-// STATICTOP = STATIC_BASE + 1294128;
+// STATICTOP = STATIC_BASE + 1294112;
 /* global initializers */  __ATINIT__.push({ func: function() { ___emscripten_environ_constructor() } });
 
 
@@ -1761,7 +1753,7 @@ var ASM_CONSTS = [];
 
 
 /* no memory initializer */
-var tempDoublePtr = 1295136
+var tempDoublePtr = 1295120
 assert(tempDoublePtr % 8 == 0);
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
@@ -1839,7 +1831,8 @@ function copyTempDouble(ptr) {
       if (!___buildEnvironment.called) {
         ___buildEnvironment.called = true;
         // Set default values. Use string keys for Closure Compiler compatibility.
-        ENV['USER'] = ENV['LOGNAME'] = 'web_user';
+        ENV['USER'] = 'web_user';
+        ENV['LOGNAME'] = 'web_user';
         ENV['PATH'] = '/';
         ENV['PWD'] = '/';
         ENV['HOME'] = '/home/web_user';
@@ -2412,9 +2405,9 @@ function copyTempDouble(ptr) {
           return length;
         },llseek:function (stream, offset, whence) {
           var position = offset;
-          if (whence === 1) {  // SEEK_CUR.
+          if (whence === 1) {
             position += stream.position;
-          } else if (whence === 2) {  // SEEK_END.
+          } else if (whence === 2) {
             if (FS.isFile(stream.node.mode)) {
               position += stream.node.usedBytes;
             }
@@ -2988,9 +2981,9 @@ function copyTempDouble(ptr) {
           }
         },llseek:function (stream, offset, whence) {
           var position = offset;
-          if (whence === 1) {  // SEEK_CUR.
+          if (whence === 1) {
             position += stream.position;
-          } else if (whence === 2) {  // SEEK_END.
+          } else if (whence === 2) {
             if (FS.isFile(stream.node.mode)) {
               try {
                 var stat = fs.fstatSync(stream.nfd);
@@ -3125,9 +3118,9 @@ function copyTempDouble(ptr) {
           throw new FS.ErrnoError(29);
         },llseek:function (stream, offset, whence) {
           var position = offset;
-          if (whence === 1) {  // SEEK_CUR.
+          if (whence === 1) {
             position += stream.position;
-          } else if (whence === 2) {  // SEEK_END.
+          } else if (whence === 2) {
             if (FS.isFile(stream.node.mode)) {
               position += stream.node.size;
             }
@@ -4062,7 +4055,7 @@ function copyTempDouble(ptr) {
         if (!stream.seekable || !stream.stream_ops.llseek) {
           throw new FS.ErrnoError(70);
         }
-        if (whence != 0 /* SEEK_SET */ && whence != 1 /* SEEK_CUR */ && whence != 2 /* SEEK_END */) {
+        if (whence != 0 && whence != 1 && whence != 2) {
           throw new FS.ErrnoError(28);
         }
         stream.position = stream.stream_ops.llseek(stream, offset, whence);
@@ -4964,7 +4957,8 @@ function copyTempDouble(ptr) {
         var ret = UTF8ToString(SYSCALLS.get());
         return ret;
       },getStreamFromFD:function (fd) {
-        if (!fd) fd = SYSCALLS.get();
+        // TODO: when all syscalls use wasi, can remove the next line
+        if (fd === undefined) fd = SYSCALLS.get();
         var stream = FS.getStream(fd);
         if (!stream) throw new FS.ErrnoError(8);
         return stream;
@@ -4975,42 +4969,7 @@ function copyTempDouble(ptr) {
         return low;
       },getZero:function () {
         assert(SYSCALLS.get() === 0);
-      }};function ___syscall140(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // llseek
-      var stream = SYSCALLS.getStreamFromFD(), offset_high = SYSCALLS.get(), offset_low = SYSCALLS.get(), result = SYSCALLS.get(), whence = SYSCALLS.get();
-      var HIGH_OFFSET = 0x100000000; // 2^32
-      // use an unsigned operator on low and shift high by 32-bits
-      var offset = offset_high * HIGH_OFFSET + (offset_low >>> 0);
-  
-      var DOUBLE_LIMIT = 0x20000000000000; // 2^53
-      // we also check for equality since DOUBLE_LIMIT + 1 == DOUBLE_LIMIT
-      if (offset <= -DOUBLE_LIMIT || offset >= DOUBLE_LIMIT) {
-        return -61;
-      }
-  
-      FS.llseek(stream, offset, whence);
-      (tempI64 = [stream.position>>>0,(tempDouble=stream.position,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[((result)>>2)]=tempI64[0],HEAP32[(((result)+(4))>>2)]=tempI64[1]);
-      if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
-      return 0;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall145(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // readv
-      var stream = SYSCALLS.getStreamFromFD(), iov = SYSCALLS.get(), iovcnt = SYSCALLS.get();
-      return SYSCALLS.doReadv(stream, iov, iovcnt);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall195(which, varargs) {SYSCALLS.varargs = varargs;
+      }};function ___syscall195(which, varargs) {SYSCALLS.varargs = varargs;
   try {
    // SYS_stat64
       var path = SYSCALLS.getStr(), buf = SYSCALLS.get();
@@ -5217,6 +5176,70 @@ function copyTempDouble(ptr) {
   }
 
   
+  function _fd_fdstat_get(fd, pbuf) {try {
+  
+      var stream = SYSCALLS.getStreamFromFD(fd);
+      // All character devices are terminals (other things a Linux system would
+      // assume is a character device, like the mouse, we have special APIs for).
+      var type = stream.tty ? 2 :
+                 FS.isDir(stream.mode) ? 3 :
+                 FS.isLink(stream.mode) ? 7 :
+                 4;
+      HEAP8[((pbuf)>>0)]=type;
+      // TODO HEAP16[(((pbuf)+(2))>>1)]=?;
+      // TODO (tempI64 = [?>>>0,(tempDouble=?,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[(((pbuf)+(8))>>2)]=tempI64[0],HEAP32[(((pbuf)+(12))>>2)]=tempI64[1]);
+      // TODO (tempI64 = [?>>>0,(tempDouble=?,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[(((pbuf)+(16))>>2)]=tempI64[0],HEAP32[(((pbuf)+(20))>>2)]=tempI64[1]);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return e.errno;
+  }
+  }function ___wasi_fd_fdstat_get() {
+  return _fd_fdstat_get.apply(null, arguments)
+  }
+
+  
+  function _fd_read(fd, iov, iovcnt, pnum) {try {
+  
+      var stream = SYSCALLS.getStreamFromFD(fd);
+      var num = SYSCALLS.doReadv(stream, iov, iovcnt);
+      HEAP32[((pnum)>>2)]=num
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return e.errno;
+  }
+  }function ___wasi_fd_read() {
+  return _fd_read.apply(null, arguments)
+  }
+
+  
+  function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {try {
+  
+      var stream = SYSCALLS.getStreamFromFD(fd);
+      var HIGH_OFFSET = 0x100000000; // 2^32
+      // use an unsigned operator on low and shift high by 32-bits
+      var offset = offset_high * HIGH_OFFSET + (offset_low >>> 0);
+  
+      var DOUBLE_LIMIT = 0x20000000000000; // 2^53
+      // we also check for equality since DOUBLE_LIMIT + 1 == DOUBLE_LIMIT
+      if (offset <= -DOUBLE_LIMIT || offset >= DOUBLE_LIMIT) {
+        return -61;
+      }
+  
+      FS.llseek(stream, offset, whence);
+      (tempI64 = [stream.position>>>0,(tempDouble=stream.position,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[((newOffset)>>2)]=tempI64[0],HEAP32[(((newOffset)+(4))>>2)]=tempI64[1]);
+      if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return e.errno;
+  }
+  }function ___wasi_fd_seek() {
+  return _fd_seek.apply(null, arguments)
+  }
+
+  
   function _fd_write(fd, iov, iovcnt, pnum) {try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
@@ -5297,10 +5320,10 @@ function copyTempDouble(ptr) {
     }
 
   
-  var ___tm_current=1294992;
+  var ___tm_current=1294976;
   
   
-  var ___tm_timezone=(stringToUTF8("GMT", 1295040, 4), 1295040);
+  var ___tm_timezone=(stringToUTF8("GMT", 1295024, 4), 1295024);
   
   function _tzset() {
       // TODO: Use (malleable) environment variables instead of system settings.
@@ -5441,7 +5464,7 @@ function nullFunc_viiii(x) { abortFnPtrError(x, 'viiii'); }
 
 var asmGlobalArg = {};
 
-var asmLibraryArg = { "___assert_fail": ___assert_fail, "___buildEnvironment": ___buildEnvironment, "___lock": ___lock, "___setErrNo": ___setErrNo, "___syscall140": ___syscall140, "___syscall145": ___syscall145, "___syscall195": ___syscall195, "___syscall197": ___syscall197, "___syscall220": ___syscall220, "___syscall221": ___syscall221, "___syscall5": ___syscall5, "___syscall54": ___syscall54, "___unlock": ___unlock, "___wasi_fd_close": ___wasi_fd_close, "___wasi_fd_write": ___wasi_fd_write, "__memory_base": 1024, "__table_base": 0, "_abort": _abort, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_exit": _exit, "_fd_close": _fd_close, "_fd_write": _fd_write, "_getenv": _getenv, "_llvm_cos_f64": _llvm_cos_f64, "_llvm_log10_f32": _llvm_log10_f32, "_llvm_log10_f64": _llvm_log10_f64, "_llvm_sin_f64": _llvm_sin_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_localtime": _localtime, "_localtime_r": _localtime_r, "_time": _time, "_tzset": _tzset, "abort": abort, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "demangle": demangle, "demangleAll": demangleAll, "getTempRet0": getTempRet0, "jsStackTrace": jsStackTrace, "memory": wasmMemory, "nullFunc_ddi": nullFunc_ddi, "nullFunc_di": nullFunc_di, "nullFunc_idii": nullFunc_idii, "nullFunc_ii": nullFunc_ii, "nullFunc_iidii": nullFunc_iidii, "nullFunc_iidiiii": nullFunc_iidiiii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiidddddd": nullFunc_iiidddddd, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiiidd": nullFunc_iiiidd, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_jiji": nullFunc_jiji, "nullFunc_vi": nullFunc_vi, "nullFunc_viddiiii": nullFunc_viddiiii, "nullFunc_vii": nullFunc_vii, "nullFunc_viii": nullFunc_viii, "nullFunc_viiii": nullFunc_viiii, "setTempRet0": setTempRet0, "stackTrace": stackTrace, "table": wasmTable, "tempDoublePtr": tempDoublePtr };
+var asmLibraryArg = { "___assert_fail": ___assert_fail, "___buildEnvironment": ___buildEnvironment, "___lock": ___lock, "___setErrNo": ___setErrNo, "___syscall195": ___syscall195, "___syscall197": ___syscall197, "___syscall220": ___syscall220, "___syscall221": ___syscall221, "___syscall5": ___syscall5, "___syscall54": ___syscall54, "___unlock": ___unlock, "___wasi_fd_close": ___wasi_fd_close, "___wasi_fd_fdstat_get": ___wasi_fd_fdstat_get, "___wasi_fd_read": ___wasi_fd_read, "___wasi_fd_seek": ___wasi_fd_seek, "___wasi_fd_write": ___wasi_fd_write, "__memory_base": 1024, "__table_base": 0, "_abort": _abort, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_exit": _exit, "_fd_close": _fd_close, "_fd_fdstat_get": _fd_fdstat_get, "_fd_read": _fd_read, "_fd_seek": _fd_seek, "_fd_write": _fd_write, "_getenv": _getenv, "_llvm_cos_f64": _llvm_cos_f64, "_llvm_log10_f32": _llvm_log10_f32, "_llvm_log10_f64": _llvm_log10_f64, "_llvm_sin_f64": _llvm_sin_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_localtime": _localtime, "_localtime_r": _localtime_r, "_time": _time, "_tzset": _tzset, "abort": abort, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "demangle": demangle, "demangleAll": demangleAll, "getTempRet0": getTempRet0, "jsStackTrace": jsStackTrace, "memory": wasmMemory, "nullFunc_ddi": nullFunc_ddi, "nullFunc_di": nullFunc_di, "nullFunc_idii": nullFunc_idii, "nullFunc_ii": nullFunc_ii, "nullFunc_iidii": nullFunc_iidii, "nullFunc_iidiiii": nullFunc_iidiiii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiidddddd": nullFunc_iiidddddd, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiiidd": nullFunc_iiiidd, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_jiji": nullFunc_jiji, "nullFunc_vi": nullFunc_vi, "nullFunc_viddiiii": nullFunc_viddiiii, "nullFunc_vii": nullFunc_vii, "nullFunc_viii": nullFunc_viii, "nullFunc_viiii": nullFunc_viiii, "setTempRet0": setTempRet0, "stackTrace": stackTrace, "table": wasmTable, "tempDoublePtr": tempDoublePtr };
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (asmGlobalArg, asmLibraryArg, buffer);
@@ -8145,7 +8168,10 @@ if (!Object.getOwnPropertyDescriptor(Module, "setTempRet0")) Module["setTempRet0
 if (!Object.getOwnPropertyDescriptor(Module, "callMain")) Module["callMain"] = function() { abort("'callMain' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "abort")) Module["abort"] = function() { abort("'abort' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "Pointer_stringify")) Module["Pointer_stringify"] = function() { abort("'Pointer_stringify' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "warnOnce")) Module["warnOnce"] = function() { abort("'warnOnce' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_NORMAL")) Object.defineProperty(Module, "ALLOC_NORMAL", { configurable: true, get: function() { abort("'ALLOC_NORMAL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
+if (!Object.getOwnPropertyDescriptor(Module, "warnOnce")) Module["warnOnce"] = function() { abort("'warnOnce' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+Module["writeStackCookie"] = writeStackCookie;
+Module["checkStackCookie"] = checkStackCookie;
+Module["abortStackOverflow"] = abortStackOverflow;if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_NORMAL")) Object.defineProperty(Module, "ALLOC_NORMAL", { configurable: true, get: function() { abort("'ALLOC_NORMAL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_STACK")) Object.defineProperty(Module, "ALLOC_STACK", { configurable: true, get: function() { abort("'ALLOC_STACK' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_DYNAMIC")) Object.defineProperty(Module, "ALLOC_DYNAMIC", { configurable: true, get: function() { abort("'ALLOC_DYNAMIC' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_NONE")) Object.defineProperty(Module, "ALLOC_NONE", { configurable: true, get: function() { abort("'ALLOC_NONE' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
@@ -8167,6 +8193,7 @@ function ExitStatus(status) {
 }
 
 var calledMain = false;
+
 
 dependenciesFulfilled = function runCaller() {
   // If run has never been called, and we should call run (INVOKE_RUN is true, and Module.noInitialRun is not false)
@@ -8281,7 +8308,7 @@ function exit(status, implicit) {
   if (noExitRuntime) {
     // if exit() was called, we may warn the user if the runtime isn't actually being shut down
     if (!implicit) {
-      err('exit(' + status + ') called, but EXIT_RUNTIME is not set, so halting execution but not exiting the runtime or preventing further async execution (build with EXIT_RUNTIME=1, if you want a true shutdown)');
+      err('program exited (with status: ' + status + '), but EXIT_RUNTIME is not set, so halting execution but not exiting the runtime or preventing further async execution (build with EXIT_RUNTIME=1, if you want a true shutdown)');
     }
   } else {
 
