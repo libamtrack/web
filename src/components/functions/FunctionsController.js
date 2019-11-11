@@ -362,8 +362,40 @@ export default class FunctionsController extends Component {
             let resPower = this.state.resultPower;
             resPower.push(resP);
 
-            const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
-            this.state.dataSeriesNames.push(dataSeriesName);
+            // TODO: Refactor
+            let relevantFormData = {...this.state.formData}
+            if (relevantFormData.intervalType !== undefined) delete relevantFormData.intervalType;
+            if (relevantFormData.pointsNo !== undefined) delete relevantFormData.pointsNo;
+            if (relevantFormData.start !== undefined) delete relevantFormData.start;
+            if (relevantFormData.end !== undefined) delete relevantFormData.end;
+            
+            let formItemsMap = new Map();
+            this.state.json.formItems.forEach((formItem) => {
+                formItemsMap.set(formItem.parameterName, formItem)
+            });
+
+            let proposedDataSeriesName = '';
+            const dicts = this.props.dictionaryData;
+            Object.keys(relevantFormData).forEach((key) => {
+                const formItem = formItemsMap.get(key);
+                switch (formItem.type.toLowerCase()) {
+                    case 'input':
+                        proposedDataSeriesName += `${formItem.label}: ${relevantFormData[key]}; `;
+                        break;
+                    case 'select':
+                        const dictName = formItemsMap.get(key).values.toLowerCase()
+                        const val = dicts[dictName].filter(e => e.value == relevantFormData[key])[0].name;
+                        proposedDataSeriesName += `${formItem.label}: ${val}; `;
+                        break;
+                    default:
+                        break;
+                }
+            });
+            proposedDataSeriesName = proposedDataSeriesName.slice(0, -2);
+
+            // const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
+            const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, proposedDataSeriesName);
+            this.state.dataSeriesNames.push(dataSeriesName); 
 
             newDataSeries.push({
                 x: this.state.plot.xType === 'log' ? dataP : data,
