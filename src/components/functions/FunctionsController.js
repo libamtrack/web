@@ -310,6 +310,8 @@ export default class FunctionsController extends Component {
         }
     };
 
+    printState = new Map();
+
     calculate = () => {
         try {
             const fun = FunctionsFromC[this.state.json.functionName];
@@ -376,22 +378,43 @@ export default class FunctionsController extends Component {
 
             let proposedDataSeriesName = '';
             const dicts = this.props.dictionaryData;
+            const formValues = {};
             Object.keys(relevantFormData).forEach((key) => {
                 const formItem = formItemsMap.get(key);
                 switch (formItem.type.toLowerCase()) {
                     case 'input':
-                        proposedDataSeriesName += `${formItem.label}: ${relevantFormData[key]}; `;
+                        formValues[formItem.label] = relevantFormData[key];
+                        if (newDataSeries.length === 0)
+                            this.printState.set(formItem.label, false);
+                        else if (newDataSeries[0].formValues[formItem.label] != relevantFormData[key])
+                            this.printState.set(formItem.label, true);
                         break;
                     case 'select':
                         const dictName = formItemsMap.get(key).values.toLowerCase()
                         const val = dicts[dictName].filter(e => e.value == relevantFormData[key])[0].name;
-                        proposedDataSeriesName += `${formItem.label}: ${val}; `;
+                        formValues[formItem.label] = val;
+                        if (newDataSeries.length === 0)
+                            this.printState.set(formItem.label, false);
+                        else if (newDataSeries[0].formValues[formItem.label] != val)
+                            this.printState.set(formItem.label, true);
                         break;
                     default:
                         break;
                 }
             });
+
+            Object.keys(formValues).forEach((key) => {
+                if (this.printState.get(key)) proposedDataSeriesName += `${key}: ${formValues[key]}; `;
+            });
             proposedDataSeriesName = proposedDataSeriesName.slice(0, -2);
+
+            newDataSeries.forEach(ds => {
+                ds.name = ''
+                Object.keys(formValues).forEach((key) => {
+                    if (this.printState.get(key)) ds.name += `${key}: ${ds.formValues[key]}; `;
+                });
+                ds.name = ds.name.slice(0, -2);
+            });
 
             // const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
             const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, proposedDataSeriesName);
@@ -402,7 +425,8 @@ export default class FunctionsController extends Component {
                 y: this.state.plot.xType === 'log' ? resP : res,
                 name: dataSeriesName,
                 type: 'scatter',
-                mode: this.state.plot.plotType
+                mode: this.state.plot.plotType,
+                formValues: formValues
             });
 
             newAllResults.push(lastResult);
