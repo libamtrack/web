@@ -194,6 +194,7 @@ export default class FunctionsController extends Component {
             if (this.state.dataSeries[i].name === oldName) {
                 newDataSeries[i].name = newName;
                 newDataSeriesNames[i] = newName;
+                newDataSeries[i].wasRenamed = true;
             }
         }
 
@@ -409,11 +410,13 @@ export default class FunctionsController extends Component {
             proposedDataSeriesName = proposedDataSeriesName.slice(0, -2);
 
             newDataSeries.forEach(ds => {
-                ds.name = ''
-                Object.keys(formValues).forEach((key) => {
-                    if (this.printState.get(key)) ds.name += `${key}: ${ds.formValues[key]}; `;
-                });
-                ds.name = ds.name.slice(0, -2);
+                if (!ds.wasRenamed) {
+                    ds.name = ''
+                    Object.keys(formValues).forEach((key) => {
+                        if (this.printState.get(key)) ds.name += `${key}: ${ds.formValues[key]}; `;
+                    });
+                    ds.name = ds.name.slice(0, -2);
+                }
             });
 
             // const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
@@ -479,12 +482,12 @@ export default class FunctionsController extends Component {
         );
     };
 
-    createResultsRow = (name, results, width) => {
+    createResultsRow = (idx, results, width) => {
         let items = [];
 
         items.push(
             <Col style={{fontSize: 16, width: width}}>
-                {name}
+                {this.state.dataSeries[idx].name}
             </Col>
         );
 
@@ -510,10 +513,8 @@ export default class FunctionsController extends Component {
             result.push("Metadata for calculated items:");
             result.push(this.createLabelsRow(width));
 
-            for (let i = 0; i < rows.length; i++) {
-                let name = this.state.dataSeriesNames[i];
-                result.push(this.createResultsRow(name, rows[i], width));
-            }
+            for (let i = 0; i < rows.length; i++)
+                result.push(this.createResultsRow(i, rows[i], width));
         }
         return result;
     }
