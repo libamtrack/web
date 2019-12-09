@@ -48,7 +48,7 @@
     "@babel/polyfill": "7.7.0",
     "@babel/preset-env": "7.7.4",
     "@babel/preset-react": "7.7.4",
-    "copy-webpack-plugin": "5.0.5",
+    "copy-webpack-plugin": "5.1.0",
     "css-loader": "3.2.0",
     "file-loader": "5.0.0",
     "gh-pages": "2.1.0",
