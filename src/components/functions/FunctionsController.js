@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Breadcrumb, Icon, Spin, Tooltip} from 'antd';
+import {Breadcrumb, Icon, Spin, Tooltip, Collapse} from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
@@ -13,6 +13,15 @@ import ErrorModal from "./modals/ErrorModal";
 import Script from 'react-load-script'
 import {Col, Row} from "react-bootstrap";
 import FormItem from "antd/es/form/FormItem";
+
+const Panel = Collapse.Panel;
+const customPanelStyle = {
+    background: '#f7f7f7',
+    borderRadius: 4,
+    marginBottom: 12,
+    border: 0,
+    overflow: 'hidden',
+};
 
 export default class FunctionsController extends Component {
     state = {
@@ -547,6 +556,26 @@ export default class FunctionsController extends Component {
         return [current_label, current_prec, current_unit];
     }
 
+    prepareDefaultValues() {
+        let defaultValues = [];
+        const formValues = this.state.dataSeries[0].formValues
+        Object.keys(formValues).forEach((key) => {
+            if (!this.printState.get(key)) {
+                defaultValues.push(
+                    <Col sm={12} style={{fontSize: 16}}>
+                        {`${key}: ${formValues[key]}`}
+                    </Col>
+                )
+            }
+        });
+
+        return(
+            <Row style={{fontSize: 16}}>
+                <Row>{defaultValues}</Row>
+            </Row>
+        )
+    }
+
     render() {
         const size = this.state.json.plot && this.state.json.plot === true ? 8 : 24;
         const unit = this.state.json.resultUnit ? this.state.json.resultUnit : "";
@@ -554,6 +583,7 @@ export default class FunctionsController extends Component {
         const label = this.state.json.resultLabel ? this.state.json.resultLabel : "Result";
 
         // assuming that no plotting is done we allocate the array of "calculator" results
+        let defaultValues = [];
         let result_items = [];
         if (typeof this.state.lastResult !== "number") { // multiple items returned from calculator method
             let rows = [];
@@ -566,6 +596,7 @@ export default class FunctionsController extends Component {
                 rows.push(items);
             }
             if (rows.length !== 0) {
+                defaultValues = this.prepareDefaultValues();
                 result_items.push(this.createResultsSummary(rows));
             } else { // when we don't need result data summary
                 for (let i = 0; i < this.state.lastResult.length; i++) {
@@ -588,6 +619,15 @@ export default class FunctionsController extends Component {
             result_items.push(this.createFormItem( current_label, this.state.lastResult, prec, current_unit));
         }
 
+        const defaultValuesTemplate =
+            <Collapse bordered={false}>
+                <Panel header={<h6>Default values</h6>} style={customPanelStyle}>
+                    <div style={{ marginLeft: 60 }} align="left">
+                        {defaultValues}
+                    </div>
+                </Panel>
+            </Collapse>
+
         const resultComp = this.state.json.plot && this.state.json.plot === true ? <Row>
             <Col lg={5} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                 {this.state.toRender}
@@ -598,7 +638,9 @@ export default class FunctionsController extends Component {
                                yTitle={this.state.json.yTitle}
                                xType={this.state.plot.xType}
                                yType={this.state.plot.yType}/>
-                               {result_items}
+                
+                {this.state.dataSeries.length > 0 ? defaultValuesTemplate : ''}
+                {this.state.dataSeries.length > 0 ? result_items : ''}
             </Col>
         </Row> : <Row>
             <Col lg={4} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
