@@ -464,30 +464,30 @@ export default class FunctionsController extends Component {
         if (typeof labels === "string") labels = [labels];
 
         cols.push(
-            <Col style={{fontSize: 16, width: width}}>
+            <th style={{fontSize: 16, width: width, border: "1px solid #dddddd"}}>
                 {"Data series"}
-            </Col>
+            </th>
         );
 
         for (let i = 0; i < labels.length; i++) {
             cols.push(
-                <Col style={{fontSize: 16, width: width}}>
+                <th style={{fontSize: 16, width: width, border: "1px solid #dddddd"}}>
                     {labels[i]}
-                </Col>
+                </th>
             );
         }
         return (
-            <Row className="text-center text-nowrap">
+            <tr className="text-center text-nowrap">
                 {cols}
-            </Row>
+            </tr>
         )
     };
 
     createResultItem = (value, prec, unit, width) => {
         return (
-            <Col style={{fontSize: 16, width: width}}>
+            <td style={{fontSize: 16, width: width, border: "1px solid #dddddd"}}>
                 {parseFloat(value.toFixed(prec))} {unit}
-            </Col>
+            </td>
         );
     };
 
@@ -495,9 +495,9 @@ export default class FunctionsController extends Component {
         let items = [];
 
         items.push(
-            <Col style={{fontSize: 16, width: width}}>
+            <td style={{fontSize: 16, width: width, whiteSpace: "normal", border: "1px solid #dddddd"}}>
                 {this.state.dataSeries[idx].name}
-            </Col>
+            </td>
         );
 
         for (let i = 0; i < results.length; i++) {
@@ -507,9 +507,9 @@ export default class FunctionsController extends Component {
             items.push(this.createResultItem(value, prec, unit, width))
         }
         return (
-            <Row className="text-center text-nowrap">
+            <tr className="text-center text-nowrap">
                 {items}
-            </Row>
+            </tr>
         )
     };
 
@@ -519,9 +519,7 @@ export default class FunctionsController extends Component {
         if (num_features !== 0) {
             let width = 100.0 / (num_features + 1) + "%";
 
-            result.push("Metadata for calculated items:");
             result.push(this.createLabelsRow(width));
-
             for (let i = 0; i < rows.length; i++)
                 result.push(this.createResultsRow(i, rows[i], width));
         }
@@ -628,6 +626,12 @@ export default class FunctionsController extends Component {
                 </Panel>
             </Collapse>
 
+        const resultTable =
+            <div>
+                <p>Metadata for calculated items:</p>
+                <table style={{borderCollapse: Collapse}}>{result_items}</table>
+            </div>
+
         const resultComp = this.state.json.plot && this.state.json.plot === true ? <Row>
             <Col lg={5} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                 {this.state.toRender}
@@ -640,12 +644,12 @@ export default class FunctionsController extends Component {
                                yType={this.state.plot.yType}/>
                 
                 {this.state.dataSeries.length > 0 ? defaultValuesTemplate : ''}
-                {this.state.dataSeries.length > 0 ? result_items : ''}
+                {this.state.dataSeries.length > 0 ? resultTable : ''}
             </Col>
         </Row> : <Row>
             <Col lg={4} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                 {this.state.toRender}
-                {result_items}
+                resultTable
             </Col>
             <Col lg={7}>
             </Col>
