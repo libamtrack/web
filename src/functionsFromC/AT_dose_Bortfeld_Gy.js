@@ -69,10 +69,11 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
 
     /*********************CALL FUNCTION******************************/
 
+    // dose calculated at depth z_cm = 0 (entrance) and fluence_cm = 1 (unit fluence)
     let entrance_dose_for_unit_fluence_Gy = at_dose_bortfeld_gy_single(0.0, 1.0, E_MeV_u, sigma_E_MeV_u, material_no, eps);
     let fluence_cm2 = entrance_dose_Gy / entrance_dose_for_unit_fluence_Gy;
 
-    let result = at_dose_bortfeld_gy_multi(n, z_cmHeap, E_MeV_u, fluence_cm2, sigma_E_MeV_u, material_no, eps, dose_GyReturnHeap.byteOffset);
+    let result = at_dose_bortfeld_gy_multi(n, z_cmHeap, fluence_cm2, E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_GyReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(dose_GyReturnHeap.buffer, dose_GyReturnHeap.byteOffset, dose_GyReturnData.length);
 
     Module._free(z_cmHeap.byteOffset);
