@@ -391,22 +391,23 @@ export default class FunctionsController extends Component {
             const formValues = {};
             Object.keys(relevantFormData).forEach((key) => {
                 const formItem = formItemsMap.get(key);
+                const formItemLabel = formItem.shortLabel || formItem.label;
                 switch (formItem.type.toLowerCase()) {
                     case 'input':
-                        formValues[formItem.label] = relevantFormData[key];
+                        formValues[formItemLabel] = relevantFormData[key];
                         if (newDataSeries.length === 0)
-                            this.printState.set(formItem.label, false);
-                        else if (newDataSeries[0].formValues[formItem.label] != relevantFormData[key])
-                            this.printState.set(formItem.label, true);
+                            this.printState.set(formItemLabel, false);
+                        else if (newDataSeries[0].formValues[formItemLabel] != relevantFormData[key])
+                            this.printState.set(formItemLabel, true);
                         break;
                     case 'select':
                         const dictName = formItemsMap.get(key).values.toLowerCase()
                         const val = dicts[dictName].filter(e => e.value == relevantFormData[key])[0].name;
-                        formValues[formItem.label] = val;
+                        formValues[formItemLabel] = val;
                         if (newDataSeries.length === 0)
-                            this.printState.set(formItem.label, false);
-                        else if (newDataSeries[0].formValues[formItem.label] != val)
-                            this.printState.set(formItem.label, true);
+                            this.printState.set(formItemLabel, false);
+                        else if (newDataSeries[0].formValues[formItemLabel] != val)
+                            this.printState.set(formItemLabel, true);
                         break;
                     default:
                         break;
