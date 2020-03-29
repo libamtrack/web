@@ -19,7 +19,7 @@ script:
 deploy:
   #deploy to libamtrack.github.io/web
   - provider: pages
-    cleanup: true
+    skip_cleanup: true
     github_token: $GH_TOKEN # defined at Travis/Settings/Environment Variables
     keep_history: true
     local_dir: ./dist
@@ -28,7 +28,7 @@ deploy:
 
   #deploy to libamtrack.github.io/web_dev
   - provider: pages
-    cleanup: true
+    skip_cleanup: true
     github_token: $GH_TOKEN # defined at Travis/Settings/Environment Variables
     keep_history: true
     local_dir: ./dist
