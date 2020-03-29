@@ -1,4 +1,5 @@
 language: node_js
+
 node_js:
   - "node"
 
@@ -10,6 +11,7 @@ install:
   - sed -i 's~NO_DEPLOY_BRANCH~'"$TRAVIS_BRANCH"'~' ./src/static/json/GlobalConfig.json
   - sed -i 's/NO_DEPLOY_COMMIT/'"${TRAVIS_COMMIT:0:7}"'/' ./src/static/json/GlobalConfig.json
   - npm install
+
 script:
   - npm run build
 
@@ -17,19 +19,19 @@ script:
 deploy:
   #deploy to libamtrack.github.io/web
   - provider: pages
-    skip-cleanup: true
-    github-token: $GH_TOKEN # defined at Travis/Settings/Environment Variables
-    keep-history: true
-    local-dir: ./dist
+    cleanup: true
+    github_token: $GH_TOKEN # defined at Travis/Settings/Environment Variables
+    keep_history: true
+    local_dir: ./dist
     on:
       branch: master
 
   #deploy to libamtrack.github.io/web_dev
   - provider: pages
-    skip-cleanup: true
-    github-token: $GH_TOKEN # defined at Travis/Settings/Environment Variables
-    keep-history: true
-    local-dir: ./dist
+    cleanup: true
+    github_token: $GH_TOKEN # defined at Travis/Settings/Environment Variables
+    keep_history: true
+    local_dir: ./dist
     repo: libamtrack/web_dev
     on:
       all_branches: true
