@@ -34,7 +34,7 @@
     {
       "type": "input",
       "parameterName": "a0_um",
-      "label": "a₀ [um²]",
+      "label": "a₀ [um]",
       "placeholder": "0.2",
       "defaultValue": "0.2",
       "validations": {
