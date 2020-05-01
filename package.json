@@ -76,7 +76,7 @@
     "bootstrap": "4.4.1",
     "jquery": "3.4.1",
     "npm-check-updates": "^4.1.0",
-    "plotly.js-basic-dist": "1.52.3",
+    "plotly.js-basic-dist": "1.53.0",
     "popper.js": "1.16.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
