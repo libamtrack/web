@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@axetroy/react-download": "1.1.1",
-    "antd": "3.26.12",
+    "antd": "3.26.16",
     "axios": "0.19.2",
     "babel-plugin-wildcard": "6.0.0",
     "bootstrap": "4.4.1",
