@@ -46,7 +46,8 @@
         "type": "float",
         "min": "0.0",
         "max": "1000000.0"
-      }
+      },
+      "shortLabel": "E spr [MeV]"
     },
     {
       "type": "input",

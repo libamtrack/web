@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Breadcrumb, Icon, Spin, Tooltip} from 'antd';
+import {Breadcrumb, Icon, Spin, Tooltip, Collapse} from 'antd';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
@@ -13,6 +13,15 @@ import ErrorModal from "./modals/ErrorModal";
 import Script from 'react-load-script'
 import {Col, Row} from "react-bootstrap";
 import FormItem from "antd/es/form/FormItem";
+
+const Panel = Collapse.Panel;
+const customPanelStyle = {
+    background: '#f7f7f7',
+    borderRadius: 4,
+    marginBottom: 12,
+    border: 0,
+    overflow: 'hidden',
+};
 
 export default class FunctionsController extends Component {
     state = {
@@ -194,6 +203,7 @@ export default class FunctionsController extends Component {
             if (this.state.dataSeries[i].name === oldName) {
                 newDataSeries[i].name = newName;
                 newDataSeriesNames[i] = newName;
+                newDataSeries[i].wasRenamed = true;
             }
         }
 
@@ -310,6 +320,8 @@ export default class FunctionsController extends Component {
         }
     };
 
+    printState = new Map();
+
     calculate = () => {
         try {
             const fun = FunctionsFromC[this.state.json.functionName];
@@ -362,15 +374,72 @@ export default class FunctionsController extends Component {
             let resPower = this.state.resultPower;
             resPower.push(resP);
 
-            const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
-            this.state.dataSeriesNames.push(dataSeriesName);
+            // TODO: Refactor
+            let relevantFormData = {...this.state.formData}
+            if (relevantFormData.intervalType !== undefined) delete relevantFormData.intervalType;
+            if (relevantFormData.pointsNo !== undefined) delete relevantFormData.pointsNo;
+            if (relevantFormData.start !== undefined) delete relevantFormData.start;
+            if (relevantFormData.end !== undefined) delete relevantFormData.end;
+            
+            let formItemsMap = new Map();
+            this.state.json.formItems.forEach((formItem) => {
+                formItemsMap.set(formItem.parameterName, formItem)
+            });
+
+            let proposedDataSeriesName = '';
+            const dicts = this.props.dictionaryData;
+            const formValues = {};
+            Object.keys(relevantFormData).forEach((key) => {
+                const formItem = formItemsMap.get(key);
+                const formItemLabel = formItem.shortLabel || formItem.label;
+                switch (formItem.type.toLowerCase()) {
+                    case 'input':
+                        formValues[formItemLabel] = relevantFormData[key];
+                        if (newDataSeries.length === 0)
+                            this.printState.set(formItemLabel, false);
+                        else if (newDataSeries[0].formValues[formItemLabel] != relevantFormData[key])
+                            this.printState.set(formItemLabel, true);
+                        break;
+                    case 'select':
+                        const dictName = formItemsMap.get(key).values.toLowerCase()
+                        const val = dicts[dictName].filter(e => e.value == relevantFormData[key])[0].name;
+                        formValues[formItemLabel] = val;
+                        if (newDataSeries.length === 0)
+                            this.printState.set(formItemLabel, false);
+                        else if (newDataSeries[0].formValues[formItemLabel] != val)
+                            this.printState.set(formItemLabel, true);
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            Object.keys(formValues).forEach((key) => {
+                if (this.printState.get(key)) proposedDataSeriesName += `${key}: ${formValues[key]}; `;
+            });
+            proposedDataSeriesName = proposedDataSeriesName.slice(0, -2);
+
+            newDataSeries.forEach(ds => {
+                if (!ds.wasRenamed) {
+                    ds.name = ''
+                    Object.keys(formValues).forEach((key) => {
+                        if (this.printState.get(key)) ds.name += `${key}: ${ds.formValues[key]}; `;
+                    });
+                    ds.name = ds.name.slice(0, -2);
+                }
+            });
+
+            // const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, this.state.entryName);
+            const dataSeriesName = getDataSeriesName(this.state.dataSeriesNames, proposedDataSeriesName);
+            this.state.dataSeriesNames.push(dataSeriesName); 
 
             newDataSeries.push({
                 x: this.state.plot.xType === 'log' ? dataP : data,
                 y: this.state.plot.xType === 'log' ? resP : res,
                 name: dataSeriesName,
                 type: 'scatter',
-                mode: this.state.plot.plotType
+                mode: this.state.plot.plotType,
+                formValues: formValues
             });
 
             newAllResults.push(lastResult);
@@ -396,40 +465,40 @@ export default class FunctionsController extends Component {
         if (typeof labels === "string") labels = [labels];
 
         cols.push(
-            <Col style={{fontSize: 16, width: width}}>
+            <th style={{fontSize: 16, width: width, border: "1px solid #dddddd"}}>
                 {"Data series"}
-            </Col>
+            </th>
         );
 
         for (let i = 0; i < labels.length; i++) {
             cols.push(
-                <Col style={{fontSize: 16, width: width}}>
+                <th style={{fontSize: 16, width: width, border: "1px solid #dddddd"}}>
                     {labels[i]}
-                </Col>
+                </th>
             );
         }
         return (
-            <Row className="text-center text-nowrap">
+            <tr className="text-center text-nowrap">
                 {cols}
-            </Row>
+            </tr>
         )
     };
 
     createResultItem = (value, prec, unit, width) => {
         return (
-            <Col style={{fontSize: 16, width: width}}>
+            <td style={{fontSize: 16, width: width, border: "1px solid #dddddd"}}>
                 {parseFloat(value.toFixed(prec))} {unit}
-            </Col>
+            </td>
         );
     };
 
-    createResultsRow = (name, results, width) => {
+    createResultsRow = (idx, results, width) => {
         let items = [];
 
         items.push(
-            <Col style={{fontSize: 16, width: width}}>
-                {name}
-            </Col>
+            <td style={{fontSize: 16, width: width, whiteSpace: "normal", border: "1px solid #dddddd"}}>
+                {this.state.dataSeries[idx].name}
+            </td>
         );
 
         for (let i = 0; i < results.length; i++) {
@@ -439,9 +508,9 @@ export default class FunctionsController extends Component {
             items.push(this.createResultItem(value, prec, unit, width))
         }
         return (
-            <Row className="text-center text-nowrap">
+            <tr className="text-center text-nowrap">
                 {items}
-            </Row>
+            </tr>
         )
     };
 
@@ -451,13 +520,9 @@ export default class FunctionsController extends Component {
         if (num_features !== 0) {
             let width = 100.0 / (num_features + 1) + "%";
 
-            result.push("Metadata for calculated items:");
             result.push(this.createLabelsRow(width));
-
-            for (let i = 0; i < rows.length; i++) {
-                let name = this.state.dataSeriesNames[i];
-                result.push(this.createResultsRow(name, rows[i], width));
-            }
+            for (let i = 0; i < rows.length; i++)
+                result.push(this.createResultsRow(i, rows[i], width));
         }
         return result;
     }
@@ -490,6 +555,26 @@ export default class FunctionsController extends Component {
         return [current_label, current_prec, current_unit];
     }
 
+    prepareDefaultValues() {
+        let defaultValues = [];
+        const formValues = this.state.dataSeries[0].formValues
+        Object.keys(formValues).forEach((key) => {
+            if (!this.printState.get(key)) {
+                defaultValues.push(
+                    <Col sm={12} style={{fontSize: 16}}>
+                        {`${key}: ${formValues[key]}`}
+                    </Col>
+                )
+            }
+        });
+
+        return(
+            <Row style={{fontSize: 16}}>
+                <Row>{defaultValues}</Row>
+            </Row>
+        )
+    }
+
     render() {
         const size = this.state.json.plot && this.state.json.plot === true ? 8 : 24;
         const unit = this.state.json.resultUnit ? this.state.json.resultUnit : "";
@@ -497,6 +582,7 @@ export default class FunctionsController extends Component {
         const label = this.state.json.resultLabel ? this.state.json.resultLabel : "Result";
 
         // assuming that no plotting is done we allocate the array of "calculator" results
+        let defaultValues = [];
         let result_items = [];
         if (typeof this.state.lastResult !== "number") { // multiple items returned from calculator method
             let rows = [];
@@ -509,6 +595,7 @@ export default class FunctionsController extends Component {
                 rows.push(items);
             }
             if (rows.length !== 0) {
+                defaultValues = this.prepareDefaultValues();
                 result_items.push(this.createResultsSummary(rows));
             } else { // when we don't need result data summary
                 for (let i = 0; i < this.state.lastResult.length; i++) {
@@ -531,6 +618,21 @@ export default class FunctionsController extends Component {
             result_items.push(this.createFormItem( current_label, this.state.lastResult, prec, current_unit));
         }
 
+        const defaultValuesTemplate =
+            <Collapse bordered={false}>
+                <Panel header={<h6>Default values</h6>} style={customPanelStyle}>
+                    <div style={{ marginLeft: 60 }} align="left">
+                        {defaultValues}
+                    </div>
+                </Panel>
+            </Collapse>
+
+        const resultTable =
+            <div>
+                <p>Metadata for calculated items:</p>
+                <table style={{borderCollapse: Collapse}}>{result_items}</table>
+            </div>
+
         const resultComp = this.state.json.plot && this.state.json.plot === true ? <Row>
             <Col lg={5} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                 {this.state.toRender}
@@ -541,12 +643,14 @@ export default class FunctionsController extends Component {
                                yTitle={this.state.json.yTitle}
                                xType={this.state.plot.xType}
                                yType={this.state.plot.yType}/>
-                               {result_items}
+                
+                {this.state.dataSeries.length > 0 ? defaultValuesTemplate : ''}
+                {this.state.dataSeries.length > 0 ? resultTable : ''}
             </Col>
         </Row> : <Row>
             <Col lg={4} style={{marginLeft: 40, marginRight: 10, marginBottom: 20, marginTop: 5}}>
                 {this.state.toRender}
-                {result_items}
+                resultTable
             </Col>
             <Col lg={7}>
             </Col>
