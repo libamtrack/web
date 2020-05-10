@@ -1,6 +1,7 @@
 import React from "react";
 import getConfigurationFromJSON from "../../providers/ConfigProvider";
 import logo from '../../static/img/logo.png'
+import githubLogo from '../../static/img/GitHub_Logo.png'
 import FunctionsView from '../layouts/FunctionsView.js';
 import SearchBox from "../functions/utils/SearchBox";
 import Layout from "antd/es/layout/layout";
@@ -72,19 +73,19 @@ class MainPage extends React.Component {
                     this.state.applicationTile = confData.applicationTile;
                     this.state.categories = confData.categories;
                     this.state.introText = confData.introText;
-
+                    this.state.dictionariesPaths = confData.dictionaries;
+                    
                     let bundleAnalyzeReportOnlyAtWebDev = packageJson.homepage.indexOf("web_dev") === -1 ? "" : <Row><a href="report.html" target="_blank">{"See the bundle.js analyze"}</a></Row>;
-
-                    this.state.footer =
+                    
+                    this.state.footer = 
                     <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
-                        <Row>{confData.footerText1}</Row>
-                        <Row style={{  'font-size': '10px' }}>{confData.footerText2}</Row>
-                        <Row>{"Deploy date: " + confData.deployDate + " from branch: "
+                        <Row>{confData.footerText1} Find code at
+                        <a href={packageJson.repository}><img key={"githubImg"} src={githubLogo} align="center" style={{ 'height': '25px', 'width': '62px', 'marginLeft': '3px', 'marginBottom': '3px'}}/></a></Row>
+                        <Row style={{  'font-size': '10px', 'font-style': 'italic' }}>{confData.footerText2}</Row>
+                        <Row style={{  'font-size': '10px', 'font-style': 'italic' }}>{"Deploy date: " + confData.deployDate + " from branch: "
                         + confData.deployBranch + " and commit number: " + confData.deployCommit}</Row>
                         {bundleAnalyzeReportOnlyAtWebDev}
                     </Footer>;
-
-                    this.state.dictionariesPaths = confData.dictionaries;
                 })
             .then(this.getDictionaries)
             .then(e => {
