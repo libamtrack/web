@@ -2,7 +2,7 @@
   "name": "LibamtrackWeb",
   "version": "1.0.0",
   "private": false,
-  "description": "Libamtrack Web Gui",
+  "description": "Libamtrack Web GUI",
   "homepage": "https://libamtrack.github.io/web",
   "repository": "https://github.com/libamtrack/web",
   "scripts": {
