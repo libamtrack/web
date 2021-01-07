@@ -1,7 +1,8 @@
-// Copyright 2010 The Emscripten Authors.  All rights reserved.
-// Emscripten is available under two separate licenses, the MIT license and the
-// University of Illinois/NCSA Open Source License.  Both these licenses can be
-// found in the LICENSE file.
+/**
+ * @license
+ * Copyright 2010 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 // The Module object: Our interface to the outside world. We import
 // and export values on it. There are various ways Module can be used:
@@ -47,17 +48,12 @@ var quit_ = function(status, toThrow) {
 var ENVIRONMENT_IS_WEB = false;
 var ENVIRONMENT_IS_WORKER = false;
 var ENVIRONMENT_IS_NODE = false;
-var ENVIRONMENT_HAS_NODE = false;
 var ENVIRONMENT_IS_SHELL = false;
 ENVIRONMENT_IS_WEB = typeof window === 'object';
 ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
-// A web environment like Electron.js can have Node enabled, so we must
-// distinguish between Node-enabled environments and Node environments per se.
-// This will allow the former to do things like mount NODEFS.
-// Extended check using process.versions fixes issue #8816.
-// (Also makes redundant the original check that 'require' is a function.)
-ENVIRONMENT_HAS_NODE = typeof process === 'object' && typeof process.versions === 'object' && typeof process.versions.node === 'string';
-ENVIRONMENT_IS_NODE = ENVIRONMENT_HAS_NODE && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
+// N.b. Electron.js environment is simultaneously a NODE-environment, but
+// also a web environment.
+ENVIRONMENT_IS_NODE = typeof process === 'object' && typeof process.versions === 'object' && typeof process.versions.node === 'string';
 ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
 
 if (Module['ENVIRONMENT']) {
@@ -85,8 +81,18 @@ var nodeFS;
 var nodePath;
 
 if (ENVIRONMENT_IS_NODE) {
-  scriptDirectory = __dirname + '/';
+  if (ENVIRONMENT_IS_WORKER) {
+    scriptDirectory = require('path').dirname(scriptDirectory) + '/';
+  } else {
+    scriptDirectory = __dirname + '/';
+  }
 
+
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
   read_ = function shell_read(filename, binary) {
     if (!nodeFS) nodeFS = require('fs');
@@ -133,6 +139,7 @@ if (ENVIRONMENT_IS_NODE) {
   Module['inspect'] = function () { return '[Emscripten Module object]'; };
 
 
+
 } else
 if (ENVIRONMENT_IS_SHELL) {
 
@@ -167,15 +174,17 @@ if (ENVIRONMENT_IS_SHELL) {
 
   if (typeof print !== 'undefined') {
     // Prefer to use print/printErr where they exist, as they usually work better.
-    if (typeof console === 'undefined') console = {};
-    console.log = print;
-    console.warn = console.error = typeof printErr !== 'undefined' ? printErr : print;
+    if (typeof console === 'undefined') console = /** @type{!Console} */({});
+    console.log = /** @type{!function(this:Console, ...*): undefined} */ (print);
+    console.warn = console.error = /** @type{!function(this:Console, ...*): undefined} */ (typeof printErr !== 'undefined' ? printErr : print);
   }
+
+
 } else
 
 // Note that this includes Node.js workers when relevant (pthreads is enabled).
 // Node.js workers are detected as a combination of ENVIRONMENT_IS_WORKER and
-// ENVIRONMENT_HAS_NODE.
+// ENVIRONMENT_IS_NODE.
 if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
   if (ENVIRONMENT_IS_WORKER) { // Check worker, not web, since window could be polyfilled
     scriptDirectory = self.location.href;
@@ -198,6 +207,12 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
   {
 
 
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
   read_ = function shell_read(url) {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, false);
@@ -211,7 +226,7 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
         xhr.open('GET', url, false);
         xhr.responseType = 'arraybuffer';
         xhr.send(null);
-        return new Uint8Array(xhr.response);
+        return new Uint8Array(/** @type{!ArrayBuffer} */(xhr.response));
     };
   }
 
@@ -275,24 +290,24 @@ assert(typeof Module['read'] === 'undefined', 'Module.read option was removed (m
 assert(typeof Module['readAsync'] === 'undefined', 'Module.readAsync option was removed (modify readAsync in JS)');
 assert(typeof Module['readBinary'] === 'undefined', 'Module.readBinary option was removed (modify readBinary in JS)');
 assert(typeof Module['setWindowTitle'] === 'undefined', 'Module.setWindowTitle option was removed (modify setWindowTitle in JS)');
+assert(typeof Module['TOTAL_MEMORY'] === 'undefined', 'Module.TOTAL_MEMORY has been renamed Module.INITIAL_MEMORY');
 if (!Object.getOwnPropertyDescriptor(Module, 'read')) Object.defineProperty(Module, 'read', { configurable: true, get: function() { abort('Module.read has been replaced with plain read_') } });
 if (!Object.getOwnPropertyDescriptor(Module, 'readAsync')) Object.defineProperty(Module, 'readAsync', { configurable: true, get: function() { abort('Module.readAsync has been replaced with plain readAsync') } });
 if (!Object.getOwnPropertyDescriptor(Module, 'readBinary')) Object.defineProperty(Module, 'readBinary', { configurable: true, get: function() { abort('Module.readBinary has been replaced with plain readBinary') } });
-// TODO: add when SDL2 is fixed if (!Object.getOwnPropertyDescriptor(Module, 'setWindowTitle')) Object.defineProperty(Module, 'setWindowTitle', { configurable: true, get: function() { abort('Module.setWindowTitle has been replaced with plain setWindowTitle') } });
+if (!Object.getOwnPropertyDescriptor(Module, 'setWindowTitle')) Object.defineProperty(Module, 'setWindowTitle', { configurable: true, get: function() { abort('Module.setWindowTitle has been replaced with plain setWindowTitle') } });
 var IDBFS = 'IDBFS is no longer included by default; build with -lidbfs.js';
 var PROXYFS = 'PROXYFS is no longer included by default; build with -lproxyfs.js';
 var WORKERFS = 'WORKERFS is no longer included by default; build with -lworkerfs.js';
 var NODEFS = 'NODEFS is no longer included by default; build with -lnodefs.js';
 
 
-// TODO remove when SDL2 is fixed (also see above)
 
 
-
-// Copyright 2017 The Emscripten Authors.  All rights reserved.
-// Emscripten is available under two separate licenses, the MIT license and the
-// University of Illinois/NCSA Open Source License.  Both these licenses can be
-// found in the LICENSE file.
+/**
+ * @license
+ * Copyright 2017 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 // {{PREAMBLE_ADDITIONS}}
 
@@ -300,6 +315,14 @@ var STACK_ALIGN = 16;
 
 // stack management, and other functionality that is provided by the compiled code,
 // should not be used before it is ready
+
+/** @suppress{duplicate} */
+var stackSave;
+/** @suppress{duplicate} */
+var stackRestore;
+/** @suppress{duplicate} */
+var stackAlloc;
+
 stackSave = stackRestore = stackAlloc = function() {
   abort('cannot use the stack before compiled code is ready to run, and has provided stack access');
 };
@@ -312,9 +335,7 @@ function dynamicAlloc(size) {
   assert(DYNAMICTOP_PTR);
   var ret = HEAP32[DYNAMICTOP_PTR>>2];
   var end = (ret + size + 15) & -16;
-  if (end > _emscripten_get_heap_size()) {
-    abort('failure to dynamicAlloc - memory growth etc. is not supported there, call malloc/sbrk directly');
-  }
+  assert(end <= HEAP8.length, 'failure to dynamicAlloc - memory growth etc. is not supported there, call malloc/sbrk directly');
   HEAP32[DYNAMICTOP_PTR>>2] = end;
   return ret;
 }
@@ -336,7 +357,7 @@ function getNativeTypeSize(type) {
       if (type[type.length-1] === '*') {
         return 4; // A pointer
       } else if (type[0] === 'i') {
-        var bits = parseInt(type.substr(1));
+        var bits = Number(type.substr(1));
         assert(bits % 8 === 0, 'getNativeTypeSize invalid bits ' + bits + ', type ' + type);
         return bits / 8;
       } else {
@@ -354,19 +375,16 @@ function warnOnce(text) {
   }
 }
 
-var asm2wasmImports = { // special asm2wasm imports
-    "f64-rem": function(x, y) {
-        return x % y;
-    },
-    "debugger": function() {
-        debugger;
-    }
-};
 
 
 
-var jsCallStartIndex = 1;
-var functionPointers = new Array(0);
+
+/**
+ * @license
+ * Copyright 2020 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
 
 // Wraps a JS function as a wasm function with a given signature.
 function convertJsFunctionToWasm(func, sig) {
@@ -452,27 +470,57 @@ function convertJsFunctionToWasm(func, sig) {
   return wrappedFunc;
 }
 
+var freeTableIndexes = [];
+
+// Weak map of functions in the table to their indexes, created on first use.
+var functionsInTableMap;
+
 // Add a wasm function to the table.
 function addFunctionWasm(func, sig) {
   var table = wasmTable;
-  var ret = table.length;
 
-  // Grow the table
-  try {
-    table.grow(1);
-  } catch (err) {
-    if (!err instanceof RangeError) {
-      throw err;
+  // Check if the function is already in the table, to ensure each function
+  // gets a unique index. First, create the map if this is the first use.
+  if (!functionsInTableMap) {
+    functionsInTableMap = new WeakMap();
+    for (var i = 0; i < table.length; i++) {
+      var item = table.get(i);
+      // Ignore null values.
+      if (item) {
+        functionsInTableMap.set(item, i);
+      }
     }
-    throw 'Unable to grow wasm table. Use a higher value for RESERVED_FUNCTION_POINTERS or set ALLOW_TABLE_GROWTH.';
+  }
+  if (functionsInTableMap.has(func)) {
+    return functionsInTableMap.get(func);
   }
 
-  // Insert new element
+  // It's not in the table, add it now.
+
+
+  var ret;
+  // Reuse a free index if there is one, otherwise grow.
+  if (freeTableIndexes.length) {
+    ret = freeTableIndexes.pop();
+  } else {
+    ret = table.length;
+    // Grow the table
+    try {
+      table.grow(1);
+    } catch (err) {
+      if (!(err instanceof RangeError)) {
+        throw err;
+      }
+      throw 'Unable to grow wasm table. Set ALLOW_TABLE_GROWTH.';
+    }
+  }
+
+  // Set the new value.
   try {
     // Attempting to call this with JS function will cause of table.set() to fail
     table.set(ret, func);
   } catch (err) {
-    if (!err instanceof TypeError) {
+    if (!(err instanceof TypeError)) {
       throw err;
     }
     assert(typeof sig !== 'undefined', 'Missing signature argument to addFunction');
@@ -480,11 +528,14 @@ function addFunctionWasm(func, sig) {
     table.set(ret, wrapped);
   }
 
+  functionsInTableMap.set(func, ret);
+
   return ret;
 }
 
 function removeFunctionWasm(index) {
-  // TODO(sbc): Look into implementing this to allow re-using of table slots
+  functionsInTableMap.delete(wasmTable.get(index));
+  freeTableIndexes.push(index);
 }
 
 // 'sig' parameter is required for the llvm backend but only when func is not
@@ -492,22 +543,14 @@ function removeFunctionWasm(index) {
 function addFunction(func, sig) {
   assert(typeof func !== 'undefined');
 
-
-  var base = 0;
-  for (var i = base; i < base + 0; i++) {
-    if (!functionPointers[i]) {
-      functionPointers[i] = func;
-      return jsCallStartIndex + i;
-    }
-  }
-  throw 'Finished up all reserved function pointers. Use a higher value for RESERVED_FUNCTION_POINTERS.';
-
+  return addFunctionWasm(func, sig);
 }
 
 function removeFunction(index) {
-
-  functionPointers[index-jsCallStartIndex] = null;
+  removeFunctionWasm(index);
 }
+
+
 
 var funcWrappers = {};
 
@@ -539,13 +582,24 @@ function getFuncWrapper(func, sig) {
 }
 
 
+/**
+ * @license
+ * Copyright 2020 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
+
+
+
 function makeBigInt(low, high, unsigned) {
   return unsigned ? ((+((low>>>0)))+((+((high>>>0)))*4294967296.0)) : ((+((low>>>0)))+((+((high|0)))*4294967296.0));
 }
 
+/** @param {Array=} args */
 function dynCall(sig, ptr, args) {
   if (args && args.length) {
-    assert(args.length == sig.length-1);
+    // j (64-bit integer) must be passed in as two numbers [low 32, high 32].
+    assert(args.length === sig.substring(1).replace(/j/g, '--').length);
     assert(('dynCall_' + sig) in Module, 'bad function pointer type - no table for sig \'' + sig + '\'');
     return Module['dynCall_' + sig].apply(null, [ptr].concat(args));
   } else {
@@ -569,13 +623,6 @@ function getCompilerSetting(name) {
   throw 'You must build with -s RETAIN_COMPILER_SETTINGS=1 for getCompilerSetting or emscripten_get_compiler_setting to work';
 }
 
-var Runtime = {
-  // helpful errors
-  getTempRet0: function() { abort('getTempRet0() is now a top-level function, after removing the Runtime object. Remove "Runtime."') },
-  staticAlloc: function() { abort('staticAlloc() is now a top-level function, after removing the Runtime object. Remove "Runtime."') },
-  stackAlloc: function() { abort('stackAlloc() is now a top-level function, after removing the Runtime object. Remove "Runtime."') },
-};
-
 // The address globals begin at. Very low in memory, for code size and optimization opportunities.
 // Above 0 is static memory, starting with globals.
 // Then the stack.
@@ -584,6 +631,11 @@ var GLOBAL_BASE = 1024;
 
 
 
+/**
+ * @license
+ * Copyright 2010 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 // === Preamble library stuff ===
 
@@ -605,10 +657,19 @@ if (typeof WebAssembly !== 'object') {
 }
 
 
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
 // In MINIMAL_RUNTIME, setValue() and getValue() are only available when building with safe heap enabled, for heap safety checking.
 // In traditional runtime, setValue() and getValue() are always available (although their use is highly discouraged due to perf penalties)
 
-/** @type {function(number, number, string, boolean=)} */
+/** @param {number} ptr
+    @param {number} value
+    @param {string} type
+    @param {number|boolean=} noSafe */
 function setValue(ptr, value, type, noSafe) {
   type = type || 'i8';
   if (type.charAt(type.length-1) === '*') type = 'i32'; // pointers are 32-bit
@@ -624,7 +685,9 @@ function setValue(ptr, value, type, noSafe) {
     }
 }
 
-/** @type {function(number, string, boolean=)} */
+/** @param {number} ptr
+    @param {string} type
+    @param {number|boolean=} noSafe */
 function getValue(ptr, type, noSafe) {
   type = type || 'i8';
   if (type.charAt(type.length-1) === '*') type = 'i32'; // pointers are 32-bit
@@ -653,8 +716,8 @@ var wasmMemory;
 // In the wasm backend, we polyfill the WebAssembly object,
 // so this creates a (non-native-wasm) table for us.
 var wasmTable = new WebAssembly.Table({
-  'initial': 1152,
-  'maximum': 1152,
+  'initial': 70,
+  'maximum': 70 + 0,
   'element': 'anyfunc'
 });
 
@@ -687,6 +750,10 @@ function getCFunc(ident) {
 }
 
 // C calling interface.
+/** @param {string|null=} returnType
+    @param {Array=} argTypes
+    @param {Arguments|Array=} args
+    @param {Object=} opts */
 function ccall(ident, returnType, argTypes, args, opts) {
   // For fast lookup of conversion functions
   var toC = {
@@ -735,6 +802,9 @@ function ccall(ident, returnType, argTypes, args, opts) {
   return ret;
 }
 
+/** @param {string=} returnType
+    @param {Array=} argTypes
+    @param {Object=} opts */
 function cwrap(ident, returnType, argTypes, opts) {
   return function() {
     return ccall(ident, returnType, argTypes, arguments, opts);
@@ -838,32 +908,13 @@ function getMemory(size) {
 }
 
 
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
-
-/** @type {function(number, number=)} */
-function Pointer_stringify(ptr, length) {
-  abort("this function has been removed - you should use UTF8ToString(ptr, maxBytesToRead) instead!");
-}
-
-// Given a pointer 'ptr' to a null-terminated ASCII-encoded string in the emscripten HEAP, returns
-// a copy of that string as a Javascript String object.
-
-function AsciiToString(ptr) {
-  var str = '';
-  while (1) {
-    var ch = HEAPU8[((ptr++)>>0)];
-    if (!ch) return str;
-    str += String.fromCharCode(ch);
-  }
-}
-
-// Copies the given Javascript String object 'str' to the emscripten HEAP at address 'outPtr',
-// null-terminated and encoded in ASCII form. The copy will require at most str.length+1 bytes of space in the HEAP.
-
-function stringToAscii(str, outPtr) {
-  return writeAsciiToMemory(str, outPtr, false);
-}
-
+// runtime_strings.js: Strings related runtime functions that are part of both MINIMAL_RUNTIME and regular runtime.
 
 // Given a pointer 'ptr' to a null-terminated UTF8-encoded string in the given array that contains uint8 values, returns
 // a copy of that string as a Javascript String object.
@@ -875,16 +926,16 @@ var UTF8Decoder = typeof TextDecoder !== 'undefined' ? new TextDecoder('utf8') :
  * @param {number=} maxBytesToRead
  * @return {string}
  */
-function UTF8ArrayToString(u8Array, idx, maxBytesToRead) {
+function UTF8ArrayToString(heap, idx, maxBytesToRead) {
   var endIdx = idx + maxBytesToRead;
   var endPtr = idx;
   // TextDecoder needs to know the byte length in advance, it doesn't stop on null terminator by itself.
   // Also, use the length info to avoid running tiny strings through TextDecoder, since .subarray() allocates garbage.
   // (As a tiny code save trick, compare endPtr against endIdx using a negation, so that undefined means Infinity)
-  while (u8Array[endPtr] && !(endPtr >= endIdx)) ++endPtr;
+  while (heap[endPtr] && !(endPtr >= endIdx)) ++endPtr;
 
-  if (endPtr - idx > 16 && u8Array.subarray && UTF8Decoder) {
-    return UTF8Decoder.decode(u8Array.subarray(idx, endPtr));
+  if (endPtr - idx > 16 && heap.subarray && UTF8Decoder) {
+    return UTF8Decoder.decode(heap.subarray(idx, endPtr));
   } else {
     var str = '';
     // If building with TextDecoder, we have already computed the string length above, so test loop end condition against that
@@ -893,16 +944,16 @@ function UTF8ArrayToString(u8Array, idx, maxBytesToRead) {
       // http://en.wikipedia.org/wiki/UTF-8#Description
       // https://www.ietf.org/rfc/rfc2279.txt
       // https://tools.ietf.org/html/rfc3629
-      var u0 = u8Array[idx++];
+      var u0 = heap[idx++];
       if (!(u0 & 0x80)) { str += String.fromCharCode(u0); continue; }
-      var u1 = u8Array[idx++] & 63;
+      var u1 = heap[idx++] & 63;
       if ((u0 & 0xE0) == 0xC0) { str += String.fromCharCode(((u0 & 31) << 6) | u1); continue; }
-      var u2 = u8Array[idx++] & 63;
+      var u2 = heap[idx++] & 63;
       if ((u0 & 0xF0) == 0xE0) {
         u0 = ((u0 & 15) << 12) | (u1 << 6) | u2;
       } else {
         if ((u0 & 0xF8) != 0xF0) warnOnce('Invalid UTF-8 leading byte 0x' + u0.toString(16) + ' encountered when deserializing a UTF-8 string on the asm.js/wasm heap to a JS string!');
-        u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | (u8Array[idx++] & 63);
+        u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | (heap[idx++] & 63);
       }
 
       if (u0 < 0x10000) {
@@ -940,7 +991,7 @@ function UTF8ToString(ptr, maxBytesToRead) {
 // Use the function lengthBytesUTF8 to compute the exact number of bytes (excluding null terminator) that this function will write.
 // Parameters:
 //   str: the Javascript string to copy.
-//   outU8Array: the array to copy to. Each index in this array is assumed to be one 8-byte element.
+//   heap: the array to copy to. Each index in this array is assumed to be one 8-byte element.
 //   outIdx: The starting offset in the array to begin the copying.
 //   maxBytesToWrite: The maximum number of bytes this function can write to the array.
 //                    This count should include the null terminator,
@@ -948,7 +999,7 @@ function UTF8ToString(ptr, maxBytesToRead) {
 //                    maxBytesToWrite=0 does not write any bytes to the output, not even the null terminator.
 // Returns the number of bytes written, EXCLUDING the null terminator.
 
-function stringToUTF8Array(str, outU8Array, outIdx, maxBytesToWrite) {
+function stringToUTF8Array(str, heap, outIdx, maxBytesToWrite) {
   if (!(maxBytesToWrite > 0)) // Parameter maxBytesToWrite is not optional. Negative values, 0, null, undefined and false each don't write out any bytes.
     return 0;
 
@@ -965,27 +1016,27 @@ function stringToUTF8Array(str, outU8Array, outIdx, maxBytesToWrite) {
     }
     if (u <= 0x7F) {
       if (outIdx >= endIdx) break;
-      outU8Array[outIdx++] = u;
+      heap[outIdx++] = u;
     } else if (u <= 0x7FF) {
       if (outIdx + 1 >= endIdx) break;
-      outU8Array[outIdx++] = 0xC0 | (u >> 6);
-      outU8Array[outIdx++] = 0x80 | (u & 63);
+      heap[outIdx++] = 0xC0 | (u >> 6);
+      heap[outIdx++] = 0x80 | (u & 63);
     } else if (u <= 0xFFFF) {
       if (outIdx + 2 >= endIdx) break;
-      outU8Array[outIdx++] = 0xE0 | (u >> 12);
-      outU8Array[outIdx++] = 0x80 | ((u >> 6) & 63);
-      outU8Array[outIdx++] = 0x80 | (u & 63);
+      heap[outIdx++] = 0xE0 | (u >> 12);
+      heap[outIdx++] = 0x80 | ((u >> 6) & 63);
+      heap[outIdx++] = 0x80 | (u & 63);
     } else {
       if (outIdx + 3 >= endIdx) break;
       if (u >= 0x200000) warnOnce('Invalid Unicode code point 0x' + u.toString(16) + ' encountered when serializing a JS string to an UTF-8 string on the asm.js/wasm heap! (Valid unicode code points should be in range 0-0x1FFFFF).');
-      outU8Array[outIdx++] = 0xF0 | (u >> 18);
-      outU8Array[outIdx++] = 0x80 | ((u >> 12) & 63);
-      outU8Array[outIdx++] = 0x80 | ((u >> 6) & 63);
-      outU8Array[outIdx++] = 0x80 | (u & 63);
+      heap[outIdx++] = 0xF0 | (u >> 18);
+      heap[outIdx++] = 0x80 | ((u >> 12) & 63);
+      heap[outIdx++] = 0x80 | ((u >> 6) & 63);
+      heap[outIdx++] = 0x80 | (u & 63);
     }
   }
   // Null-terminate the pointer to the buffer.
-  outU8Array[outIdx] = 0;
+  heap[outIdx] = 0;
   return outIdx - startIdx;
 }
 
@@ -1016,10 +1067,39 @@ function lengthBytesUTF8(str) {
 }
 
 
+
+/**
+ * @license
+ * Copyright 2020 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
+// runtime_strings_extra.js: Strings related runtime functions that are available only in regular runtime.
+
+// Given a pointer 'ptr' to a null-terminated ASCII-encoded string in the emscripten HEAP, returns
+// a copy of that string as a Javascript String object.
+
+function AsciiToString(ptr) {
+  var str = '';
+  while (1) {
+    var ch = HEAPU8[((ptr++)>>0)];
+    if (!ch) return str;
+    str += String.fromCharCode(ch);
+  }
+}
+
+// Copies the given Javascript String object 'str' to the emscripten HEAP at address 'outPtr',
+// null-terminated and encoded in ASCII form. The copy will require at most str.length+1 bytes of space in the HEAP.
+
+function stringToAscii(str, outPtr) {
+  return writeAsciiToMemory(str, outPtr, false);
+}
+
 // Given a pointer 'ptr' to a null-terminated UTF16LE-encoded string in the emscripten HEAP, returns
 // a copy of that string as a Javascript String object.
 
 var UTF16Decoder = typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-16le') : undefined;
+
 function UTF16ToString(ptr) {
   assert(ptr % 2 == 0, 'Pointer passed to UTF16ToString must be aligned to two bytes!');
   var endPtr = ptr;
@@ -1091,8 +1171,7 @@ function UTF32ToString(ptr) {
   var str = '';
   while (1) {
     var utf32 = HEAP32[(((ptr)+(i*4))>>2)];
-    if (utf32 == 0)
-      return str;
+    if (utf32 == 0) return str;
     ++i;
     // Gotcha: fromCharCode constructs a character from a UTF-16 encoded code (pair), not from a Unicode code point! So encode the code point to UTF-16 for constructing.
     // See http://unicode.org/faq/utf_bom.html#utf16-3
@@ -1179,7 +1258,8 @@ function allocateUTF8OnStack(str) {
 // a maximum length limit of how many bytes it is allowed to write. Prefer calling the
 // function stringToUTF8Array() instead, which takes in a maximum length that can be used
 // to be secure from out of bounds writes.
-/** @deprecated */
+/** @deprecated
+    @param {boolean=} dontAddNull */
 function writeStringToMemory(string, buffer, dontAddNull) {
   warnOnce('writeStringToMemory is deprecated and should not be called! Use stringToUTF8() instead!');
 
@@ -1200,6 +1280,7 @@ function writeArrayToMemory(array, buffer) {
   HEAP8.set(array, buffer);
 }
 
+/** @param {boolean=} dontAddNull */
 function writeAsciiToMemory(str, buffer, dontAddNull) {
   for (var i = 0; i < str.length; ++i) {
     assert(str.charCodeAt(i) === str.charCodeAt(i)&0xff);
@@ -1208,7 +1289,6 @@ function writeAsciiToMemory(str, buffer, dontAddNull) {
   // Null-terminate the pointer to the HEAP.
   if (!dontAddNull) HEAP8[((buffer)>>0)]=0;
 }
-
 
 
 
@@ -1258,11 +1338,11 @@ function updateGlobalBufferAndViews(buf) {
 }
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 1295136,
+    STACK_BASE = 6544544,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 6538016,
-    DYNAMIC_BASE = 6538016,
-    DYNAMICTOP_PTR = 1294944;
+    STACK_MAX = 1301664,
+    DYNAMIC_BASE = 6544544,
+    DYNAMICTOP_PTR = 1301504;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1272,9 +1352,9 @@ assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
 var TOTAL_STACK = 5242880;
 if (Module['TOTAL_STACK']) assert(TOTAL_STACK === Module['TOTAL_STACK'], 'the stack size can no longer be determined at runtime')
 
-var INITIAL_TOTAL_MEMORY = Module['TOTAL_MEMORY'] || 16777216;if (!Object.getOwnPropertyDescriptor(Module, 'TOTAL_MEMORY')) Object.defineProperty(Module, 'TOTAL_MEMORY', { configurable: true, get: function() { abort('Module.TOTAL_MEMORY has been replaced with plain INITIAL_TOTAL_MEMORY') } });
+var INITIAL_INITIAL_MEMORY = Module['INITIAL_MEMORY'] || 16777216;if (!Object.getOwnPropertyDescriptor(Module, 'INITIAL_MEMORY')) Object.defineProperty(Module, 'INITIAL_MEMORY', { configurable: true, get: function() { abort('Module.INITIAL_MEMORY has been replaced with plain INITIAL_INITIAL_MEMORY') } });
 
-assert(INITIAL_TOTAL_MEMORY >= TOTAL_STACK, 'TOTAL_MEMORY should be larger than TOTAL_STACK, was ' + INITIAL_TOTAL_MEMORY + '! (TOTAL_STACK=' + TOTAL_STACK + ')');
+assert(INITIAL_INITIAL_MEMORY >= TOTAL_STACK, 'INITIAL_MEMORY should be larger than TOTAL_STACK, was ' + INITIAL_INITIAL_MEMORY + '! (TOTAL_STACK=' + TOTAL_STACK + ')');
 
 // check for full engine support (use string 'subarray' to avoid closure compiler confusion)
 assert(typeof Int32Array !== 'undefined' && typeof Float64Array !== 'undefined' && Int32Array.prototype.subarray !== undefined && Int32Array.prototype.set !== undefined,
@@ -1282,11 +1362,23 @@ assert(typeof Int32Array !== 'undefined' && typeof Float64Array !== 'undefined' 
 
 
 
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
 
 
 
 // In standalone mode, the wasm creates the memory, and the user can't provide it.
 // In non-standalone/normal mode, we create the memory here.
+
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 // Create the main memory. (Note: this isn't used in STANDALONE_WASM mode since the wasm
 // memory is created in the wasm, not in JS.)
@@ -1296,9 +1388,9 @@ assert(typeof Int32Array !== 'undefined' && typeof Float64Array !== 'undefined' 
   } else
   {
     wasmMemory = new WebAssembly.Memory({
-      'initial': INITIAL_TOTAL_MEMORY / WASM_PAGE_SIZE
+      'initial': INITIAL_INITIAL_MEMORY / WASM_PAGE_SIZE
       ,
-      'maximum': INITIAL_TOTAL_MEMORY / WASM_PAGE_SIZE
+      'maximum': INITIAL_INITIAL_MEMORY / WASM_PAGE_SIZE
     });
   }
 
@@ -1308,9 +1400,9 @@ if (wasmMemory) {
 }
 
 // If the user provides an incorrect length, just use that length instead rather than providing the user to
-// specifically provide the memory length with Module['TOTAL_MEMORY'].
-INITIAL_TOTAL_MEMORY = buffer.byteLength;
-assert(INITIAL_TOTAL_MEMORY % WASM_PAGE_SIZE === 0);
+// specifically provide the memory length with Module['INITIAL_MEMORY'].
+INITIAL_INITIAL_MEMORY = buffer.byteLength;
+assert(INITIAL_INITIAL_MEMORY % WASM_PAGE_SIZE === 0);
 updateGlobalBufferAndViews(buffer);
 
 HEAP32[DYNAMICTOP_PTR>>2] = DYNAMIC_BASE;
@@ -1318,21 +1410,28 @@ HEAP32[DYNAMICTOP_PTR>>2] = DYNAMIC_BASE;
 
 
 
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
 // Initializes the stack cookie. Called at the startup of main and at the startup of each thread in pthreads mode.
 function writeStackCookie() {
   assert((STACK_MAX & 3) == 0);
-  HEAPU32[(STACK_MAX >> 2)-1] = 0x02135467;
-  HEAPU32[(STACK_MAX >> 2)-2] = 0x89BACDFE;
+  // The stack grows downwards
+  HEAPU32[(STACK_MAX >> 2)+1] = 0x2135467;
+  HEAPU32[(STACK_MAX >> 2)+2] = 0x89BACDFE;
   // Also test the global address 0 for integrity.
   // We don't do this with ASan because ASan does its own checks for this.
   HEAP32[0] = 0x63736d65; /* 'emsc' */
 }
 
 function checkStackCookie() {
-  var cookie1 = HEAPU32[(STACK_MAX >> 2)-1];
-  var cookie2 = HEAPU32[(STACK_MAX >> 2)-2];
-  if (cookie1 != 0x02135467 || cookie2 != 0x89BACDFE) {
-    abort('Stack overflow! Stack cookie has been overwritten, expected hex dwords 0x89BACDFE and 0x02135467, but received 0x' + cookie2.toString(16) + ' ' + cookie1.toString(16));
+  var cookie1 = HEAPU32[(STACK_MAX >> 2)+1];
+  var cookie2 = HEAPU32[(STACK_MAX >> 2)+2];
+  if (cookie1 != 0x2135467 || cookie2 != 0x89BACDFE) {
+    abort('Stack overflow! Stack cookie has been overwritten, expected hex dwords 0x89BACDFE and 0x2135467, but received 0x' + cookie2.toString(16) + ' ' + cookie1.toString(16));
   }
   // Also test the global address 0 for integrity.
   // We don't do this with ASan because ASan does its own checks for this.
@@ -1345,6 +1444,12 @@ function abortStackOverflow(allocSize) {
 
 
 
+
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 // Endianness check (note: assumes compiler arch was little-endian)
 (function() {
@@ -1364,7 +1469,7 @@ function callRuntimeCallbacks(callbacks) {
   while(callbacks.length > 0) {
     var callback = callbacks.shift();
     if (typeof callback == 'function') {
-      callback();
+      callback(Module); // Pass the module as the first argument.
       continue;
     }
     var func = callback.func;
@@ -1454,6 +1559,7 @@ function addOnPostRun(cb) {
   __ATPOSTRUN__.unshift(cb);
 }
 
+/** @param {number|boolean=} ignore */
 function unSign(value, bits, ignore) {
   if (value >= 0) {
     return value;
@@ -1461,6 +1567,7 @@ function unSign(value, bits, ignore) {
   return bits <= 32 ? 2*Math.abs(1 << (bits-1)) + value // Need some trickery, since if bits == 32, we are right at the limit of the bits JS uses in bitshifts
                     : Math.pow(2, bits)         + value;
 }
+/** @param {number|boolean=} ignore */
 function reSign(value, bits, ignore) {
   if (value <= 0) {
     return value;
@@ -1475,6 +1582,20 @@ function reSign(value, bits, ignore) {
   return value;
 }
 
+
+/**
+ * @license
+ * Copyright 2019 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/imul
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/fround
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/clz32
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc
 
 assert(Math.imul, 'This browser does not support Math.imul(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill');
 assert(Math.fround, 'This browser does not support Math.fround(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill');
@@ -1523,7 +1644,6 @@ function getUniqueRunDependency(id) {
     if (!runDependencyTracking[id]) return id;
     id = orig + Math.random();
   }
-  return id;
 }
 
 function addRunDependency(id) {
@@ -1592,6 +1712,7 @@ Module["preloadedImages"] = {}; // maps url to image data
 Module["preloadedAudios"] = {}; // maps url to audio data
 
 
+/** @param {string|number=} what */
 function abort(what) {
   if (Module['onAbort']) {
     Module['onAbort'](what);
@@ -1617,26 +1738,44 @@ function abort(what) {
 var memoryInitializer = null;
 
 
+/**
+ * @license
+ * Copyright 2015 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 
 
 
 
-// Copyright 2017 The Emscripten Authors.  All rights reserved.
-// Emscripten is available under two separate licenses, the MIT license and the
-// University of Illinois/NCSA Open Source License.  Both these licenses can be
-// found in the LICENSE file.
+
+
+/**
+ * @license
+ * Copyright 2017 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
+
+function hasPrefix(str, prefix) {
+  return String.prototype.startsWith ?
+      str.startsWith(prefix) :
+      str.indexOf(prefix) === 0;
+}
 
 // Prefix of data URIs emitted by SINGLE_FILE and related options.
 var dataURIPrefix = 'data:application/octet-stream;base64,';
 
 // Indicates whether filename is a base64 data URI.
 function isDataURI(filename) {
-  return String.prototype.startsWith ?
-      filename.startsWith(dataURIPrefix) :
-      filename.indexOf(dataURIPrefix) === 0;
+  return hasPrefix(filename, dataURIPrefix);
 }
 
+var fileURIPrefix = "file://";
+
+// Indicates whether filename is delivered via file protocol (as opposed to http/https)
+function isFileURI(filename) {
+  return hasPrefix(filename, fileURIPrefix);
+}
 
 
 
@@ -1663,9 +1802,12 @@ function getBinary() {
 }
 
 function getBinaryPromise() {
-  // if we don't have the binary yet, and have the Fetch api, use that
+  // If we don't have the binary yet, and have the Fetch api, use that;
   // in some environments, like Electron's render process, Fetch api may be present, but have a different context than expected, let's only use it on the Web
-  if (!wasmBinary && (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && typeof fetch === 'function') {
+  if (!wasmBinary && (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && typeof fetch === 'function'
+      // Let's not use fetch to get objects over file:// as it's most likely Cordova which doesn't support fetch for file://
+      && !isFileURI(wasmBinaryFile)
+      ) {
     return fetch(wasmBinaryFile, { credentials: 'same-origin' }).then(function(response) {
       if (!response['ok']) {
         throw "failed to load wasm binary file at '" + wasmBinaryFile + "'";
@@ -1689,24 +1831,18 @@ function createWasm() {
   // prepare imports
   var info = {
     'env': asmLibraryArg,
-    'wasi_unstable': asmLibraryArg
-    ,
-    'global': {
-      'NaN': NaN,
-      'Infinity': Infinity
-    },
-    'global.Math': Math,
-    'asm2wasm': asm2wasmImports
+    'wasi_snapshot_preview1': asmLibraryArg
   };
   // Load the wasm module and create an instance of using native support in the JS engine.
   // handle a generated wasm instance, receiving its exports and
   // performing other necessary setup
+  /** @param {WebAssembly.Module=} module*/
   function receiveInstance(instance, module) {
     var exports = instance.exports;
     Module['asm'] = exports;
     removeRunDependency('wasm-instantiate');
   }
-   // we can't run yet (except in a pthread, where we have a custom sync instantiator)
+  // we can't run yet (except in a pthread, where we have a custom sync instantiator)
   addRunDependency('wasm-instantiate');
 
 
@@ -1719,8 +1855,8 @@ function createWasm() {
     // receiveInstance() will swap in the exports (to Module.asm) so they can be called
     assert(Module === trueModule, 'the Module object should not be replaced during async compilation - perhaps the order of HTML elements is wrong?');
     trueModule = null;
-      // TODO: Due to Closure regression https://github.com/google/closure-compiler/issues/3193, the above line no longer optimizes out down to the following line.
-      // When the regression is fixed, can restore the above USE_PTHREADS-enabled path.
+    // TODO: Due to Closure regression https://github.com/google/closure-compiler/issues/3193, the above line no longer optimizes out down to the following line.
+    // When the regression is fixed, can restore the above USE_PTHREADS-enabled path.
     receiveInstance(output['instance']);
   }
 
@@ -1739,6 +1875,8 @@ function createWasm() {
     if (!wasmBinary &&
         typeof WebAssembly.instantiateStreaming === 'function' &&
         !isDataURI(wasmBinaryFile) &&
+        // Don't use streaming for file:// delivered objects in a webview, fetch them synchronously.
+        !isFileURI(wasmBinaryFile) &&
         typeof fetch === 'function') {
       fetch(wasmBinaryFile, { credentials: 'same-origin' }).then(function (response) {
         var result = WebAssembly.instantiateStreaming(response, info);
@@ -1771,7 +1909,6 @@ function createWasm() {
   return {}; // no exports yet; we'll fill them in later
 }
 
-Module['asm'] = createWasm;
 
 // Globals used by JS i64 conversions
 var tempDouble;
@@ -1779,44 +1916,20 @@ var tempI64;
 
 // === Body ===
 
-var ASM_CONSTS = [];
+var ASM_CONSTS = {
+  
+};
 
 
 
 
-
-// STATICTOP = STATIC_BASE + 1294112;
-/* global initializers */  __ATINIT__.push({ func: function() { ___emscripten_environ_constructor() } });
-
-
-
-
+// STATICTOP = STATIC_BASE + 1300640;
+/* global initializers */  __ATINIT__.push({ func: function() { ___wasm_call_ctors() } });
 
 
 
 
 /* no memory initializer */
-var tempDoublePtr = 1295120
-assert(tempDoublePtr % 8 == 0);
-
-function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
-  HEAP8[tempDoublePtr] = HEAP8[ptr];
-  HEAP8[tempDoublePtr+1] = HEAP8[ptr+1];
-  HEAP8[tempDoublePtr+2] = HEAP8[ptr+2];
-  HEAP8[tempDoublePtr+3] = HEAP8[ptr+3];
-}
-
-function copyTempDouble(ptr) {
-  HEAP8[tempDoublePtr] = HEAP8[ptr];
-  HEAP8[tempDoublePtr+1] = HEAP8[ptr+1];
-  HEAP8[tempDoublePtr+2] = HEAP8[ptr+2];
-  HEAP8[tempDoublePtr+3] = HEAP8[ptr+3];
-  HEAP8[tempDoublePtr+4] = HEAP8[ptr+4];
-  HEAP8[tempDoublePtr+5] = HEAP8[ptr+5];
-  HEAP8[tempDoublePtr+6] = HEAP8[ptr+6];
-  HEAP8[tempDoublePtr+7] = HEAP8[ptr+7];
-}
-
 // {{PRE_LIBRARY}}
 
 
@@ -1827,7 +1940,7 @@ function copyTempDouble(ptr) {
 
   function demangleAll(text) {
       var regex =
-        /\b__Z[\w\d_]+/g;
+        /\b_Z[\w\d_]+/g;
       return text.replace(regex,
         function(x) {
           var y = demangle(x);
@@ -1841,7 +1954,7 @@ function copyTempDouble(ptr) {
         // IE10+ special cases: It does have callstack info, but it is only populated if an Error object is thrown,
         // so try that as a special-case.
         try {
-          throw new Error(0);
+          throw new Error();
         } catch(e) {
           err = e;
         }
@@ -1862,69 +1975,21 @@ function copyTempDouble(ptr) {
       abort('Assertion failed: ' + UTF8ToString(condition) + ', at: ' + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
     }
 
-  
-  var ENV={};function ___buildEnvironment(environ) {
-      // WARNING: Arbitrary limit!
-      var MAX_ENV_VALUES = 64;
-      var TOTAL_ENV_SIZE = 1024;
-  
-      // Statically allocate memory for the environment.
-      var poolPtr;
-      var envPtr;
-      if (!___buildEnvironment.called) {
-        ___buildEnvironment.called = true;
-        // Set default values. Use string keys for Closure Compiler compatibility.
-        ENV['USER'] = 'web_user';
-        ENV['LOGNAME'] = 'web_user';
-        ENV['PATH'] = '/';
-        ENV['PWD'] = '/';
-        ENV['HOME'] = '/home/web_user';
-        // Browser language detection #8751
-        ENV['LANG'] = ((typeof navigator === 'object' && navigator.languages && navigator.languages[0]) || 'C').replace('-', '_') + '.UTF-8';
-        ENV['_'] = thisProgram;
-        // Allocate memory.
-        poolPtr = getMemory(TOTAL_ENV_SIZE);
-        envPtr = getMemory(MAX_ENV_VALUES * 4);
-        HEAP32[((envPtr)>>2)]=poolPtr;
-        HEAP32[((environ)>>2)]=envPtr;
-      } else {
-        envPtr = HEAP32[((environ)>>2)];
-        poolPtr = HEAP32[((envPtr)>>2)];
-      }
-  
-      // Collect key=value lines.
-      var strings = [];
-      var totalSize = 0;
-      for (var key in ENV) {
-        if (typeof ENV[key] === 'string') {
-          var line = key + '=' + ENV[key];
-          strings.push(line);
-          totalSize += line.length;
-        }
-      }
-      if (totalSize > TOTAL_ENV_SIZE) {
-        throw new Error('Environment size exceeded TOTAL_ENV_SIZE!');
-      }
-  
-      // Make new.
-      var ptrSize = 4;
-      for (var i = 0; i < strings.length; i++) {
-        var line = strings[i];
-        writeAsciiToMemory(line, poolPtr);
-        HEAP32[(((envPtr)+(i * ptrSize))>>2)]=poolPtr;
-        poolPtr += line.length + 1;
-      }
-      HEAP32[(((envPtr)+(strings.length * ptrSize))>>2)]=0;
+  function ___handle_stack_overflow() {
+      abort('stack overflow')
     }
 
-  function ___lock() {}
-
+  
+  function setErrNo(value) {
+      HEAP32[((___errno_location())>>2)]=value;
+      return value;
+    }
   
   
-  var PATH={splitPath:function (filename) {
+  var PATH={splitPath:function(filename) {
         var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
         return splitPathRe.exec(filename).slice(1);
-      },normalizeArray:function (parts, allowAboveRoot) {
+      },normalizeArray:function(parts, allowAboveRoot) {
         // if the path tries to go above the root, `up` ends up > 0
         var up = 0;
         for (var i = parts.length - 1; i >= 0; i--) {
@@ -1946,7 +2011,7 @@ function copyTempDouble(ptr) {
           }
         }
         return parts;
-      },normalize:function (path) {
+      },normalize:function(path) {
         var isAbsolute = path.charAt(0) === '/',
             trailingSlash = path.substr(-1) === '/';
         // Normalize the path
@@ -1960,7 +2025,7 @@ function copyTempDouble(ptr) {
           path += '/';
         }
         return (isAbsolute ? '/' : '') + path;
-      },dirname:function (path) {
+      },dirname:function(path) {
         var result = PATH.splitPath(path),
             root = result[0],
             dir = result[1];
@@ -1973,29 +2038,23 @@ function copyTempDouble(ptr) {
           dir = dir.substr(0, dir.length - 1);
         }
         return root + dir;
-      },basename:function (path) {
+      },basename:function(path) {
         // EMSCRIPTEN return '/'' for '/', not an empty string
         if (path === '/') return '/';
         var lastSlash = path.lastIndexOf('/');
         if (lastSlash === -1) return path;
         return path.substr(lastSlash+1);
-      },extname:function (path) {
+      },extname:function(path) {
         return PATH.splitPath(path)[3];
-      },join:function () {
+      },join:function() {
         var paths = Array.prototype.slice.call(arguments, 0);
         return PATH.normalize(paths.join('/'));
-      },join2:function (l, r) {
+      },join2:function(l, r) {
         return PATH.normalize(l + '/' + r);
       }};
   
   
-  function ___setErrNo(value) {
-      if (Module['___errno_location']) HEAP32[((Module['___errno_location']())>>2)]=value;
-      else err('failed to set errno from JS');
-      return value;
-    }
-  
-  var PATH_FS={resolve:function () {
+  var PATH_FS={resolve:function() {
         var resolvedPath = '',
           resolvedAbsolute = false;
         for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
@@ -2015,7 +2074,7 @@ function copyTempDouble(ptr) {
           return !!p;
         }), !resolvedAbsolute).join('/');
         return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-      },relative:function (from, to) {
+      },relative:function(from, to) {
         from = PATH_FS.resolve(from).substr(1);
         to = PATH_FS.resolve(to).substr(1);
         function trim(arr) {
@@ -2057,7 +2116,7 @@ function copyTempDouble(ptr) {
         //   // with text files until FS.init can be refactored.
         //   process['stdin']['setEncoding']('utf8');
         // }
-      },shutdown:function () {
+      },shutdown:function() {
         // https://github.com/emscripten-core/emscripten/pull/1555
         // if (ENVIRONMENT_IS_NODE) {
         //   // inolen: any idea as to why node -e 'process.stdin.read()' wouldn't exit immediately (with process.stdin being a tty)?
@@ -2067,22 +2126,22 @@ function copyTempDouble(ptr) {
         //   // isaacs: do process.stdin.pause() and i'd think it'd probably close the pending call
         //   process['stdin']['pause']();
         // }
-      },register:function (dev, ops) {
+      },register:function(dev, ops) {
         TTY.ttys[dev] = { input: [], output: [], ops: ops };
         FS.registerDevice(dev, TTY.stream_ops);
-      },stream_ops:{open:function (stream) {
+      },stream_ops:{open:function(stream) {
           var tty = TTY.ttys[stream.node.rdev];
           if (!tty) {
             throw new FS.ErrnoError(43);
           }
           stream.tty = tty;
           stream.seekable = false;
-        },close:function (stream) {
+        },close:function(stream) {
           // flush any pending line data
           stream.tty.ops.flush(stream.tty);
-        },flush:function (stream) {
+        },flush:function(stream) {
           stream.tty.ops.flush(stream.tty);
-        },read:function (stream, buffer, offset, length, pos /* ignored */) {
+        },read:function(stream, buffer, offset, length, pos /* ignored */) {
           if (!stream.tty || !stream.tty.ops.get_char) {
             throw new FS.ErrnoError(60);
           }
@@ -2105,7 +2164,7 @@ function copyTempDouble(ptr) {
             stream.node.timestamp = Date.now();
           }
           return bytesRead;
-        },write:function (stream, buffer, offset, length, pos) {
+        },write:function(stream, buffer, offset, length, pos) {
           if (!stream.tty || !stream.tty.ops.put_char) {
             throw new FS.ErrnoError(60);
           }
@@ -2120,7 +2179,7 @@ function copyTempDouble(ptr) {
             stream.node.timestamp = Date.now();
           }
           return i;
-        }},default_tty_ops:{get_char:function (tty) {
+        }},default_tty_ops:{get_char:function(tty) {
           if (!tty.input.length) {
             var result = null;
             if (ENVIRONMENT_IS_NODE) {
@@ -2164,35 +2223,35 @@ function copyTempDouble(ptr) {
             tty.input = intArrayFromString(result, true);
           }
           return tty.input.shift();
-        },put_char:function (tty, val) {
+        },put_char:function(tty, val) {
           if (val === null || val === 10) {
             out(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           } else {
             if (val != 0) tty.output.push(val); // val == 0 would cut text output off in the middle.
           }
-        },flush:function (tty) {
+        },flush:function(tty) {
           if (tty.output && tty.output.length > 0) {
             out(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           }
-        }},default_tty1_ops:{put_char:function (tty, val) {
+        }},default_tty1_ops:{put_char:function(tty, val) {
           if (val === null || val === 10) {
             err(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           } else {
             if (val != 0) tty.output.push(val);
           }
-        },flush:function (tty) {
+        },flush:function(tty) {
           if (tty.output && tty.output.length > 0) {
             err(UTF8ArrayToString(tty.output, 0));
             tty.output = [];
           }
         }}};
   
-  var MEMFS={ops_table:null,mount:function (mount) {
+  var MEMFS={ops_table:null,mount:function(mount) {
         return MEMFS.createNode(null, '/', 16384 | 511 /* 0777 */, 0);
-      },createNode:function (parent, name, mode, dev) {
+      },createNode:function(parent, name, mode, dev) {
         if (FS.isBlkdev(mode) || FS.isFIFO(mode)) {
           // no supported
           throw new FS.ErrnoError(63);
@@ -2272,31 +2331,31 @@ function copyTempDouble(ptr) {
           parent.contents[name] = node;
         }
         return node;
-      },getFileDataAsRegularArray:function (node) {
+      },getFileDataAsRegularArray:function(node) {
         if (node.contents && node.contents.subarray) {
           var arr = [];
           for (var i = 0; i < node.usedBytes; ++i) arr.push(node.contents[i]);
           return arr; // Returns a copy of the original data.
         }
         return node.contents; // No-op, the file contents are already in a JS array. Return as-is.
-      },getFileDataAsTypedArray:function (node) {
-        if (!node.contents) return new Uint8Array;
+      },getFileDataAsTypedArray:function(node) {
+        if (!node.contents) return new Uint8Array(0);
         if (node.contents.subarray) return node.contents.subarray(0, node.usedBytes); // Make sure to not return excess unused bytes.
         return new Uint8Array(node.contents);
-      },expandFileStorage:function (node, newCapacity) {
+      },expandFileStorage:function(node, newCapacity) {
         var prevCapacity = node.contents ? node.contents.length : 0;
         if (prevCapacity >= newCapacity) return; // No need to expand, the storage was already large enough.
         // Don't expand strictly to the given requested limit if it's only a very small increase, but instead geometrically grow capacity.
         // For small filesizes (<1MB), perform size*2 geometric increase, but for large sizes, do a much more conservative size*1.125 increase to
         // avoid overshooting the allocation cap by a very large margin.
         var CAPACITY_DOUBLING_MAX = 1024 * 1024;
-        newCapacity = Math.max(newCapacity, (prevCapacity * (prevCapacity < CAPACITY_DOUBLING_MAX ? 2.0 : 1.125)) | 0);
+        newCapacity = Math.max(newCapacity, (prevCapacity * (prevCapacity < CAPACITY_DOUBLING_MAX ? 2.0 : 1.125)) >>> 0);
         if (prevCapacity != 0) newCapacity = Math.max(newCapacity, 256); // At minimum allocate 256b for each file when expanding.
         var oldContents = node.contents;
         node.contents = new Uint8Array(newCapacity); // Allocate new storage.
         if (node.usedBytes > 0) node.contents.set(oldContents.subarray(0, node.usedBytes), 0); // Copy old data over to the new storage.
         return;
-      },resizeFileStorage:function (node, newSize) {
+      },resizeFileStorage:function(node, newSize) {
         if (node.usedBytes == newSize) return;
         if (newSize == 0) {
           node.contents = null; // Fully decommit when requesting a resize to zero.
@@ -2305,7 +2364,7 @@ function copyTempDouble(ptr) {
         }
         if (!node.contents || node.contents.subarray) { // Resize a typed array if that is being used as the backing store.
           var oldContents = node.contents;
-          node.contents = new Uint8Array(new ArrayBuffer(newSize)); // Allocate new storage.
+          node.contents = new Uint8Array(newSize); // Allocate new storage.
           if (oldContents) {
             node.contents.set(oldContents.subarray(0, Math.min(newSize, node.usedBytes))); // Copy old data over to the new storage.
           }
@@ -2317,7 +2376,7 @@ function copyTempDouble(ptr) {
         if (node.contents.length > newSize) node.contents.length = newSize;
         else while (node.contents.length < newSize) node.contents.push(0);
         node.usedBytes = newSize;
-      },node_ops:{getattr:function (node) {
+      },node_ops:{getattr:function(node) {
           var attr = {};
           // device numbers reuse inode numbers.
           attr.dev = FS.isChrdev(node.mode) ? node.id : 1;
@@ -2344,7 +2403,7 @@ function copyTempDouble(ptr) {
           attr.blksize = 4096;
           attr.blocks = Math.ceil(attr.size / attr.blksize);
           return attr;
-        },setattr:function (node, attr) {
+        },setattr:function(node, attr) {
           if (attr.mode !== undefined) {
             node.mode = attr.mode;
           }
@@ -2354,11 +2413,11 @@ function copyTempDouble(ptr) {
           if (attr.size !== undefined) {
             MEMFS.resizeFileStorage(node, attr.size);
           }
-        },lookup:function (parent, name) {
+        },lookup:function(parent, name) {
           throw FS.genericErrors[44];
-        },mknod:function (parent, name, mode, dev) {
+        },mknod:function(parent, name, mode, dev) {
           return MEMFS.createNode(parent, name, mode, dev);
-        },rename:function (old_node, new_dir, new_name) {
+        },rename:function(old_node, new_dir, new_name) {
           // if we're overwriting a directory at new_name, make sure it's empty.
           if (FS.isDir(old_node.mode)) {
             var new_node;
@@ -2377,15 +2436,15 @@ function copyTempDouble(ptr) {
           old_node.name = new_name;
           new_dir.contents[new_name] = old_node;
           old_node.parent = new_dir;
-        },unlink:function (parent, name) {
+        },unlink:function(parent, name) {
           delete parent.contents[name];
-        },rmdir:function (parent, name) {
+        },rmdir:function(parent, name) {
           var node = FS.lookupNode(parent, name);
           for (var i in node.contents) {
             throw new FS.ErrnoError(55);
           }
           delete parent.contents[name];
-        },readdir:function (node) {
+        },readdir:function(node) {
           var entries = ['.', '..'];
           for (var key in node.contents) {
             if (!node.contents.hasOwnProperty(key)) {
@@ -2394,16 +2453,16 @@ function copyTempDouble(ptr) {
             entries.push(key);
           }
           return entries;
-        },symlink:function (parent, newname, oldpath) {
+        },symlink:function(parent, newname, oldpath) {
           var node = MEMFS.createNode(parent, newname, 511 /* 0777 */ | 40960, 0);
           node.link = oldpath;
           return node;
-        },readlink:function (node) {
+        },readlink:function(node) {
           if (!FS.isLink(node.mode)) {
             throw new FS.ErrnoError(28);
           }
           return node.link;
-        }},stream_ops:{read:function (stream, buffer, offset, length, position) {
+        }},stream_ops:{read:function(stream, buffer, offset, length, position) {
           var contents = stream.node.contents;
           if (position >= stream.node.usedBytes) return 0;
           var size = Math.min(stream.node.usedBytes - position, length);
@@ -2414,7 +2473,7 @@ function copyTempDouble(ptr) {
             for (var i = 0; i < size; i++) buffer[offset + i] = contents[position + i];
           }
           return size;
-        },write:function (stream, buffer, offset, length, position, canOwn) {
+        },write:function(stream, buffer, offset, length, position, canOwn) {
           // The data buffer should be a typed array view
           assert(!(buffer instanceof ArrayBuffer));
   
@@ -2429,7 +2488,7 @@ function copyTempDouble(ptr) {
               node.usedBytes = length;
               return length;
             } else if (node.usedBytes === 0 && position === 0) { // If this is a simple first write to an empty file, do a fast set since we don't need to care about old data.
-              node.contents = new Uint8Array(buffer.subarray(offset, offset + length));
+              node.contents = buffer.slice(offset, offset + length);
               node.usedBytes = length;
               return length;
             } else if (position + length <= node.usedBytes) { // Writing to an already allocated and used subrange of the file?
@@ -2446,9 +2505,9 @@ function copyTempDouble(ptr) {
              node.contents[position + i] = buffer[offset + i]; // Or fall back to manual write if not.
             }
           }
-          node.usedBytes = Math.max(node.usedBytes, position+length);
+          node.usedBytes = Math.max(node.usedBytes, position + length);
           return length;
-        },llseek:function (stream, offset, whence) {
+        },llseek:function(stream, offset, whence) {
           var position = offset;
           if (whence === 1) {
             position += stream.position;
@@ -2461,10 +2520,10 @@ function copyTempDouble(ptr) {
             throw new FS.ErrnoError(28);
           }
           return position;
-        },allocate:function (stream, offset, length) {
+        },allocate:function(stream, offset, length) {
           MEMFS.expandFileStorage(stream.node, offset + length);
           stream.node.usedBytes = Math.max(stream.node.usedBytes, offset + length);
-        },mmap:function (stream, buffer, offset, length, position, prot, flags) {
+        },mmap:function(stream, buffer, offset, length, position, prot, flags) {
           // The data buffer should be a typed array view
           assert(!(buffer instanceof ArrayBuffer));
           if (!FS.isFile(stream.node.mode)) {
@@ -2482,7 +2541,7 @@ function copyTempDouble(ptr) {
             ptr = contents.byteOffset;
           } else {
             // Try to avoid unnecessary slices.
-            if (position > 0 || position + length < stream.node.usedBytes) {
+            if (position > 0 || position + length < contents.length) {
               if (contents.subarray) {
                 contents = contents.subarray(position, position + length);
               } else {
@@ -2500,7 +2559,7 @@ function copyTempDouble(ptr) {
             (fromHeap ? HEAP8 : buffer).set(contents, ptr);
           }
           return { ptr: ptr, allocated: allocated };
-        },msync:function (stream, buffer, offset, length, mmapFlags) {
+        },msync:function(stream, buffer, offset, length, mmapFlags) {
           if (!FS.isFile(stream.node.mode)) {
             throw new FS.ErrnoError(43);
           }
@@ -2516,10 +2575,10 @@ function copyTempDouble(ptr) {
   
   var ERRNO_MESSAGES={0:"Success",1:"Arg list too long",2:"Permission denied",3:"Address already in use",4:"Address not available",5:"Address family not supported by protocol family",6:"No more processes",7:"Socket already connected",8:"Bad file number",9:"Trying to read unreadable message",10:"Mount device busy",11:"Operation canceled",12:"No children",13:"Connection aborted",14:"Connection refused",15:"Connection reset by peer",16:"File locking deadlock error",17:"Destination address required",18:"Math arg out of domain of func",19:"Quota exceeded",20:"File exists",21:"Bad address",22:"File too large",23:"Host is unreachable",24:"Identifier removed",25:"Illegal byte sequence",26:"Connection already in progress",27:"Interrupted system call",28:"Invalid argument",29:"I/O error",30:"Socket is already connected",31:"Is a directory",32:"Too many symbolic links",33:"Too many open files",34:"Too many links",35:"Message too long",36:"Multihop attempted",37:"File or path name too long",38:"Network interface is not configured",39:"Connection reset by network",40:"Network is unreachable",41:"Too many open files in system",42:"No buffer space available",43:"No such device",44:"No such file or directory",45:"Exec format error",46:"No record locks available",47:"The link has been severed",48:"Not enough core",49:"No message of desired type",50:"Protocol not available",51:"No space left on device",52:"Function not implemented",53:"Socket is not connected",54:"Not a directory",55:"Directory not empty",56:"State not recoverable",57:"Socket operation on non-socket",59:"Not a typewriter",60:"No such device or address",61:"Value too large for defined data type",62:"Previous owner died",63:"Not super-user",64:"Broken pipe",65:"Protocol error",66:"Unknown protocol",67:"Protocol wrong type for socket",68:"Math result not representable",69:"Read only file system",70:"Illegal seek",71:"No such process",72:"Stale file handle",73:"Connection timed out",74:"Text file busy",75:"Cross-device link",100:"Device not a stream",101:"Bad font file fmt",102:"Invalid slot",103:"Invalid request code",104:"No anode",105:"Block device required",106:"Channel number out of range",107:"Level 3 halted",108:"Level 3 reset",109:"Link number out of range",110:"Protocol driver not attached",111:"No CSI structure available",112:"Level 2 halted",113:"Invalid exchange",114:"Invalid request descriptor",115:"Exchange full",116:"No data (for no delay io)",117:"Timer expired",118:"Out of streams resources",119:"Machine is not on the network",120:"Package not installed",121:"The object is remote",122:"Advertise error",123:"Srmount error",124:"Communication error on send",125:"Cross mount point (not really error)",126:"Given log. name not unique",127:"f.d. invalid for this operation",128:"Remote address changed",129:"Can   access a needed shared lib",130:"Accessing a corrupted shared lib",131:".lib section in a.out corrupted",132:"Attempting to link in too many libs",133:"Attempting to exec a shared library",135:"Streams pipe error",136:"Too many users",137:"Socket type not supported",138:"Not supported",139:"Protocol family not supported",140:"Can't send after socket shutdown",141:"Too many references",142:"Host is down",148:"No medium (in tape drive)",156:"Level 2 not synchronized"};
   
-  var ERRNO_CODES={EPERM:63,ENOENT:44,ESRCH:71,EINTR:27,EIO:29,ENXIO:60,E2BIG:1,ENOEXEC:45,EBADF:8,ECHILD:12,EAGAIN:6,EWOULDBLOCK:6,ENOMEM:48,EACCES:2,EFAULT:21,ENOTBLK:105,EBUSY:10,EEXIST:20,EXDEV:75,ENODEV:43,ENOTDIR:54,EISDIR:31,EINVAL:28,ENFILE:41,EMFILE:33,ENOTTY:59,ETXTBSY:74,EFBIG:22,ENOSPC:51,ESPIPE:70,EROFS:69,EMLINK:34,EPIPE:64,EDOM:18,ERANGE:68,ENOMSG:49,EIDRM:24,ECHRNG:106,EL2NSYNC:156,EL3HLT:107,EL3RST:108,ELNRNG:109,EUNATCH:110,ENOCSI:111,EL2HLT:112,EDEADLK:16,ENOLCK:46,EBADE:113,EBADR:114,EXFULL:115,ENOANO:104,EBADRQC:103,EBADSLT:102,EDEADLOCK:16,EBFONT:101,ENOSTR:100,ENODATA:116,ETIME:117,ENOSR:118,ENONET:119,ENOPKG:120,EREMOTE:121,ENOLINK:47,EADV:122,ESRMNT:123,ECOMM:124,EPROTO:65,EMULTIHOP:36,EDOTDOT:125,EBADMSG:9,ENOTUNIQ:126,EBADFD:127,EREMCHG:128,ELIBACC:129,ELIBBAD:130,ELIBSCN:131,ELIBMAX:132,ELIBEXEC:133,ENOSYS:52,ENOTEMPTY:55,ENAMETOOLONG:37,ELOOP:32,EOPNOTSUPP:138,EPFNOSUPPORT:139,ECONNRESET:15,ENOBUFS:42,EAFNOSUPPORT:5,EPROTOTYPE:67,ENOTSOCK:57,ENOPROTOOPT:50,ESHUTDOWN:140,ECONNREFUSED:14,EADDRINUSE:3,ECONNABORTED:13,ENETUNREACH:40,ENETDOWN:38,ETIMEDOUT:73,EHOSTDOWN:142,EHOSTUNREACH:23,EINPROGRESS:26,EALREADY:7,EDESTADDRREQ:17,EMSGSIZE:35,EPROTONOSUPPORT:66,ESOCKTNOSUPPORT:137,EADDRNOTAVAIL:4,ENETRESET:39,EISCONN:30,ENOTCONN:53,ETOOMANYREFS:141,EUSERS:136,EDQUOT:19,ESTALE:72,ENOTSUP:138,ENOMEDIUM:148,EILSEQ:25,EOVERFLOW:61,ECANCELED:11,ENOTRECOVERABLE:56,EOWNERDEAD:62,ESTRPIPE:135};var FS={root:null,mounts:[],devices:{},streams:[],nextInode:1,nameTable:null,currentPath:"/",initialized:false,ignorePermissions:true,trackingDelegate:{},tracking:{openFlags:{READ:1,WRITE:2}},ErrnoError:null,genericErrors:{},filesystems:null,syncFSRequests:0,handleFSError:function (e) {
+  var ERRNO_CODES={EPERM:63,ENOENT:44,ESRCH:71,EINTR:27,EIO:29,ENXIO:60,E2BIG:1,ENOEXEC:45,EBADF:8,ECHILD:12,EAGAIN:6,EWOULDBLOCK:6,ENOMEM:48,EACCES:2,EFAULT:21,ENOTBLK:105,EBUSY:10,EEXIST:20,EXDEV:75,ENODEV:43,ENOTDIR:54,EISDIR:31,EINVAL:28,ENFILE:41,EMFILE:33,ENOTTY:59,ETXTBSY:74,EFBIG:22,ENOSPC:51,ESPIPE:70,EROFS:69,EMLINK:34,EPIPE:64,EDOM:18,ERANGE:68,ENOMSG:49,EIDRM:24,ECHRNG:106,EL2NSYNC:156,EL3HLT:107,EL3RST:108,ELNRNG:109,EUNATCH:110,ENOCSI:111,EL2HLT:112,EDEADLK:16,ENOLCK:46,EBADE:113,EBADR:114,EXFULL:115,ENOANO:104,EBADRQC:103,EBADSLT:102,EDEADLOCK:16,EBFONT:101,ENOSTR:100,ENODATA:116,ETIME:117,ENOSR:118,ENONET:119,ENOPKG:120,EREMOTE:121,ENOLINK:47,EADV:122,ESRMNT:123,ECOMM:124,EPROTO:65,EMULTIHOP:36,EDOTDOT:125,EBADMSG:9,ENOTUNIQ:126,EBADFD:127,EREMCHG:128,ELIBACC:129,ELIBBAD:130,ELIBSCN:131,ELIBMAX:132,ELIBEXEC:133,ENOSYS:52,ENOTEMPTY:55,ENAMETOOLONG:37,ELOOP:32,EOPNOTSUPP:138,EPFNOSUPPORT:139,ECONNRESET:15,ENOBUFS:42,EAFNOSUPPORT:5,EPROTOTYPE:67,ENOTSOCK:57,ENOPROTOOPT:50,ESHUTDOWN:140,ECONNREFUSED:14,EADDRINUSE:3,ECONNABORTED:13,ENETUNREACH:40,ENETDOWN:38,ETIMEDOUT:73,EHOSTDOWN:142,EHOSTUNREACH:23,EINPROGRESS:26,EALREADY:7,EDESTADDRREQ:17,EMSGSIZE:35,EPROTONOSUPPORT:66,ESOCKTNOSUPPORT:137,EADDRNOTAVAIL:4,ENETRESET:39,EISCONN:30,ENOTCONN:53,ETOOMANYREFS:141,EUSERS:136,EDQUOT:19,ESTALE:72,ENOTSUP:138,ENOMEDIUM:148,EILSEQ:25,EOVERFLOW:61,ECANCELED:11,ENOTRECOVERABLE:56,EOWNERDEAD:62,ESTRPIPE:135};var FS={root:null,mounts:[],devices:{},streams:[],nextInode:1,nameTable:null,currentPath:"/",initialized:false,ignorePermissions:true,trackingDelegate:{},tracking:{openFlags:{READ:1,WRITE:2}},ErrnoError:null,genericErrors:{},filesystems:null,syncFSRequests:0,handleFSError:function(e) {
         if (!(e instanceof FS.ErrnoError)) throw e + ' : ' + stackTrace();
-        return ___setErrNo(e.errno);
-      },lookupPath:function (path, opts) {
+        return setErrNo(e.errno);
+      },lookupPath:function(path, opts) {
         path = PATH_FS.resolve(FS.cwd(), path);
         opts = opts || {};
   
@@ -2584,7 +2643,7 @@ function copyTempDouble(ptr) {
         }
   
         return { path: current_path, node: current };
-      },getPath:function (node) {
+      },getPath:function(node) {
         var path;
         while (true) {
           if (FS.isRoot(node)) {
@@ -2595,7 +2654,7 @@ function copyTempDouble(ptr) {
           path = path ? node.name + '/' + path : node.name;
           node = node.parent;
         }
-      },hashName:function (parentid, name) {
+      },hashName:function(parentid, name) {
         var hash = 0;
   
   
@@ -2603,11 +2662,11 @@ function copyTempDouble(ptr) {
           hash = ((hash << 5) - hash + name.charCodeAt(i)) | 0;
         }
         return ((parentid + hash) >>> 0) % FS.nameTable.length;
-      },hashAddNode:function (node) {
+      },hashAddNode:function(node) {
         var hash = FS.hashName(node.parent.id, node.name);
         node.name_next = FS.nameTable[hash];
         FS.nameTable[hash] = node;
-      },hashRemoveNode:function (node) {
+      },hashRemoveNode:function(node) {
         var hash = FS.hashName(node.parent.id, node.name);
         if (FS.nameTable[hash] === node) {
           FS.nameTable[hash] = node.name_next;
@@ -2621,10 +2680,10 @@ function copyTempDouble(ptr) {
             current = current.name_next;
           }
         }
-      },lookupNode:function (parent, name) {
-        var err = FS.mayLookup(parent);
-        if (err) {
-          throw new FS.ErrnoError(err, parent);
+      },lookupNode:function(parent, name) {
+        var errCode = FS.mayLookup(parent);
+        if (errCode) {
+          throw new FS.ErrnoError(errCode, parent);
         }
         var hash = FS.hashName(parent.id, name);
         for (var node = FS.nameTable[hash]; node; node = node.name_next) {
@@ -2635,87 +2694,45 @@ function copyTempDouble(ptr) {
         }
         // if we failed to find it in the cache, call into the VFS
         return FS.lookup(parent, name);
-      },createNode:function (parent, name, mode, rdev) {
-        if (!FS.FSNode) {
-          FS.FSNode = function(parent, name, mode, rdev) {
-            if (!parent) {
-              parent = this;  // root node sets parent to itself
-            }
-            this.parent = parent;
-            this.mount = parent.mount;
-            this.mounted = null;
-            this.id = FS.nextInode++;
-            this.name = name;
-            this.mode = mode;
-            this.node_ops = {};
-            this.stream_ops = {};
-            this.rdev = rdev;
-          };
-  
-          FS.FSNode.prototype = {};
-  
-          // compatibility
-          var readMode = 292 | 73;
-          var writeMode = 146;
-  
-          // NOTE we must use Object.defineProperties instead of individual calls to
-          // Object.defineProperty in order to make closure compiler happy
-          Object.defineProperties(FS.FSNode.prototype, {
-            read: {
-              get: function() { return (this.mode & readMode) === readMode; },
-              set: function(val) { val ? this.mode |= readMode : this.mode &= ~readMode; }
-            },
-            write: {
-              get: function() { return (this.mode & writeMode) === writeMode; },
-              set: function(val) { val ? this.mode |= writeMode : this.mode &= ~writeMode; }
-            },
-            isFolder: {
-              get: function() { return FS.isDir(this.mode); }
-            },
-            isDevice: {
-              get: function() { return FS.isChrdev(this.mode); }
-            }
-          });
-        }
-  
+      },createNode:function(parent, name, mode, rdev) {
         var node = new FS.FSNode(parent, name, mode, rdev);
   
         FS.hashAddNode(node);
   
         return node;
-      },destroyNode:function (node) {
+      },destroyNode:function(node) {
         FS.hashRemoveNode(node);
-      },isRoot:function (node) {
+      },isRoot:function(node) {
         return node === node.parent;
-      },isMountpoint:function (node) {
+      },isMountpoint:function(node) {
         return !!node.mounted;
-      },isFile:function (mode) {
+      },isFile:function(mode) {
         return (mode & 61440) === 32768;
-      },isDir:function (mode) {
+      },isDir:function(mode) {
         return (mode & 61440) === 16384;
-      },isLink:function (mode) {
+      },isLink:function(mode) {
         return (mode & 61440) === 40960;
-      },isChrdev:function (mode) {
+      },isChrdev:function(mode) {
         return (mode & 61440) === 8192;
-      },isBlkdev:function (mode) {
+      },isBlkdev:function(mode) {
         return (mode & 61440) === 24576;
-      },isFIFO:function (mode) {
+      },isFIFO:function(mode) {
         return (mode & 61440) === 4096;
-      },isSocket:function (mode) {
+      },isSocket:function(mode) {
         return (mode & 49152) === 49152;
-      },flagModes:{"r":0,"rs":1052672,"r+":2,"w":577,"wx":705,"xw":705,"w+":578,"wx+":706,"xw+":706,"a":1089,"ax":1217,"xa":1217,"a+":1090,"ax+":1218,"xa+":1218},modeStringToFlags:function (str) {
+      },flagModes:{"r":0,"rs":1052672,"r+":2,"w":577,"wx":705,"xw":705,"w+":578,"wx+":706,"xw+":706,"a":1089,"ax":1217,"xa":1217,"a+":1090,"ax+":1218,"xa+":1218},modeStringToFlags:function(str) {
         var flags = FS.flagModes[str];
         if (typeof flags === 'undefined') {
           throw new Error('Unknown file open mode: ' + str);
         }
         return flags;
-      },flagsToPermissionString:function (flag) {
+      },flagsToPermissionString:function(flag) {
         var perms = ['r', 'w', 'rw'][flag & 3];
         if ((flag & 512)) {
           perms += 'w';
         }
         return perms;
-      },nodePermissions:function (node, perms) {
+      },nodePermissions:function(node, perms) {
         if (FS.ignorePermissions) {
           return 0;
         }
@@ -2728,28 +2745,28 @@ function copyTempDouble(ptr) {
           return 2;
         }
         return 0;
-      },mayLookup:function (dir) {
-        var err = FS.nodePermissions(dir, 'x');
-        if (err) return err;
+      },mayLookup:function(dir) {
+        var errCode = FS.nodePermissions(dir, 'x');
+        if (errCode) return errCode;
         if (!dir.node_ops.lookup) return 2;
         return 0;
-      },mayCreate:function (dir, name) {
+      },mayCreate:function(dir, name) {
         try {
           var node = FS.lookupNode(dir, name);
           return 20;
         } catch (e) {
         }
         return FS.nodePermissions(dir, 'wx');
-      },mayDelete:function (dir, name, isdir) {
+      },mayDelete:function(dir, name, isdir) {
         var node;
         try {
           node = FS.lookupNode(dir, name);
         } catch (e) {
           return e.errno;
         }
-        var err = FS.nodePermissions(dir, 'wx');
-        if (err) {
-          return err;
+        var errCode = FS.nodePermissions(dir, 'wx');
+        if (errCode) {
+          return errCode;
         }
         if (isdir) {
           if (!FS.isDir(node.mode)) {
@@ -2764,7 +2781,7 @@ function copyTempDouble(ptr) {
           }
         }
         return 0;
-      },mayOpen:function (node, flags) {
+      },mayOpen:function(node, flags) {
         if (!node) {
           return 44;
         }
@@ -2777,7 +2794,7 @@ function copyTempDouble(ptr) {
           }
         }
         return FS.nodePermissions(node, FS.flagsToPermissionString(flags));
-      },MAX_OPEN_FDS:4096,nextfd:function (fd_start, fd_end) {
+      },MAX_OPEN_FDS:4096,nextfd:function(fd_start, fd_end) {
         fd_start = fd_start || 0;
         fd_end = fd_end || FS.MAX_OPEN_FDS;
         for (var fd = fd_start; fd <= fd_end; fd++) {
@@ -2786,14 +2803,12 @@ function copyTempDouble(ptr) {
           }
         }
         throw new FS.ErrnoError(33);
-      },getStream:function (fd) {
+      },getStream:function(fd) {
         return FS.streams[fd];
-      },createStream:function (stream, fd_start, fd_end) {
+      },createStream:function(stream, fd_start, fd_end) {
         if (!FS.FSStream) {
-          FS.FSStream = function(){};
-          FS.FSStream.prototype = {};
-          // compatibility
-          Object.defineProperties(FS.FSStream.prototype, {
+          FS.FSStream = /** @constructor */ function(){};
+          FS.FSStream.prototype = {
             object: {
               get: function() { return this.node; },
               set: function(val) { this.node = val; }
@@ -2807,7 +2822,7 @@ function copyTempDouble(ptr) {
             isAppend: {
               get: function() { return (this.flags & 1024); }
             }
-          });
+          };
         }
         // clone it, so we can return an instance of FSStream
         var newStream = new FS.FSStream();
@@ -2819,9 +2834,9 @@ function copyTempDouble(ptr) {
         stream.fd = fd;
         FS.streams[fd] = stream;
         return stream;
-      },closeStream:function (fd) {
+      },closeStream:function(fd) {
         FS.streams[fd] = null;
-      },chrdev_stream_ops:{open:function (stream) {
+      },chrdev_stream_ops:{open:function(stream) {
           var device = FS.getDevice(stream.node.rdev);
           // override node's stream ops with the device's
           stream.stream_ops = device.stream_ops;
@@ -2829,19 +2844,19 @@ function copyTempDouble(ptr) {
           if (stream.stream_ops.open) {
             stream.stream_ops.open(stream);
           }
-        },llseek:function () {
+        },llseek:function() {
           throw new FS.ErrnoError(70);
-        }},major:function (dev) {
+        }},major:function(dev) {
         return ((dev) >> 8);
-      },minor:function (dev) {
+      },minor:function(dev) {
         return ((dev) & 0xff);
-      },makedev:function (ma, mi) {
+      },makedev:function(ma, mi) {
         return ((ma) << 8 | (mi));
-      },registerDevice:function (dev, ops) {
+      },registerDevice:function(dev, ops) {
         FS.devices[dev] = { stream_ops: ops };
-      },getDevice:function (dev) {
+      },getDevice:function(dev) {
         return FS.devices[dev];
-      },getMounts:function (mount) {
+      },getMounts:function(mount) {
         var mounts = [];
         var check = [mount];
   
@@ -2854,7 +2869,7 @@ function copyTempDouble(ptr) {
         }
   
         return mounts;
-      },syncfs:function (populate, callback) {
+      },syncfs:function(populate, callback) {
         if (typeof(populate) === 'function') {
           callback = populate;
           populate = false;
@@ -2863,23 +2878,23 @@ function copyTempDouble(ptr) {
         FS.syncFSRequests++;
   
         if (FS.syncFSRequests > 1) {
-          console.log('warning: ' + FS.syncFSRequests + ' FS.syncfs operations in flight at once, probably just doing extra work');
+          err('warning: ' + FS.syncFSRequests + ' FS.syncfs operations in flight at once, probably just doing extra work');
         }
   
         var mounts = FS.getMounts(FS.root.mount);
         var completed = 0;
   
-        function doCallback(err) {
+        function doCallback(errCode) {
           assert(FS.syncFSRequests > 0);
           FS.syncFSRequests--;
-          return callback(err);
+          return callback(errCode);
         }
   
-        function done(err) {
-          if (err) {
+        function done(errCode) {
+          if (errCode) {
             if (!done.errored) {
               done.errored = true;
-              return doCallback(err);
+              return doCallback(errCode);
             }
             return;
           }
@@ -2895,7 +2910,7 @@ function copyTempDouble(ptr) {
           }
           mount.type.syncfs(mount, populate, done);
         });
-      },mount:function (type, opts, mountpoint) {
+      },mount:function(type, opts, mountpoint) {
         if (typeof type === 'string') {
           // The filesystem was not included, and instead we have an error
           // message stored in the variable.
@@ -2980,34 +2995,34 @@ function copyTempDouble(ptr) {
         var idx = node.mount.mounts.indexOf(mount);
         assert(idx !== -1);
         node.mount.mounts.splice(idx, 1);
-      },lookup:function (parent, name) {
+      },lookup:function(parent, name) {
         return parent.node_ops.lookup(parent, name);
-      },mknod:function (path, mode, dev) {
+      },mknod:function(path, mode, dev) {
         var lookup = FS.lookupPath(path, { parent: true });
         var parent = lookup.node;
         var name = PATH.basename(path);
         if (!name || name === '.' || name === '..') {
           throw new FS.ErrnoError(28);
         }
-        var err = FS.mayCreate(parent, name);
-        if (err) {
-          throw new FS.ErrnoError(err);
+        var errCode = FS.mayCreate(parent, name);
+        if (errCode) {
+          throw new FS.ErrnoError(errCode);
         }
         if (!parent.node_ops.mknod) {
           throw new FS.ErrnoError(63);
         }
         return parent.node_ops.mknod(parent, name, mode, dev);
-      },create:function (path, mode) {
+      },create:function(path, mode) {
         mode = mode !== undefined ? mode : 438 /* 0666 */;
         mode &= 4095;
         mode |= 32768;
         return FS.mknod(path, mode, 0);
-      },mkdir:function (path, mode) {
+      },mkdir:function(path, mode) {
         mode = mode !== undefined ? mode : 511 /* 0777 */;
         mode &= 511 | 512;
         mode |= 16384;
         return FS.mknod(path, mode, 0);
-      },mkdirTree:function (path, mode) {
+      },mkdirTree:function(path, mode) {
         var dirs = path.split('/');
         var d = '';
         for (var i = 0; i < dirs.length; ++i) {
@@ -3019,14 +3034,14 @@ function copyTempDouble(ptr) {
             if (e.errno != 20) throw e;
           }
         }
-      },mkdev:function (path, mode, dev) {
+      },mkdev:function(path, mode, dev) {
         if (typeof(dev) === 'undefined') {
           dev = mode;
           mode = 438 /* 0666 */;
         }
         mode |= 8192;
         return FS.mknod(path, mode, dev);
-      },symlink:function (oldpath, newpath) {
+      },symlink:function(oldpath, newpath) {
         if (!PATH_FS.resolve(oldpath)) {
           throw new FS.ErrnoError(44);
         }
@@ -3036,15 +3051,15 @@ function copyTempDouble(ptr) {
           throw new FS.ErrnoError(44);
         }
         var newname = PATH.basename(newpath);
-        var err = FS.mayCreate(parent, newname);
-        if (err) {
-          throw new FS.ErrnoError(err);
+        var errCode = FS.mayCreate(parent, newname);
+        if (errCode) {
+          throw new FS.ErrnoError(errCode);
         }
         if (!parent.node_ops.symlink) {
           throw new FS.ErrnoError(63);
         }
         return parent.node_ops.symlink(parent, newname, oldpath);
-      },rename:function (old_path, new_path) {
+      },rename:function(old_path, new_path) {
         var old_dirname = PATH.dirname(old_path);
         var new_dirname = PATH.dirname(new_path);
         var old_name = PATH.basename(old_path);
@@ -3089,17 +3104,17 @@ function copyTempDouble(ptr) {
         }
         // we'll need to delete the old entry
         var isdir = FS.isDir(old_node.mode);
-        var err = FS.mayDelete(old_dir, old_name, isdir);
-        if (err) {
-          throw new FS.ErrnoError(err);
+        var errCode = FS.mayDelete(old_dir, old_name, isdir);
+        if (errCode) {
+          throw new FS.ErrnoError(errCode);
         }
         // need delete permissions if we'll be overwriting.
         // need create permissions if new doesn't already exist.
-        err = new_node ?
+        errCode = new_node ?
           FS.mayDelete(new_dir, new_name, isdir) :
           FS.mayCreate(new_dir, new_name);
-        if (err) {
-          throw new FS.ErrnoError(err);
+        if (errCode) {
+          throw new FS.ErrnoError(errCode);
         }
         if (!old_dir.node_ops.rename) {
           throw new FS.ErrnoError(63);
@@ -3109,9 +3124,9 @@ function copyTempDouble(ptr) {
         }
         // if we are going to change the parent, check write permissions
         if (new_dir !== old_dir) {
-          err = FS.nodePermissions(old_dir, 'w');
-          if (err) {
-            throw new FS.ErrnoError(err);
+          errCode = FS.nodePermissions(old_dir, 'w');
+          if (errCode) {
+            throw new FS.ErrnoError(errCode);
           }
         }
         try {
@@ -3119,7 +3134,7 @@ function copyTempDouble(ptr) {
             FS.trackingDelegate['willMovePath'](old_path, new_path);
           }
         } catch(e) {
-          console.log("FS.trackingDelegate['willMovePath']('"+old_path+"', '"+new_path+"') threw an exception: " + e.message);
+          err("FS.trackingDelegate['willMovePath']('"+old_path+"', '"+new_path+"') threw an exception: " + e.message);
         }
         // remove the node from the lookup hash
         FS.hashRemoveNode(old_node);
@@ -3136,16 +3151,16 @@ function copyTempDouble(ptr) {
         try {
           if (FS.trackingDelegate['onMovePath']) FS.trackingDelegate['onMovePath'](old_path, new_path);
         } catch(e) {
-          console.log("FS.trackingDelegate['onMovePath']('"+old_path+"', '"+new_path+"') threw an exception: " + e.message);
+          err("FS.trackingDelegate['onMovePath']('"+old_path+"', '"+new_path+"') threw an exception: " + e.message);
         }
-      },rmdir:function (path) {
+      },rmdir:function(path) {
         var lookup = FS.lookupPath(path, { parent: true });
         var parent = lookup.node;
         var name = PATH.basename(path);
         var node = FS.lookupNode(parent, name);
-        var err = FS.mayDelete(parent, name, true);
-        if (err) {
-          throw new FS.ErrnoError(err);
+        var errCode = FS.mayDelete(parent, name, true);
+        if (errCode) {
+          throw new FS.ErrnoError(errCode);
         }
         if (!parent.node_ops.rmdir) {
           throw new FS.ErrnoError(63);
@@ -3158,33 +3173,33 @@ function copyTempDouble(ptr) {
             FS.trackingDelegate['willDeletePath'](path);
           }
         } catch(e) {
-          console.log("FS.trackingDelegate['willDeletePath']('"+path+"') threw an exception: " + e.message);
+          err("FS.trackingDelegate['willDeletePath']('"+path+"') threw an exception: " + e.message);
         }
         parent.node_ops.rmdir(parent, name);
         FS.destroyNode(node);
         try {
           if (FS.trackingDelegate['onDeletePath']) FS.trackingDelegate['onDeletePath'](path);
         } catch(e) {
-          console.log("FS.trackingDelegate['onDeletePath']('"+path+"') threw an exception: " + e.message);
+          err("FS.trackingDelegate['onDeletePath']('"+path+"') threw an exception: " + e.message);
         }
-      },readdir:function (path) {
+      },readdir:function(path) {
         var lookup = FS.lookupPath(path, { follow: true });
         var node = lookup.node;
         if (!node.node_ops.readdir) {
           throw new FS.ErrnoError(54);
         }
         return node.node_ops.readdir(node);
-      },unlink:function (path) {
+      },unlink:function(path) {
         var lookup = FS.lookupPath(path, { parent: true });
         var parent = lookup.node;
         var name = PATH.basename(path);
         var node = FS.lookupNode(parent, name);
-        var err = FS.mayDelete(parent, name, false);
-        if (err) {
+        var errCode = FS.mayDelete(parent, name, false);
+        if (errCode) {
           // According to POSIX, we should map EISDIR to EPERM, but
           // we instead do what Linux does (and we must, as we use
           // the musl linux libc).
-          throw new FS.ErrnoError(err);
+          throw new FS.ErrnoError(errCode);
         }
         if (!parent.node_ops.unlink) {
           throw new FS.ErrnoError(63);
@@ -3197,16 +3212,16 @@ function copyTempDouble(ptr) {
             FS.trackingDelegate['willDeletePath'](path);
           }
         } catch(e) {
-          console.log("FS.trackingDelegate['willDeletePath']('"+path+"') threw an exception: " + e.message);
+          err("FS.trackingDelegate['willDeletePath']('"+path+"') threw an exception: " + e.message);
         }
         parent.node_ops.unlink(parent, name);
         FS.destroyNode(node);
         try {
           if (FS.trackingDelegate['onDeletePath']) FS.trackingDelegate['onDeletePath'](path);
         } catch(e) {
-          console.log("FS.trackingDelegate['onDeletePath']('"+path+"') threw an exception: " + e.message);
+          err("FS.trackingDelegate['onDeletePath']('"+path+"') threw an exception: " + e.message);
         }
-      },readlink:function (path) {
+      },readlink:function(path) {
         var lookup = FS.lookupPath(path);
         var link = lookup.node;
         if (!link) {
@@ -3216,7 +3231,7 @@ function copyTempDouble(ptr) {
           throw new FS.ErrnoError(28);
         }
         return PATH_FS.resolve(FS.getPath(link.parent), link.node_ops.readlink(link));
-      },stat:function (path, dontFollow) {
+      },stat:function(path, dontFollow) {
         var lookup = FS.lookupPath(path, { follow: !dontFollow });
         var node = lookup.node;
         if (!node) {
@@ -3226,9 +3241,9 @@ function copyTempDouble(ptr) {
           throw new FS.ErrnoError(63);
         }
         return node.node_ops.getattr(node);
-      },lstat:function (path) {
+      },lstat:function(path) {
         return FS.stat(path, true);
-      },chmod:function (path, mode, dontFollow) {
+      },chmod:function(path, mode, dontFollow) {
         var node;
         if (typeof path === 'string') {
           var lookup = FS.lookupPath(path, { follow: !dontFollow });
@@ -3243,15 +3258,15 @@ function copyTempDouble(ptr) {
           mode: (mode & 4095) | (node.mode & ~4095),
           timestamp: Date.now()
         });
-      },lchmod:function (path, mode) {
+      },lchmod:function(path, mode) {
         FS.chmod(path, mode, true);
-      },fchmod:function (fd, mode) {
+      },fchmod:function(fd, mode) {
         var stream = FS.getStream(fd);
         if (!stream) {
           throw new FS.ErrnoError(8);
         }
         FS.chmod(stream.node, mode);
-      },chown:function (path, uid, gid, dontFollow) {
+      },chown:function(path, uid, gid, dontFollow) {
         var node;
         if (typeof path === 'string') {
           var lookup = FS.lookupPath(path, { follow: !dontFollow });
@@ -3266,15 +3281,15 @@ function copyTempDouble(ptr) {
           timestamp: Date.now()
           // we ignore the uid / gid for now
         });
-      },lchown:function (path, uid, gid) {
+      },lchown:function(path, uid, gid) {
         FS.chown(path, uid, gid, true);
-      },fchown:function (fd, uid, gid) {
+      },fchown:function(fd, uid, gid) {
         var stream = FS.getStream(fd);
         if (!stream) {
           throw new FS.ErrnoError(8);
         }
         FS.chown(stream.node, uid, gid);
-      },truncate:function (path, len) {
+      },truncate:function(path, len) {
         if (len < 0) {
           throw new FS.ErrnoError(28);
         }
@@ -3294,15 +3309,15 @@ function copyTempDouble(ptr) {
         if (!FS.isFile(node.mode)) {
           throw new FS.ErrnoError(28);
         }
-        var err = FS.nodePermissions(node, 'w');
-        if (err) {
-          throw new FS.ErrnoError(err);
+        var errCode = FS.nodePermissions(node, 'w');
+        if (errCode) {
+          throw new FS.ErrnoError(errCode);
         }
         node.node_ops.setattr(node, {
           size: len,
           timestamp: Date.now()
         });
-      },ftruncate:function (fd, len) {
+      },ftruncate:function(fd, len) {
         var stream = FS.getStream(fd);
         if (!stream) {
           throw new FS.ErrnoError(8);
@@ -3311,13 +3326,13 @@ function copyTempDouble(ptr) {
           throw new FS.ErrnoError(28);
         }
         FS.truncate(stream.node, len);
-      },utime:function (path, atime, mtime) {
+      },utime:function(path, atime, mtime) {
         var lookup = FS.lookupPath(path, { follow: true });
         var node = lookup.node;
         node.node_ops.setattr(node, {
           timestamp: Math.max(atime, mtime)
         });
-      },open:function (path, flags, mode, fd_start, fd_end) {
+      },open:function(path, flags, mode, fd_start, fd_end) {
         if (path === "") {
           throw new FS.ErrnoError(44);
         }
@@ -3371,9 +3386,9 @@ function copyTempDouble(ptr) {
         // create and write to a file with read-only permissions; it is read-only
         // for later use)
         if (!created) {
-          var err = FS.mayOpen(node, flags);
-          if (err) {
-            throw new FS.ErrnoError(err);
+          var errCode = FS.mayOpen(node, flags);
+          if (errCode) {
+            throw new FS.ErrnoError(errCode);
           }
         }
         // do truncation if necessary
@@ -3381,7 +3396,7 @@ function copyTempDouble(ptr) {
           FS.truncate(node, 0);
         }
         // we've already handled these, don't pass down to the underlying vfs
-        flags &= ~(128 | 512);
+        flags &= ~(128 | 512 | 131072);
   
         // register the stream with the filesystem
         var stream = FS.createStream({
@@ -3403,7 +3418,7 @@ function copyTempDouble(ptr) {
           if (!FS.readFiles) FS.readFiles = {};
           if (!(path in FS.readFiles)) {
             FS.readFiles[path] = 1;
-            console.log("FS.trackingDelegate error on read file: " + path);
+            err("FS.trackingDelegate error on read file: " + path);
           }
         }
         try {
@@ -3418,10 +3433,10 @@ function copyTempDouble(ptr) {
             FS.trackingDelegate['onOpenFile'](path, trackingFlags);
           }
         } catch(e) {
-          console.log("FS.trackingDelegate['onOpenFile']('"+path+"', flags) threw an exception: " + e.message);
+          err("FS.trackingDelegate['onOpenFile']('"+path+"', flags) threw an exception: " + e.message);
         }
         return stream;
-      },close:function (stream) {
+      },close:function(stream) {
         if (FS.isClosed(stream)) {
           throw new FS.ErrnoError(8);
         }
@@ -3436,9 +3451,9 @@ function copyTempDouble(ptr) {
           FS.closeStream(stream.fd);
         }
         stream.fd = null;
-      },isClosed:function (stream) {
+      },isClosed:function(stream) {
         return stream.fd === null;
-      },llseek:function (stream, offset, whence) {
+      },llseek:function(stream, offset, whence) {
         if (FS.isClosed(stream)) {
           throw new FS.ErrnoError(8);
         }
@@ -3451,7 +3466,7 @@ function copyTempDouble(ptr) {
         stream.position = stream.stream_ops.llseek(stream, offset, whence);
         stream.ungotten = [];
         return stream.position;
-      },read:function (stream, buffer, offset, length, position) {
+      },read:function(stream, buffer, offset, length, position) {
         if (length < 0 || position < 0) {
           throw new FS.ErrnoError(28);
         }
@@ -3476,7 +3491,7 @@ function copyTempDouble(ptr) {
         var bytesRead = stream.stream_ops.read(stream, buffer, offset, length, position);
         if (!seeking) stream.position += bytesRead;
         return bytesRead;
-      },write:function (stream, buffer, offset, length, position, canOwn) {
+      },write:function(stream, buffer, offset, length, position, canOwn) {
         if (length < 0 || position < 0) {
           throw new FS.ErrnoError(28);
         }
@@ -3492,7 +3507,7 @@ function copyTempDouble(ptr) {
         if (!stream.stream_ops.write) {
           throw new FS.ErrnoError(28);
         }
-        if (stream.flags & 1024) {
+        if (stream.seekable && stream.flags & 1024) {
           // seek to the end before writing in append mode
           FS.llseek(stream, 0, 2);
         }
@@ -3507,10 +3522,10 @@ function copyTempDouble(ptr) {
         try {
           if (stream.path && FS.trackingDelegate['onWriteToFile']) FS.trackingDelegate['onWriteToFile'](stream.path);
         } catch(e) {
-          console.log("FS.trackingDelegate['onWriteToFile']('"+stream.path+"') threw an exception: " + e.message);
+          err("FS.trackingDelegate['onWriteToFile']('"+stream.path+"') threw an exception: " + e.message);
         }
         return bytesWritten;
-      },allocate:function (stream, offset, length) {
+      },allocate:function(stream, offset, length) {
         if (FS.isClosed(stream)) {
           throw new FS.ErrnoError(8);
         }
@@ -3527,7 +3542,7 @@ function copyTempDouble(ptr) {
           throw new FS.ErrnoError(138);
         }
         stream.stream_ops.allocate(stream, offset, length);
-      },mmap:function (stream, buffer, offset, length, position, prot, flags) {
+      },mmap:function(stream, buffer, offset, length, position, prot, flags) {
         // User requests writing to file (prot & PROT_WRITE != 0).
         // Checking if we have permissions to write to the file unless
         // MAP_PRIVATE flag is set. According to POSIX spec it is possible
@@ -3546,19 +3561,19 @@ function copyTempDouble(ptr) {
           throw new FS.ErrnoError(43);
         }
         return stream.stream_ops.mmap(stream, buffer, offset, length, position, prot, flags);
-      },msync:function (stream, buffer, offset, length, mmapFlags) {
+      },msync:function(stream, buffer, offset, length, mmapFlags) {
         if (!stream || !stream.stream_ops.msync) {
           return 0;
         }
         return stream.stream_ops.msync(stream, buffer, offset, length, mmapFlags);
-      },munmap:function (stream) {
+      },munmap:function(stream) {
         return 0;
-      },ioctl:function (stream, cmd, arg) {
+      },ioctl:function(stream, cmd, arg) {
         if (!stream.stream_ops.ioctl) {
           throw new FS.ErrnoError(59);
         }
         return stream.stream_ops.ioctl(stream, cmd, arg);
-      },readFile:function (path, opts) {
+      },readFile:function(path, opts) {
         opts = opts || {};
         opts.flags = opts.flags || 'r';
         opts.encoding = opts.encoding || 'binary';
@@ -3578,7 +3593,7 @@ function copyTempDouble(ptr) {
         }
         FS.close(stream);
         return ret;
-      },writeFile:function (path, data, opts) {
+      },writeFile:function(path, data, opts) {
         opts = opts || {};
         opts.flags = opts.flags || 'w';
         var stream = FS.open(path, opts.flags, opts.mode);
@@ -3592,9 +3607,9 @@ function copyTempDouble(ptr) {
           throw new Error('Unsupported data type');
         }
         FS.close(stream);
-      },cwd:function () {
+      },cwd:function() {
         return FS.currentPath;
-      },chdir:function (path) {
+      },chdir:function(path) {
         var lookup = FS.lookupPath(path, { follow: true });
         if (lookup.node === null) {
           throw new FS.ErrnoError(44);
@@ -3602,16 +3617,16 @@ function copyTempDouble(ptr) {
         if (!FS.isDir(lookup.node.mode)) {
           throw new FS.ErrnoError(54);
         }
-        var err = FS.nodePermissions(lookup.node, 'x');
-        if (err) {
-          throw new FS.ErrnoError(err);
+        var errCode = FS.nodePermissions(lookup.node, 'x');
+        if (errCode) {
+          throw new FS.ErrnoError(errCode);
         }
         FS.currentPath = lookup.path;
-      },createDefaultDirectories:function () {
+      },createDefaultDirectories:function() {
         FS.mkdir('/tmp');
         FS.mkdir('/home');
         FS.mkdir('/home/web_user');
-      },createDefaultDevices:function () {
+      },createDefaultDevices:function() {
         // create /dev
         FS.mkdir('/dev');
         // setup /dev/null
@@ -3655,7 +3670,7 @@ function copyTempDouble(ptr) {
         // just create the tmp dirs that reside in it commonly
         FS.mkdir('/dev/shm');
         FS.mkdir('/dev/shm/tmp');
-      },createSpecialDirectories:function () {
+      },createSpecialDirectories:function() {
         // create /proc/self/fd which allows /proc/self/fd/6 => readlink gives the name of the stream for fd 6 (see test_unistd_ttyname)
         FS.mkdir('/proc');
         FS.mkdir('/proc/self');
@@ -3680,7 +3695,7 @@ function copyTempDouble(ptr) {
             return node;
           }
         }, {}, '/proc/self/fd');
-      },createStandardStreams:function () {
+      },createStandardStreams:function() {
         // TODO deprecate the old functionality of a single
         // input / output callback and that utilizes FS.createDevice
         // and instead require a unique set of stream ops
@@ -3712,11 +3727,11 @@ function copyTempDouble(ptr) {
         assert(stdin.fd === 0, 'invalid handle for stdin (' + stdin.fd + ')');
         assert(stdout.fd === 1, 'invalid handle for stdout (' + stdout.fd + ')');
         assert(stderr.fd === 2, 'invalid handle for stderr (' + stderr.fd + ')');
-      },ensureErrnoError:function () {
+      },ensureErrnoError:function() {
         if (FS.ErrnoError) return;
-        FS.ErrnoError = function ErrnoError(errno, node) {
+        FS.ErrnoError = /** @this{Object} */ function ErrnoError(errno, node) {
           this.node = node;
-          this.setErrno = function(errno) {
+          this.setErrno = /** @this{Object} */ function(errno) {
             this.errno = errno;
             for (var key in ERRNO_CODES) {
               if (ERRNO_CODES[key] === errno) {
@@ -3743,7 +3758,7 @@ function copyTempDouble(ptr) {
           FS.genericErrors[code] = new FS.ErrnoError(code);
           FS.genericErrors[code].stack = '<generic error, no stack>';
         });
-      },staticInit:function () {
+      },staticInit:function() {
         FS.ensureErrnoError();
   
         FS.nameTable = new Array(4096);
@@ -3757,7 +3772,7 @@ function copyTempDouble(ptr) {
         FS.filesystems = {
           'MEMFS': MEMFS,
         };
-      },init:function (input, output, error) {
+      },init:function(input, output, error) {
         assert(!FS.init.initialized, 'FS.init was previously called. If you want to initialize later with custom parameters, remove any earlier calls (note that one is automatically added to the generated code)');
         FS.init.initialized = true;
   
@@ -3769,7 +3784,7 @@ function copyTempDouble(ptr) {
         Module['stderr'] = error || Module['stderr'];
   
         FS.createStandardStreams();
-      },quit:function () {
+      },quit:function() {
         FS.init.initialized = false;
         // force-flush all streams, so we get musl std streams printed out
         var fflush = Module['_fflush'];
@@ -3782,28 +3797,28 @@ function copyTempDouble(ptr) {
           }
           FS.close(stream);
         }
-      },getMode:function (canRead, canWrite) {
+      },getMode:function(canRead, canWrite) {
         var mode = 0;
         if (canRead) mode |= 292 | 73;
         if (canWrite) mode |= 146;
         return mode;
-      },joinPath:function (parts, forceRelative) {
+      },joinPath:function(parts, forceRelative) {
         var path = PATH.join.apply(null, parts);
         if (forceRelative && path[0] == '/') path = path.substr(1);
         return path;
-      },absolutePath:function (relative, base) {
+      },absolutePath:function(relative, base) {
         return PATH_FS.resolve(base, relative);
-      },standardizePath:function (path) {
+      },standardizePath:function(path) {
         return PATH.normalize(path);
-      },findObject:function (path, dontResolveLastLink) {
+      },findObject:function(path, dontResolveLastLink) {
         var ret = FS.analyzePath(path, dontResolveLastLink);
         if (ret.exists) {
           return ret.object;
         } else {
-          ___setErrNo(ret.error);
+          setErrNo(ret.error);
           return null;
         }
-      },analyzePath:function (path, dontResolveLastLink) {
+      },analyzePath:function(path, dontResolveLastLink) {
         // operate from within the context of the symlink's target
         try {
           var lookup = FS.lookupPath(path, { follow: !dontResolveLastLink });
@@ -3830,11 +3845,11 @@ function copyTempDouble(ptr) {
           ret.error = e.errno;
         };
         return ret;
-      },createFolder:function (parent, name, canRead, canWrite) {
+      },createFolder:function(parent, name, canRead, canWrite) {
         var path = PATH.join2(typeof parent === 'string' ? parent : FS.getPath(parent), name);
         var mode = FS.getMode(canRead, canWrite);
         return FS.mkdir(path, mode);
-      },createPath:function (parent, path, canRead, canWrite) {
+      },createPath:function(parent, path, canRead, canWrite) {
         parent = typeof parent === 'string' ? parent : FS.getPath(parent);
         var parts = path.split('/').reverse();
         while (parts.length) {
@@ -3849,11 +3864,11 @@ function copyTempDouble(ptr) {
           parent = current;
         }
         return current;
-      },createFile:function (parent, name, properties, canRead, canWrite) {
+      },createFile:function(parent, name, properties, canRead, canWrite) {
         var path = PATH.join2(typeof parent === 'string' ? parent : FS.getPath(parent), name);
         var mode = FS.getMode(canRead, canWrite);
         return FS.create(path, mode);
-      },createDataFile:function (parent, name, data, canRead, canWrite, canOwn) {
+      },createDataFile:function(parent, name, data, canRead, canWrite, canOwn) {
         var path = name ? PATH.join2(typeof parent === 'string' ? parent : FS.getPath(parent), name) : parent;
         var mode = FS.getMode(canRead, canWrite);
         var node = FS.create(path, mode);
@@ -3871,7 +3886,7 @@ function copyTempDouble(ptr) {
           FS.chmod(node, mode);
         }
         return node;
-      },createDevice:function (parent, name, input, output) {
+      },createDevice:function(parent, name, input, output) {
         var path = PATH.join2(typeof parent === 'string' ? parent : FS.getPath(parent), name);
         var mode = FS.getMode(!!input, !!output);
         if (!FS.createDevice.major) FS.createDevice.major = 64;
@@ -3924,10 +3939,10 @@ function copyTempDouble(ptr) {
           }
         });
         return FS.mkdev(path, mode, dev);
-      },createLink:function (parent, name, target, canRead, canWrite) {
+      },createLink:function(parent, name, target, canRead, canWrite) {
         var path = PATH.join2(typeof parent === 'string' ? parent : FS.getPath(parent), name);
         return FS.symlink(target, path);
-      },forceLoadFile:function (obj) {
+      },forceLoadFile:function(obj) {
         if (obj.isDevice || obj.isFolder || obj.link || obj.contents) return true;
         var success = true;
         if (typeof XMLHttpRequest !== 'undefined') {
@@ -3945,15 +3960,16 @@ function copyTempDouble(ptr) {
         } else {
           throw new Error('Cannot load without read() or XMLHttpRequest.');
         }
-        if (!success) ___setErrNo(29);
+        if (!success) setErrNo(29);
         return success;
-      },createLazyFile:function (parent, name, url, canRead, canWrite) {
+      },createLazyFile:function(parent, name, url, canRead, canWrite) {
         // Lazy chunked Uint8Array (implements get and length from Uint8Array). Actual getting is abstracted away for eventual reuse.
+        /** @constructor */
         function LazyUint8Array() {
           this.lengthKnown = false;
           this.chunks = []; // Loaded chunks. Index is the chunk number
         }
-        LazyUint8Array.prototype.get = function LazyUint8Array_get(idx) {
+        LazyUint8Array.prototype.get = /** @this{Object} */ function LazyUint8Array_get(idx) {
           if (idx > this.length-1 || idx < 0) {
             return undefined;
           }
@@ -3998,7 +4014,7 @@ function copyTempDouble(ptr) {
             xhr.send(null);
             if (!(xhr.status >= 200 && xhr.status < 300 || xhr.status === 304)) throw new Error("Couldn't load " + url + ". Status: " + xhr.status);
             if (xhr.response !== undefined) {
-              return new Uint8Array(xhr.response || []);
+              return new Uint8Array(/** @type{Array<number>} */(xhr.response || []));
             } else {
               return intArrayFromString(xhr.responseText || '', true);
             }
@@ -4020,7 +4036,7 @@ function copyTempDouble(ptr) {
             chunkSize = datalength = 1; // this will force getter(0)/doXHR do download the whole file
             datalength = this.getter(0).length;
             chunkSize = datalength;
-            console.log("LazyFiles on gzip forces download of the whole file when length is accessed");
+            out("LazyFiles on gzip forces download of the whole file when length is accessed");
           }
   
           this._length = datalength;
@@ -4032,7 +4048,7 @@ function copyTempDouble(ptr) {
           var lazyArray = new LazyUint8Array();
           Object.defineProperties(lazyArray, {
             length: {
-              get: function() {
+              get: /** @this{Object} */ function() {
                 if(!this.lengthKnown) {
                   this.cacheLength();
                 }
@@ -4040,7 +4056,7 @@ function copyTempDouble(ptr) {
               }
             },
             chunkSize: {
-              get: function() {
+              get: /** @this{Object} */ function() {
                 if(!this.lengthKnown) {
                   this.cacheLength();
                 }
@@ -4067,7 +4083,7 @@ function copyTempDouble(ptr) {
         // Add a function that defers querying the file size until it is asked the first time.
         Object.defineProperties(node, {
           usedBytes: {
-            get: function() { return this.contents.length; }
+            get: /** @this {FSNode} */ function() { return this.contents.length; }
           }
         });
         // override each stream op with one that tries to force load the lazy file first
@@ -4105,7 +4121,7 @@ function copyTempDouble(ptr) {
         };
         node.stream_ops = stream_ops;
         return node;
-      },createPreloadedFile:function (parent, name, url, canRead, canWrite, onload, onerror, dontCreateFile, canOwn, preFinish) {
+      },createPreloadedFile:function(parent, name, url, canRead, canWrite, onload, onerror, dontCreateFile, canOwn, preFinish) {
         Browser.init(); // XXX perhaps this method should move onto Browser?
         // TODO we should allow people to just pass in a complete filename instead
         // of parent and name being that we just join them anyways
@@ -4141,11 +4157,11 @@ function copyTempDouble(ptr) {
         } else {
           processData(url);
         }
-      },indexedDB:function () {
+      },indexedDB:function() {
         return window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-      },DB_NAME:function () {
+      },DB_NAME:function() {
         return 'EM_FS_' + window.location.pathname;
-      },DB_VERSION:20,DB_STORE_NAME:"FILE_DATA",saveFilesToDB:function (paths, onload, onerror) {
+      },DB_VERSION:20,DB_STORE_NAME:"FILE_DATA",saveFilesToDB:function(paths, onload, onerror) {
         onload = onload || function(){};
         onerror = onerror || function(){};
         var indexedDB = FS.indexedDB();
@@ -4155,7 +4171,7 @@ function copyTempDouble(ptr) {
           return onerror(e);
         }
         openRequest.onupgradeneeded = function openRequest_onupgradeneeded() {
-          console.log('creating db');
+          out('creating db');
           var db = openRequest.result;
           db.createObjectStore(FS.DB_STORE_NAME);
         };
@@ -4175,7 +4191,7 @@ function copyTempDouble(ptr) {
           transaction.onerror = onerror;
         };
         openRequest.onerror = onerror;
-      },loadFilesFromDB:function (paths, onload, onerror) {
+      },loadFilesFromDB:function(paths, onload, onerror) {
         onload = onload || function(){};
         onerror = onerror || function(){};
         var indexedDB = FS.indexedDB();
@@ -4213,7 +4229,7 @@ function copyTempDouble(ptr) {
           transaction.onerror = onerror;
         };
         openRequest.onerror = onerror;
-      }};var SYSCALLS={DEFAULT_POLLMASK:5,mappings:{},umask:511,calculateAt:function (dirfd, path) {
+      }};var SYSCALLS={mappings:{},DEFAULT_POLLMASK:5,umask:511,calculateAt:function(dirfd, path) {
         if (path[0] !== '/') {
           // relative path
           var dir;
@@ -4227,7 +4243,7 @@ function copyTempDouble(ptr) {
           path = PATH.join2(dir, path);
         }
         return path;
-      },doStat:function (func, path, buf) {
+      },doStat:function(func, path, buf) {
         try {
           var stat = func(path);
         } catch (e) {
@@ -4257,17 +4273,17 @@ function copyTempDouble(ptr) {
         HEAP32[(((buf)+(76))>>2)]=0;
         (tempI64 = [stat.ino>>>0,(tempDouble=stat.ino,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[(((buf)+(80))>>2)]=tempI64[0],HEAP32[(((buf)+(84))>>2)]=tempI64[1]);
         return 0;
-      },doMsync:function (addr, stream, len, flags) {
-        var buffer = new Uint8Array(HEAPU8.subarray(addr, addr + len));
-        FS.msync(stream, buffer, 0, len, flags);
-      },doMkdir:function (path, mode) {
+      },doMsync:function(addr, stream, len, flags, offset) {
+        var buffer = HEAPU8.slice(addr, addr + len);
+        FS.msync(stream, buffer, offset, len, flags);
+      },doMkdir:function(path, mode) {
         // remove a trailing slash, if one - /a/b/ has basename of '', but
         // we want to create b in the context of this function
         path = PATH.normalize(path);
         if (path[path.length-1] === '/') path = path.substr(0, path.length-1);
         FS.mkdir(path, mode, 0);
         return 0;
-      },doMknod:function (path, mode, dev) {
+      },doMknod:function(path, mode, dev) {
         // we don't want this in the JS API as it uses mknod to create all nodes.
         switch (mode & 61440) {
           case 32768:
@@ -4280,7 +4296,7 @@ function copyTempDouble(ptr) {
         }
         FS.mknod(path, mode, dev);
         return 0;
-      },doReadlink:function (path, buf, bufsize) {
+      },doReadlink:function(path, buf, bufsize) {
         if (bufsize <= 0) return -28;
         var ret = FS.readlink(path);
   
@@ -4292,7 +4308,7 @@ function copyTempDouble(ptr) {
         HEAP8[buf+len] = endChar;
   
         return len;
-      },doAccess:function (path, amode) {
+      },doAccess:function(path, amode) {
         if (amode & ~7) {
           // need a valid mode
           return -28;
@@ -4311,11 +4327,11 @@ function copyTempDouble(ptr) {
           return -2;
         }
         return 0;
-      },doDup:function (path, flags, suggestFD) {
+      },doDup:function(path, flags, suggestFD) {
         var suggest = FS.getStream(suggestFD);
         if (suggest) FS.close(suggest);
         return FS.open(path, flags, 0, suggestFD, suggestFD).fd;
-      },doReadv:function (stream, iov, iovcnt, offset) {
+      },doReadv:function(stream, iov, iovcnt, offset) {
         var ret = 0;
         for (var i = 0; i < iovcnt; i++) {
           var ptr = HEAP32[(((iov)+(i*8))>>2)];
@@ -4326,7 +4342,7 @@ function copyTempDouble(ptr) {
           if (curr < len) break; // nothing more to read
         }
         return ret;
-      },doWritev:function (stream, iov, iovcnt, offset) {
+      },doWritev:function(stream, iov, iovcnt, offset) {
         var ret = 0;
         for (var i = 0; i < iovcnt; i++) {
           var ptr = HEAP32[(((iov)+(i*8))>>2)];
@@ -4336,97 +4352,26 @@ function copyTempDouble(ptr) {
           ret += curr;
         }
         return ret;
-      },varargs:0,get:function (varargs) {
+      },varargs:undefined,get:function() {
+        assert(SYSCALLS.varargs != undefined);
         SYSCALLS.varargs += 4;
         var ret = HEAP32[(((SYSCALLS.varargs)-(4))>>2)];
         return ret;
-      },getStr:function () {
-        var ret = UTF8ToString(SYSCALLS.get());
+      },getStr:function(ptr) {
+        var ret = UTF8ToString(ptr);
         return ret;
-      },getStreamFromFD:function (fd) {
-        // TODO: when all syscalls use wasi, can remove the next line
-        if (fd === undefined) fd = SYSCALLS.get();
+      },getStreamFromFD:function(fd) {
         var stream = FS.getStream(fd);
         if (!stream) throw new FS.ErrnoError(8);
         return stream;
-      },get64:function () {
-        var low = SYSCALLS.get(), high = SYSCALLS.get();
+      },get64:function(low, high) {
         if (low >= 0) assert(high === 0);
         else assert(high === -1);
         return low;
-      },getZero:function () {
-        assert(SYSCALLS.get() === 0);
-      }};function ___syscall195(which, varargs) {SYSCALLS.varargs = varargs;
+      }};function ___sys_fcntl64(fd, cmd, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // SYS_stat64
-      var path = SYSCALLS.getStr(), buf = SYSCALLS.get();
-      return SYSCALLS.doStat(FS.stat, path, buf);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall197(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // SYS_fstat64
-      var stream = SYSCALLS.getStreamFromFD(), buf = SYSCALLS.get();
-      return SYSCALLS.doStat(FS.stat, stream.path, buf);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall220(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // SYS_getdents64
-      var stream = SYSCALLS.getStreamFromFD(), dirp = SYSCALLS.get(), count = SYSCALLS.get();
-      if (!stream.getdents) {
-        stream.getdents = FS.readdir(stream.path);
-      }
   
-      var struct_size = 280;
-      var pos = 0;
-      var off = FS.llseek(stream, 0, 1);
-  
-      var idx = Math.floor(off / struct_size);
-  
-      while (idx < stream.getdents.length && pos + struct_size <= count) {
-        var id;
-        var type;
-        var name = stream.getdents[idx];
-        if (name[0] === '.') {
-          id = 1;
-          type = 4; // DT_DIR
-        } else {
-          var child = FS.lookupNode(stream.node, name);
-          id = child.id;
-          type = FS.isChrdev(child.mode) ? 2 :  // DT_CHR, character device.
-                 FS.isDir(child.mode) ? 4 :     // DT_DIR, directory.
-                 FS.isLink(child.mode) ? 10 :   // DT_LNK, symbolic link.
-                 8;                             // DT_REG, regular file.
-        }
-        (tempI64 = [id>>>0,(tempDouble=id,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[((dirp + pos)>>2)]=tempI64[0],HEAP32[(((dirp + pos)+(4))>>2)]=tempI64[1]);
-        (tempI64 = [(idx + 1) * struct_size>>>0,(tempDouble=(idx + 1) * struct_size,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[(((dirp + pos)+(8))>>2)]=tempI64[0],HEAP32[(((dirp + pos)+(12))>>2)]=tempI64[1]);
-        HEAP16[(((dirp + pos)+(16))>>1)]=280;
-        HEAP8[(((dirp + pos)+(18))>>0)]=type;
-        stringToUTF8(name, dirp + pos + 19, 256);
-        pos += struct_size;
-        idx += 1;
-      }
-      FS.llseek(stream, idx * struct_size, 0);
-      return pos;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall221(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fcntl64
-      var stream = SYSCALLS.getStreamFromFD(), cmd = SYSCALLS.get();
+      var stream = SYSCALLS.getStreamFromFD(fd);
       switch (cmd) {
         case 0: {
           var arg = SYSCALLS.get();
@@ -4468,7 +4413,7 @@ function copyTempDouble(ptr) {
           return -28; // These are for sockets. We don't have them fully implemented yet.
         case 9:
           // musl trusts getown return values, due to a bug where they must be, as they overlap with errors. just return -1 here, so fnctl() returns that, and we set errno ourselves.
-          ___setErrNo(28);
+          setErrNo(28);
           return -1;
         default: {
           return -28;
@@ -4480,22 +4425,64 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___syscall5(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // open
-      var pathname = SYSCALLS.getStr(), flags = SYSCALLS.get(), mode = SYSCALLS.get(); // optional TODO
-      var stream = FS.open(pathname, flags, mode);
-      return stream.fd;
+  function ___sys_fstat64(fd, buf) {try {
+  
+      var stream = SYSCALLS.getStreamFromFD(fd);
+      return SYSCALLS.doStat(FS.stat, stream.path, buf);
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return -e.errno;
   }
   }
 
-  function ___syscall54(which, varargs) {SYSCALLS.varargs = varargs;
+  function ___sys_getdents64(fd, dirp, count) {try {
+  
+      var stream = SYSCALLS.getStreamFromFD(fd)
+      if (!stream.getdents) {
+        stream.getdents = FS.readdir(stream.path);
+      }
+  
+      var struct_size = 280;
+      var pos = 0;
+      var off = FS.llseek(stream, 0, 1);
+  
+      var idx = Math.floor(off / struct_size);
+  
+      while (idx < stream.getdents.length && pos + struct_size <= count) {
+        var id;
+        var type;
+        var name = stream.getdents[idx];
+        if (name[0] === '.') {
+          id = 1;
+          type = 4; // DT_DIR
+        } else {
+          var child = FS.lookupNode(stream.node, name);
+          id = child.id;
+          type = FS.isChrdev(child.mode) ? 2 :  // DT_CHR, character device.
+                 FS.isDir(child.mode) ? 4 :     // DT_DIR, directory.
+                 FS.isLink(child.mode) ? 10 :   // DT_LNK, symbolic link.
+                 8;                             // DT_REG, regular file.
+        }
+        (tempI64 = [id>>>0,(tempDouble=id,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[((dirp + pos)>>2)]=tempI64[0],HEAP32[(((dirp + pos)+(4))>>2)]=tempI64[1]);
+        (tempI64 = [(idx + 1) * struct_size>>>0,(tempDouble=(idx + 1) * struct_size,(+(Math_abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math_min((+(Math_floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math_ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[(((dirp + pos)+(8))>>2)]=tempI64[0],HEAP32[(((dirp + pos)+(12))>>2)]=tempI64[1]);
+        HEAP16[(((dirp + pos)+(16))>>1)]=280;
+        HEAP8[(((dirp + pos)+(18))>>0)]=type;
+        stringToUTF8(name, dirp + pos + 19, 256);
+        pos += struct_size;
+        idx += 1;
+      }
+      FS.llseek(stream, idx * struct_size, 0);
+      return pos;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___sys_ioctl(fd, op, varargs) {SYSCALLS.varargs = varargs;
   try {
-   // ioctl
-      var stream = SYSCALLS.getStreamFromFD(), op = SYSCALLS.get();
+  
+      var stream = SYSCALLS.getStreamFromFD(fd);
       switch (op) {
         case 21509:
         case 21505: {
@@ -4546,9 +4533,113 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___unlock() {}
+  function ___sys_open(path, flags, varargs) {SYSCALLS.varargs = varargs;
+  try {
+  
+      var pathname = SYSCALLS.getStr(path);
+      var mode = SYSCALLS.get();
+      var stream = FS.open(pathname, flags, mode);
+      return stream.fd;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function ___sys_stat64(path, buf) {try {
+  
+      path = SYSCALLS.getStr(path);
+      return SYSCALLS.doStat(FS.stat, path, buf);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }
+
+  function _abort() {
+      abort();
+    }
+
+  var _abs=Math_abs;
+
+  function _emscripten_get_sbrk_ptr() {
+      return 1301504;
+    }
+
+  function _emscripten_memcpy_big(dest, src, num) {
+      HEAPU8.copyWithin(dest, src, src + num);
+    }
 
   
+  function _emscripten_get_heap_size() {
+      return HEAPU8.length;
+    }
+  
+  function abortOnCannotGrowMemory(requestedSize) {
+      abort('Cannot enlarge memory arrays to size ' + requestedSize + ' bytes (OOM). Either (1) compile with  -s INITIAL_MEMORY=X  with X higher than the current value ' + HEAP8.length + ', (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ');
+    }function _emscripten_resize_heap(requestedSize) {
+      requestedSize = requestedSize >>> 0;
+      abortOnCannotGrowMemory(requestedSize);
+    }
+
+  
+  
+  var ENV={};
+  
+  function __getExecutableName() {
+      return thisProgram || './this.program';
+    }function getEnvStrings() {
+      if (!getEnvStrings.strings) {
+        // Default values.
+        var env = {
+          'USER': 'web_user',
+          'LOGNAME': 'web_user',
+          'PATH': '/',
+          'PWD': '/',
+          'HOME': '/home/web_user',
+          // Browser language detection #8751
+          'LANG': ((typeof navigator === 'object' && navigator.languages && navigator.languages[0]) || 'C').replace('-', '_') + '.UTF-8',
+          '_': __getExecutableName()
+        };
+        // Apply the user-provided values, if any.
+        for (var x in ENV) {
+          env[x] = ENV[x];
+        }
+        var strings = [];
+        for (var x in env) {
+          strings.push(x + '=' + env[x]);
+        }
+        getEnvStrings.strings = strings;
+      }
+      return getEnvStrings.strings;
+    }function _environ_get(__environ, environ_buf) {
+      var bufSize = 0;
+      getEnvStrings().forEach(function(string, i) {
+        var ptr = environ_buf + bufSize;
+        HEAP32[(((__environ)+(i * 4))>>2)]=ptr;
+        writeAsciiToMemory(string, ptr);
+        bufSize += string.length + 1;
+      });
+      return 0;
+    }
+
+  function _environ_sizes_get(penviron_count, penviron_buf_size) {
+      var strings = getEnvStrings();
+      HEAP32[((penviron_count)>>2)]=strings.length;
+      var bufSize = 0;
+      strings.forEach(function(string) {
+        bufSize += string.length + 1;
+      });
+      HEAP32[((penviron_buf_size)>>2)]=bufSize;
+      return 0;
+    }
+
+  function _exit(status) {
+      // void _exit(int status);
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/exit.html
+      exit(status);
+    }
+
   function _fd_close(fd) {try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
@@ -4558,11 +4649,8 @@ function copyTempDouble(ptr) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return e.errno;
   }
-  }function ___wasi_fd_close() {
-  return _fd_close.apply(null, arguments)
   }
 
-  
   function _fd_fdstat_get(fd, pbuf) {try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
@@ -4581,11 +4669,8 @@ function copyTempDouble(ptr) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return e.errno;
   }
-  }function ___wasi_fd_fdstat_get() {
-  return _fd_fdstat_get.apply(null, arguments)
   }
 
-  
   function _fd_read(fd, iov, iovcnt, pnum) {try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
@@ -4596,13 +4681,11 @@ function copyTempDouble(ptr) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return e.errno;
   }
-  }function ___wasi_fd_read() {
-  return _fd_read.apply(null, arguments)
   }
 
-  
   function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {try {
   
+      
       var stream = SYSCALLS.getStreamFromFD(fd);
       var HIGH_OFFSET = 0x100000000; // 2^32
       // use an unsigned operator on low and shift high by 32-bits
@@ -4622,11 +4705,8 @@ function copyTempDouble(ptr) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return e.errno;
   }
-  }function ___wasi_fd_seek() {
-  return _fd_seek.apply(null, arguments)
   }
 
-  
   function _fd_write(fd, iov, iovcnt, pnum) {try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
@@ -4637,80 +4717,13 @@ function copyTempDouble(ptr) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
     return e.errno;
   }
-  }function ___wasi_fd_write() {
-  return _fd_write.apply(null, arguments)
   }
 
-  function _abort() {
-      abort();
-    }
-
-  function _emscripten_get_heap_size() {
-      return HEAP8.length;
-    }
-
-   
-
   
-  function abortOnCannotGrowMemory(requestedSize) {
-      abort('Cannot enlarge memory arrays to size ' + requestedSize + ' bytes (OOM). Either (1) compile with  -s TOTAL_MEMORY=X  with X higher than the current value ' + HEAP8.length + ', (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ');
-    }function _emscripten_resize_heap(requestedSize) {
-      abortOnCannotGrowMemory(requestedSize);
-    }
-
-  function _exit(status) {
-      // void _exit(int status);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/exit.html
-      exit(status);
-    }
-
-  function _getenv(name) {
-      // char *getenv(const char *name);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/getenv.html
-      if (name === 0) return 0;
-      name = UTF8ToString(name);
-      if (!ENV.hasOwnProperty(name)) return 0;
-  
-      if (_getenv.ret) _free(_getenv.ret);
-      _getenv.ret = allocateUTF8(ENV[name]);
-      return _getenv.ret;
-    }
-
-   
-
-  var _llvm_cos_f64=Math_cos;
-
-  
-  function _llvm_log10_f32(x) {
-      return Math.log(x) / Math.LN10; // TODO: Math.log10, when browser support is there
-    }function _llvm_log10_f64(a0
-  /*``*/) {
-  return _llvm_log10_f32(a0);
-  }
-
-  var _llvm_sin_f64=Math_sin;
-
-  function _llvm_stackrestore(p) {
-      var self = _llvm_stacksave;
-      var ret = self.LLVM_SAVEDSTACKS[p];
-      self.LLVM_SAVEDSTACKS.splice(p, 1);
-      stackRestore(ret);
-    }
-
-  function _llvm_stacksave() {
-      var self = _llvm_stacksave;
-      if (!self.LLVM_SAVEDSTACKS) {
-        self.LLVM_SAVEDSTACKS = [];
-      }
-      self.LLVM_SAVEDSTACKS.push(stackSave());
-      return self.LLVM_SAVEDSTACKS.length-1;
-    }
-
-  
-  var ___tm_current=1294976;
+  var ___tm_current=1301520;
   
   
-  var ___tm_timezone=(stringToUTF8("GMT", 1295024, 4), 1295024);
+  var ___tm_timezone=(stringToUTF8("GMT", 1301568, 4), 1301568);
   
   function _tzset() {
       // TODO: Use (malleable) environment variables instead of system settings.
@@ -4735,8 +4748,8 @@ function copyTempDouble(ptr) {
       };
       var winterName = extractZone(winter);
       var summerName = extractZone(summer);
-      var winterNamePtr = allocate(intArrayFromString(winterName), 'i8', ALLOC_NORMAL);
-      var summerNamePtr = allocate(intArrayFromString(summerName), 'i8', ALLOC_NORMAL);
+      var winterNamePtr = allocateUTF8(winterName);
+      var summerNamePtr = allocateUTF8(summerName);
       if (summer.getTimezoneOffset() < winter.getTimezoneOffset()) {
         // Northern hemisphere
         HEAP32[((__get_tzname())>>2)]=winterNamePtr;
@@ -4775,14 +4788,9 @@ function copyTempDouble(ptr) {
       return _localtime_r(time, ___tm_current);
     }
 
-  
-  function _emscripten_memcpy_big(dest, src, num) {
-      HEAPU8.set(HEAPU8.subarray(src, src+num), dest);
+  function _setTempRet0($i) {
+      setTempRet0(($i) | 0);
     }
-  
-   
-
-   
 
   function _time(ptr) {
       var ret = (Date.now()/1000)|0;
@@ -4791,13 +4799,59 @@ function copyTempDouble(ptr) {
       }
       return ret;
     }
-FS.staticInit();;
+var FSNode = /** @constructor */ function(parent, name, mode, rdev) {
+    if (!parent) {
+      parent = this;  // root node sets parent to itself
+    }
+    this.parent = parent;
+    this.mount = parent.mount;
+    this.mounted = null;
+    this.id = FS.nextInode++;
+    this.name = name;
+    this.mode = mode;
+    this.node_ops = {};
+    this.stream_ops = {};
+    this.rdev = rdev;
+  };
+  var readMode = 292/*292*/ | 73/*73*/;
+  var writeMode = 146/*146*/;
+  Object.defineProperties(FSNode.prototype, {
+   read: {
+    get: /** @this{FSNode} */function() {
+     return (this.mode & readMode) === readMode;
+    },
+    set: /** @this{FSNode} */function(val) {
+     val ? this.mode |= readMode : this.mode &= ~readMode;
+    }
+   },
+   write: {
+    get: /** @this{FSNode} */function() {
+     return (this.mode & writeMode) === writeMode;
+    },
+    set: /** @this{FSNode} */function(val) {
+     val ? this.mode |= writeMode : this.mode &= ~writeMode;
+    }
+   },
+   isFolder: {
+    get: /** @this{FSNode} */function() {
+     return FS.isDir(this.mode);
+    }
+   },
+   isDevice: {
+    get: /** @this{FSNode} */function() {
+     return FS.isChrdev(this.mode);
+    }
+   }
+  });
+  FS.FSNode = FSNode;
+  FS.staticInit();;
 var ASSERTIONS = true;
 
-// Copyright 2017 The Emscripten Authors.  All rights reserved.
-// Emscripten is available under two separate licenses, the MIT license and the
-// University of Illinois/NCSA Open Source License.  Both these licenses can be
-// found in the LICENSE file.
+/**
+ * @license
+ * Copyright 2017 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 /** @type {function(string, boolean=, number=)} */
 function intArrayFromString(stringy, dontAddNull, length) {
@@ -4824,2662 +4878,3048 @@ function intArrayToString(array) {
 }
 
 
-// ASM_LIBRARY EXTERN PRIMITIVES: Int8Array,Int32Array
-
-function nullFunc_ddi(x) { abortFnPtrError(x, 'ddi'); }
-function nullFunc_di(x) { abortFnPtrError(x, 'di'); }
-function nullFunc_idii(x) { abortFnPtrError(x, 'idii'); }
-function nullFunc_ii(x) { abortFnPtrError(x, 'ii'); }
-function nullFunc_iidii(x) { abortFnPtrError(x, 'iidii'); }
-function nullFunc_iidiiii(x) { abortFnPtrError(x, 'iidiiii'); }
-function nullFunc_iii(x) { abortFnPtrError(x, 'iii'); }
-function nullFunc_iiidddddd(x) { abortFnPtrError(x, 'iiidddddd'); }
-function nullFunc_iiii(x) { abortFnPtrError(x, 'iiii'); }
-function nullFunc_iiiidd(x) { abortFnPtrError(x, 'iiiidd'); }
-function nullFunc_iiiii(x) { abortFnPtrError(x, 'iiiii'); }
-function nullFunc_iiiiii(x) { abortFnPtrError(x, 'iiiiii'); }
-function nullFunc_iiiiiii(x) { abortFnPtrError(x, 'iiiiiii'); }
-function nullFunc_iiiiiiii(x) { abortFnPtrError(x, 'iiiiiiii'); }
-function nullFunc_iiiiiiiii(x) { abortFnPtrError(x, 'iiiiiiiii'); }
-function nullFunc_jiji(x) { abortFnPtrError(x, 'jiji'); }
-function nullFunc_vi(x) { abortFnPtrError(x, 'vi'); }
-function nullFunc_viddiiii(x) { abortFnPtrError(x, 'viddiiii'); }
-function nullFunc_vii(x) { abortFnPtrError(x, 'vii'); }
-function nullFunc_viii(x) { abortFnPtrError(x, 'viii'); }
-function nullFunc_viiii(x) { abortFnPtrError(x, 'viiii'); }
-
 var asmGlobalArg = {};
-
-var asmLibraryArg = { "___assert_fail": ___assert_fail, "___buildEnvironment": ___buildEnvironment, "___lock": ___lock, "___setErrNo": ___setErrNo, "___syscall195": ___syscall195, "___syscall197": ___syscall197, "___syscall220": ___syscall220, "___syscall221": ___syscall221, "___syscall5": ___syscall5, "___syscall54": ___syscall54, "___unlock": ___unlock, "___wasi_fd_close": ___wasi_fd_close, "___wasi_fd_fdstat_get": ___wasi_fd_fdstat_get, "___wasi_fd_read": ___wasi_fd_read, "___wasi_fd_seek": ___wasi_fd_seek, "___wasi_fd_write": ___wasi_fd_write, "__memory_base": 1024, "__table_base": 0, "_abort": _abort, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_exit": _exit, "_fd_close": _fd_close, "_fd_fdstat_get": _fd_fdstat_get, "_fd_read": _fd_read, "_fd_seek": _fd_seek, "_fd_write": _fd_write, "_getenv": _getenv, "_llvm_cos_f64": _llvm_cos_f64, "_llvm_log10_f32": _llvm_log10_f32, "_llvm_log10_f64": _llvm_log10_f64, "_llvm_sin_f64": _llvm_sin_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_localtime": _localtime, "_localtime_r": _localtime_r, "_time": _time, "_tzset": _tzset, "abort": abort, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "demangle": demangle, "demangleAll": demangleAll, "getTempRet0": getTempRet0, "jsStackTrace": jsStackTrace, "memory": wasmMemory, "nullFunc_ddi": nullFunc_ddi, "nullFunc_di": nullFunc_di, "nullFunc_idii": nullFunc_idii, "nullFunc_ii": nullFunc_ii, "nullFunc_iidii": nullFunc_iidii, "nullFunc_iidiiii": nullFunc_iidiiii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiidddddd": nullFunc_iiidddddd, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiiidd": nullFunc_iiiidd, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_jiji": nullFunc_jiji, "nullFunc_vi": nullFunc_vi, "nullFunc_viddiiii": nullFunc_viddiiii, "nullFunc_vii": nullFunc_vii, "nullFunc_viii": nullFunc_viii, "nullFunc_viiii": nullFunc_viiii, "setTempRet0": setTempRet0, "stackTrace": stackTrace, "table": wasmTable, "tempDoublePtr": tempDoublePtr };
-// EMSCRIPTEN_START_ASM
-var asm =Module["asm"]// EMSCRIPTEN_END_ASM
-(asmGlobalArg, asmLibraryArg, buffer);
-
+var asmLibraryArg = { "__assert_fail": ___assert_fail, "__handle_stack_overflow": ___handle_stack_overflow, "__sys_fcntl64": ___sys_fcntl64, "__sys_fstat64": ___sys_fstat64, "__sys_getdents64": ___sys_getdents64, "__sys_ioctl": ___sys_ioctl, "__sys_open": ___sys_open, "__sys_stat64": ___sys_stat64, "abort": _abort, "abs": _abs, "emscripten_get_sbrk_ptr": _emscripten_get_sbrk_ptr, "emscripten_memcpy_big": _emscripten_memcpy_big, "emscripten_resize_heap": _emscripten_resize_heap, "environ_get": _environ_get, "environ_sizes_get": _environ_sizes_get, "exit": _exit, "fd_close": _fd_close, "fd_fdstat_get": _fd_fdstat_get, "fd_read": _fd_read, "fd_seek": _fd_seek, "fd_write": _fd_write, "localtime": _localtime, "memory": wasmMemory, "setTempRet0": _setTempRet0, "table": wasmTable, "time": _time };
+var asm = createWasm();
 Module["asm"] = asm;
-var _AT_A_from_particle_no = Module["_AT_A_from_particle_no"] = function() {
+/** @type {function(...*):?} */
+var ___wasm_call_ctors = Module["___wasm_call_ctors"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_A_from_particle_no"].apply(null, arguments)
+  return Module["asm"]["__wasm_call_ctors"].apply(null, arguments)
 };
 
-var _AT_A_from_particle_no_single = Module["_AT_A_from_particle_no_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_A_from_particle_no_single"].apply(null, arguments)
-};
-
-var _AT_Bethe_Stopping_Number = Module["_AT_Bethe_Stopping_Number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Bethe_Stopping_Number"].apply(null, arguments)
-};
-
-var _AT_Bethe_energy_loss_MeV_cm2_g = Module["_AT_Bethe_energy_loss_MeV_cm2_g"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Bethe_energy_loss_MeV_cm2_g"].apply(null, arguments)
-};
-
-var _AT_Bethe_energy_loss_MeV_cm2_g_single = Module["_AT_Bethe_energy_loss_MeV_cm2_g_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Bethe_energy_loss_MeV_cm2_g_single"].apply(null, arguments)
-};
-
-var _AT_Bethe_wrapper = Module["_AT_Bethe_wrapper"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Bethe_wrapper"].apply(null, arguments)
-};
-
-var _AT_CSDA_energy_after_slab_E_MeV_u_multi = Module["_AT_CSDA_energy_after_slab_E_MeV_u_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_CSDA_energy_after_slab_E_MeV_u_multi"].apply(null, arguments)
-};
-
-var _AT_CSDA_energy_after_slab_E_MeV_u_single = Module["_AT_CSDA_energy_after_slab_E_MeV_u_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_CSDA_energy_after_slab_E_MeV_u_single"].apply(null, arguments)
-};
-
-var _AT_CSDA_range_difference_solver = Module["_AT_CSDA_range_difference_solver"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_CSDA_range_difference_solver"].apply(null, arguments)
-};
-
-var _AT_CSDA_range_g_cm2_multi = Module["_AT_CSDA_range_g_cm2_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_CSDA_range_g_cm2_multi"].apply(null, arguments)
-};
-
-var _AT_CSDA_range_g_cm2_single = Module["_AT_CSDA_range_g_cm2_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_CSDA_range_g_cm2_single"].apply(null, arguments)
-};
-
-var _AT_D_RDD_Gy = Module["_AT_D_RDD_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_D_RDD_Gy"].apply(null, arguments)
-};
-
-var _AT_D_RDD_Gy_int = Module["_AT_D_RDD_Gy_int"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_D_RDD_Gy_int"].apply(null, arguments)
-};
-
-var _AT_Dyx = Module["_AT_Dyx"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Dyx"].apply(null, arguments)
-};
-
-var _AT_ER_AM_RadDiff_range_g_cm2 = Module["_AT_ER_AM_RadDiff_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_AM_RadDiff_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_ER_ButtsKatz_range_g_cm2 = Module["_AT_ER_ButtsKatz_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_ButtsKatz_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_ER_Edmund_range_g_cm2 = Module["_AT_ER_Edmund_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_Edmund_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_ER_Geiss_range_g_cm2 = Module["_AT_ER_Geiss_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_Geiss_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_ER_PowerLaw_alpha = Module["_AT_ER_PowerLaw_alpha"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_PowerLaw_alpha"].apply(null, arguments)
-};
-
-var _AT_ER_Scholz_new_range_g_cm2 = Module["_AT_ER_Scholz_new_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_Scholz_new_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_ER_Scholz_range_g_cm2 = Module["_AT_ER_Scholz_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_Scholz_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_ER_Tabata_constants = Module["_AT_ER_Tabata_constants"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_Tabata_constants"].apply(null, arguments)
-};
-
-var _AT_ER_Tabata_range_g_cm2 = Module["_AT_ER_Tabata_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_Tabata_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_ER_Waligorski_range_g_cm2 = Module["_AT_ER_Waligorski_range_g_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ER_Waligorski_range_g_cm2"].apply(null, arguments)
-};
-
-var _AT_E_MeV_from_E_MeV_u = Module["_AT_E_MeV_from_E_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_MeV_from_E_MeV_u"].apply(null, arguments)
-};
-
-var _AT_E_MeV_u_from_E_MeV = Module["_AT_E_MeV_u_from_E_MeV"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_MeV_u_from_E_MeV"].apply(null, arguments)
-};
-
-var _AT_E_MeV_u_from_momentum_MeV_c_u = Module["_AT_E_MeV_u_from_momentum_MeV_c_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_MeV_u_from_momentum_MeV_c_u"].apply(null, arguments)
-};
-
-var _AT_E_MeV_u_from_momentum_single = Module["_AT_E_MeV_u_from_momentum_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_MeV_u_from_momentum_single"].apply(null, arguments)
-};
-
-var _AT_E_RadicalDiffusion_MeV_u = Module["_AT_E_RadicalDiffusion_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_RadicalDiffusion_MeV_u"].apply(null, arguments)
-};
-
-var _AT_E_from_beta = Module["_AT_E_from_beta"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_from_beta"].apply(null, arguments)
-};
-
-var _AT_E_from_beta_single = Module["_AT_E_from_beta_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_from_beta_single"].apply(null, arguments)
-};
-
-var _AT_E_from_gamma = Module["_AT_E_from_gamma"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_from_gamma"].apply(null, arguments)
-};
-
-var _AT_E_from_gamma_single = Module["_AT_E_from_gamma_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_E_from_gamma_single"].apply(null, arguments)
-};
-
-var _AT_Energy_MeV_u_from_Stopping_Power_single = Module["_AT_Energy_MeV_u_from_Stopping_Power_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Energy_MeV_u_from_Stopping_Power_single"].apply(null, arguments)
-};
-
-var _AT_FromFile_wrapper = Module["_AT_FromFile_wrapper"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_FromFile_wrapper"].apply(null, arguments)
-};
-
-var _AT_GSM_dose_grid_from_particles_positions = Module["_AT_GSM_dose_grid_from_particles_positions"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_GSM_dose_grid_from_particles_positions"].apply(null, arguments)
-};
-
-var _AT_GSM_local_dose_distrib = Module["_AT_GSM_local_dose_distrib"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_GSM_local_dose_distrib"].apply(null, arguments)
-};
-
-var _AT_GSM_local_dose_distrib_from_dose_grid = Module["_AT_GSM_local_dose_distrib_from_dose_grid"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_GSM_local_dose_distrib_from_dose_grid"].apply(null, arguments)
-};
-
-var _AT_GSM_multiple_local_dose_distrib = Module["_AT_GSM_multiple_local_dose_distrib"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_GSM_multiple_local_dose_distrib"].apply(null, arguments)
-};
-
-var _AT_GSM_response_grid_from_dose_grid = Module["_AT_GSM_response_grid_from_dose_grid"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_GSM_response_grid_from_dose_grid"].apply(null, arguments)
-};
-
-var _AT_GSM_sample_particle_positions = Module["_AT_GSM_sample_particle_positions"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_GSM_sample_particle_positions"].apply(null, arguments)
-};
-
-var _AT_Gamma_index_from_material_number = Module["_AT_Gamma_index_from_material_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gamma_index_from_material_number"].apply(null, arguments)
-};
-
-var _AT_Gamma_name_from_number = Module["_AT_Gamma_name_from_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gamma_name_from_number"].apply(null, arguments)
-};
-
-var _AT_Gamma_number_of_parameters = Module["_AT_Gamma_number_of_parameters"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gamma_number_of_parameters"].apply(null, arguments)
-};
-
-var _AT_Gauss_FWHM = Module["_AT_Gauss_FWHM"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gauss_FWHM"].apply(null, arguments)
-};
-
-var _AT_Gauss_IDF = Module["_AT_Gauss_IDF"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gauss_IDF"].apply(null, arguments)
-};
-
-var _AT_Gauss_Mean = Module["_AT_Gauss_Mean"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gauss_Mean"].apply(null, arguments)
-};
-
-var _AT_Gauss_Mode = Module["_AT_Gauss_Mode"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gauss_Mode"].apply(null, arguments)
-};
-
-var _AT_Gauss_PDF = Module["_AT_Gauss_PDF"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gauss_PDF"].apply(null, arguments)
-};
-
-var _AT_Gauss_energy_loss_distribution = Module["_AT_Gauss_energy_loss_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Gauss_energy_loss_distribution"].apply(null, arguments)
-};
-
-var _AT_Highland_angle = Module["_AT_Highland_angle"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Highland_angle"].apply(null, arguments)
-};
-
-var _AT_Highland_angle_single = Module["_AT_Highland_angle_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Highland_angle_single"].apply(null, arguments)
-};
-
-var _AT_ICRU_wrapper = Module["_AT_ICRU_wrapper"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_ICRU_wrapper"].apply(null, arguments)
-};
-
-var _AT_I_eV_from_composition = Module["_AT_I_eV_from_composition"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_I_eV_from_composition"].apply(null, arguments)
-};
-
-var _AT_I_eV_from_element_acronym = Module["_AT_I_eV_from_element_acronym"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_I_eV_from_element_acronym"].apply(null, arguments)
-};
-
-var _AT_I_eV_from_element_acronym_single = Module["_AT_I_eV_from_element_acronym_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_I_eV_from_element_acronym_single"].apply(null, arguments)
-};
-
-var _AT_I_eV_from_material_no = Module["_AT_I_eV_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_I_eV_from_material_no"].apply(null, arguments)
-};
-
-var _AT_I_eV_from_particle_no = Module["_AT_I_eV_from_particle_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_I_eV_from_particle_no"].apply(null, arguments)
-};
-
-var _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m = Module["_AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m"].apply(null, arguments)
-};
-
-var _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2 = Module["_AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2"].apply(null, arguments)
-};
-
-var _AT_KatzModel_CucinottaExtTarget_inactivation_probability = Module["_AT_KatzModel_CucinottaExtTarget_inactivation_probability"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_CucinottaExtTarget_inactivation_probability"].apply(null, arguments)
-};
-
-var _AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth = Module["_AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth"].apply(null, arguments)
-};
-
-var _AT_KatzModel_KatzExtTarget_Zhang_TrackWidth = Module["_AT_KatzModel_KatzExtTarget_Zhang_TrackWidth"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_KatzExtTarget_Zhang_TrackWidth"].apply(null, arguments)
-};
-
-var _AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m = Module["_AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m"].apply(null, arguments)
-};
-
-var _AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2 = Module["_AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2"].apply(null, arguments)
-};
-
-var _AT_KatzModel_KatzExtTarget_inactivation_probability = Module["_AT_KatzModel_KatzExtTarget_inactivation_probability"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_KatzExtTarget_inactivation_probability"].apply(null, arguments)
-};
-
-var _AT_KatzModel_inactivation_cross_section_approximation_m2 = Module["_AT_KatzModel_inactivation_cross_section_approximation_m2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_inactivation_cross_section_approximation_m2"].apply(null, arguments)
-};
-
-var _AT_KatzModel_inactivation_cross_section_m2 = Module["_AT_KatzModel_inactivation_cross_section_m2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_inactivation_cross_section_m2"].apply(null, arguments)
-};
-
-var _AT_KatzModel_inactivation_probability = Module["_AT_KatzModel_inactivation_probability"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_inactivation_probability"].apply(null, arguments)
-};
-
-var _AT_KatzModel_mixed_field_survival = Module["_AT_KatzModel_mixed_field_survival"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_mixed_field_survival"].apply(null, arguments)
-};
-
-var _AT_KatzModel_single_field_survival = Module["_AT_KatzModel_single_field_survival"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_single_field_survival"].apply(null, arguments)
-};
-
-var _AT_KatzModel_single_field_survival_from_inactivation_cross_section = Module["_AT_KatzModel_single_field_survival_from_inactivation_cross_section"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_single_field_survival_from_inactivation_cross_section"].apply(null, arguments)
-};
-
-var _AT_KatzModel_single_field_survival_optimized_for_fluence_vector = Module["_AT_KatzModel_single_field_survival_optimized_for_fluence_vector"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_KatzModel_single_field_survival_optimized_for_fluence_vector"].apply(null, arguments)
-};
-
-var _AT_Kellerer_folding = Module["_AT_Kellerer_folding"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Kellerer_folding"].apply(null, arguments)
-};
-
-var _AT_Kellerer_interpolation = Module["_AT_Kellerer_interpolation"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Kellerer_interpolation"].apply(null, arguments)
-};
-
-var _AT_Kellerer_normalize = Module["_AT_Kellerer_normalize"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Kellerer_normalize"].apply(null, arguments)
-};
-
-var _AT_Kellerer_reset = Module["_AT_Kellerer_reset"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Kellerer_reset"].apply(null, arguments)
-};
-
-var _AT_Kellerer_shrink = Module["_AT_Kellerer_shrink"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Kellerer_shrink"].apply(null, arguments)
-};
-
-var _AT_Kellerer_zero = Module["_AT_Kellerer_zero"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Kellerer_zero"].apply(null, arguments)
-};
-
-var _AT_LET_d_Wilkens_keV_um_multi = Module["_AT_LET_d_Wilkens_keV_um_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_LET_d_Wilkens_keV_um_multi"].apply(null, arguments)
-};
-
-var _AT_LET_d_Wilkens_keV_um_single = Module["_AT_LET_d_Wilkens_keV_um_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_LET_d_Wilkens_keV_um_single"].apply(null, arguments)
-};
-
-var _AT_LET_t_Wilkens_keV_um_multi = Module["_AT_LET_t_Wilkens_keV_um_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_LET_t_Wilkens_keV_um_multi"].apply(null, arguments)
-};
-
-var _AT_LET_t_Wilkens_keV_um_single = Module["_AT_LET_t_Wilkens_keV_um_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_LET_t_Wilkens_keV_um_single"].apply(null, arguments)
-};
-
-var _AT_Landau_IDF = Module["_AT_Landau_IDF"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Landau_IDF"].apply(null, arguments)
-};
-
-var _AT_Landau_PDF = Module["_AT_Landau_PDF"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Landau_PDF"].apply(null, arguments)
-};
-
-var _AT_Landau_energy_loss_distribution = Module["_AT_Landau_energy_loss_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Landau_energy_loss_distribution"].apply(null, arguments)
-};
-
-var _AT_Mass_Stopping_Power = Module["_AT_Mass_Stopping_Power"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Mass_Stopping_Power"].apply(null, arguments)
-};
-
-var _AT_Mass_Stopping_Power_with_no = Module["_AT_Mass_Stopping_Power_with_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Mass_Stopping_Power_with_no"].apply(null, arguments)
-};
-
-var _AT_Moliere_function_f0 = Module["_AT_Moliere_function_f0"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Moliere_function_f0"].apply(null, arguments)
-};
-
-var _AT_Moliere_function_f1 = Module["_AT_Moliere_function_f1"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Moliere_function_f1"].apply(null, arguments)
-};
-
-var _AT_Moliere_function_f2 = Module["_AT_Moliere_function_f2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Moliere_function_f2"].apply(null, arguments)
-};
-
-var _AT_N2_to_step = Module["_AT_N2_to_step"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_N2_to_step"].apply(null, arguments)
-};
-
-var _AT_PSTAR_wrapper = Module["_AT_PSTAR_wrapper"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_PSTAR_wrapper"].apply(null, arguments)
-};
-
-var _AT_P_RDD = Module["_AT_P_RDD"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_P_RDD"].apply(null, arguments)
-};
-
-var _AT_RDD_CucinottaPoint_Gy = Module["_AT_RDD_CucinottaPoint_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_CucinottaPoint_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_Cnorm = Module["_AT_RDD_Cucinotta_Cnorm"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_Cnorm"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_Ddelta_Gy = Module["_AT_RDD_Cucinotta_Ddelta_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_Ddelta_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_Ddelta_average_Gy = Module["_AT_RDD_Cucinotta_Ddelta_average_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_Ddelta_average_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_Ddelta_average_integrand_m = Module["_AT_RDD_Cucinotta_Ddelta_average_integrand_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_Ddelta_average_integrand_m"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_Dexc_Gy = Module["_AT_RDD_Cucinotta_Dexc_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_Dexc_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_Dexc_average_Gy = Module["_AT_RDD_Cucinotta_Dexc_average_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_Dexc_average_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_f_longRange = Module["_AT_RDD_Cucinotta_f_longRange"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_f_longRange"].apply(null, arguments)
-};
-
-var _AT_RDD_Cucinotta_f_shortRange = Module["_AT_RDD_Cucinotta_f_shortRange"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Cucinotta_f_shortRange"].apply(null, arguments)
-};
-
-var _AT_RDD_ExtendedTarget_CucinottaPoint_Gy = Module["_AT_RDD_ExtendedTarget_CucinottaPoint_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_ExtendedTarget_CucinottaPoint_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration = Module["_AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration"].apply(null, arguments)
-};
-
-var _AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy = Module["_AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_ExtendedTarget_KatzPoint_Gy = Module["_AT_RDD_ExtendedTarget_KatzPoint_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_ExtendedTarget_KatzPoint_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration = Module["_AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration"].apply(null, arguments)
-};
-
-var _AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy = Module["_AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Geiss_Gy = Module["_AT_RDD_Geiss_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Geiss_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Geiss_average_Gy = Module["_AT_RDD_Geiss_average_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Geiss_average_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_KatzPoint_Gy = Module["_AT_RDD_KatzPoint_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_KatzPoint_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_KatzSite_Gy = Module["_AT_RDD_KatzSite_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_KatzSite_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_LinearER_DSite_Gy = Module["_AT_RDD_Katz_LinearER_DSite_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_LinearER_DSite_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_LinearER_Daverage_Gy = Module["_AT_RDD_Katz_LinearER_Daverage_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_LinearER_Daverage_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_LinearER_Dpoint_Gy = Module["_AT_RDD_Katz_LinearER_Dpoint_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_LinearER_Dpoint_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_LinearER_dEdx_J_m = Module["_AT_RDD_Katz_LinearER_dEdx_J_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_LinearER_dEdx_J_m"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_PowerLawER_DSite_Gy = Module["_AT_RDD_Katz_PowerLawER_DSite_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_PowerLawER_DSite_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_PowerLawER_DaverageKernel = Module["_AT_RDD_Katz_PowerLawER_DaverageKernel"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_PowerLawER_DaverageKernel"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_PowerLawER_DaverageKernel_approx = Module["_AT_RDD_Katz_PowerLawER_DaverageKernel_approx"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_PowerLawER_DaverageKernel_approx"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_PowerLawER_Daverage_Gy = Module["_AT_RDD_Katz_PowerLawER_Daverage_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_PowerLawER_Daverage_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_PowerLawER_Dpoint_Gy = Module["_AT_RDD_Katz_PowerLawER_Dpoint_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_PowerLawER_Dpoint_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_PowerLawER_dEdx_J_m = Module["_AT_RDD_Katz_PowerLawER_dEdx_J_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_PowerLawER_dEdx_J_m"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_coeff_Gy = Module["_AT_RDD_Katz_coeff_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_coeff_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_Katz_coeff_Gy_general = Module["_AT_RDD_Katz_coeff_Gy_general"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Katz_coeff_Gy_general"].apply(null, arguments)
-};
-
-var _AT_RDD_RadicalDiffusion_Gy = Module["_AT_RDD_RadicalDiffusion_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_RadicalDiffusion_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_RadicalDiffusion_get_energy_idx = Module["_AT_RDD_RadicalDiffusion_get_energy_idx"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_RadicalDiffusion_get_energy_idx"].apply(null, arguments)
-};
-
-var _AT_RDD_Test_Gy = Module["_AT_RDD_Test_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_Test_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_a0_m = Module["_AT_RDD_a0_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_a0_m"].apply(null, arguments)
-};
-
-var _AT_RDD_d_max_Gy = Module["_AT_RDD_d_max_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_d_max_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_d_min_Gy = Module["_AT_RDD_d_min_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_d_min_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_f1_parameters_mixed_field = Module["_AT_RDD_f1_parameters_mixed_field"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_f1_parameters_mixed_field"].apply(null, arguments)
-};
-
-var _AT_RDD_f1_parameters_single_field = Module["_AT_RDD_f1_parameters_single_field"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_f1_parameters_single_field"].apply(null, arguments)
-};
-
-var _AT_RDD_index_from_RDD_number = Module["_AT_RDD_index_from_RDD_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_index_from_RDD_number"].apply(null, arguments)
-};
-
-var _AT_RDD_name_from_number = Module["_AT_RDD_name_from_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_name_from_number"].apply(null, arguments)
-};
-
-var _AT_RDD_number_from_name = Module["_AT_RDD_number_from_name"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_number_from_name"].apply(null, arguments)
-};
-
-var _AT_RDD_number_of_parameters = Module["_AT_RDD_number_of_parameters"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_number_of_parameters"].apply(null, arguments)
-};
-
-var _AT_RDD_precalculated_constant_Gy = Module["_AT_RDD_precalculated_constant_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_precalculated_constant_Gy"].apply(null, arguments)
-};
-
-var _AT_RDD_r_min_m = Module["_AT_RDD_r_min_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_RDD_r_min_m"].apply(null, arguments)
-};
-
-var _AT_Rutherford_SDCS = Module["_AT_Rutherford_SDCS"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Rutherford_SDCS"].apply(null, arguments)
-};
-
-var _AT_Rutherford_scatter_cross_section = Module["_AT_Rutherford_scatter_cross_section"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Rutherford_scatter_cross_section"].apply(null, arguments)
-};
-
-var _AT_SPC_decompose_data = Module["_AT_SPC_decompose_data"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_decompose_data"].apply(null, arguments)
-};
-
-var _AT_SPC_decompose_header = Module["_AT_SPC_decompose_header"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_decompose_header"].apply(null, arguments)
-};
-
-var _AT_SPC_decompose_size = Module["_AT_SPC_decompose_size"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_decompose_size"].apply(null, arguments)
-};
-
-var _AT_SPC_fast_read_buffer = Module["_AT_SPC_fast_read_buffer"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_fast_read_buffer"].apply(null, arguments)
-};
-
-var _AT_SPC_get_number_of_bins_from_filename_fast = Module["_AT_SPC_get_number_of_bins_from_filename_fast"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_get_number_of_bins_from_filename_fast"].apply(null, arguments)
-};
-
-var _AT_SPC_get_number_of_bytes_in_file = Module["_AT_SPC_get_number_of_bytes_in_file"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_get_number_of_bytes_in_file"].apply(null, arguments)
-};
-
-var _AT_SPC_number_of_bins_at_range = Module["_AT_SPC_number_of_bins_at_range"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_number_of_bins_at_range"].apply(null, arguments)
-};
-
-var _AT_SPC_read_data_from_filename_fast = Module["_AT_SPC_read_data_from_filename_fast"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_read_data_from_filename_fast"].apply(null, arguments)
-};
-
-var _AT_SPC_read_from_filename_fast = Module["_AT_SPC_read_from_filename_fast"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_read_from_filename_fast"].apply(null, arguments)
-};
-
-var _AT_SPC_read_header_from_filename_fast = Module["_AT_SPC_read_header_from_filename_fast"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_read_header_from_filename_fast"].apply(null, arguments)
-};
-
-var _AT_SPC_spectrum_at_range = Module["_AT_SPC_spectrum_at_range"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SPC_spectrum_at_range"].apply(null, arguments)
-};
-
-var _AT_Stopping_Power = Module["_AT_Stopping_Power"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Stopping_Power"].apply(null, arguments)
-};
-
-var _AT_Stopping_Power_Mass_MeV_cm2_g_int = Module["_AT_Stopping_Power_Mass_MeV_cm2_g_int"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Stopping_Power_Mass_MeV_cm2_g_int"].apply(null, arguments)
-};
-
-var _AT_Stopping_Power_with_no = Module["_AT_Stopping_Power_with_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Stopping_Power_with_no"].apply(null, arguments)
-};
-
-var _AT_SuccessiveConvolutions = Module["_AT_SuccessiveConvolutions"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_SuccessiveConvolutions"].apply(null, arguments)
-};
-
-var _AT_Vavilov_IDF = Module["_AT_Vavilov_IDF"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Vavilov_IDF"].apply(null, arguments)
-};
-
-var _AT_Vavilov_PDF = Module["_AT_Vavilov_PDF"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Vavilov_PDF"].apply(null, arguments)
-};
-
-var _AT_Vavilov_energy_loss_distribution = Module["_AT_Vavilov_energy_loss_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Vavilov_energy_loss_distribution"].apply(null, arguments)
-};
-
-var _AT_WEPL_multi = Module["_AT_WEPL_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_WEPL_multi"].apply(null, arguments)
-};
-
-var _AT_WEPL_single = Module["_AT_WEPL_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_WEPL_single"].apply(null, arguments)
-};
-
-var _AT_Z_from_element_acronym = Module["_AT_Z_from_element_acronym"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Z_from_element_acronym"].apply(null, arguments)
-};
-
-var _AT_Z_from_element_acronym_single = Module["_AT_Z_from_element_acronym_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Z_from_element_acronym_single"].apply(null, arguments)
-};
-
-var _AT_Z_from_particle_no = Module["_AT_Z_from_particle_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Z_from_particle_no"].apply(null, arguments)
-};
-
-var _AT_Z_from_particle_no_single = Module["_AT_Z_from_particle_no_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_Z_from_particle_no_single"].apply(null, arguments)
-};
-
-var _AT_alpha_g_cm2_MeV_from_material_no = Module["_AT_alpha_g_cm2_MeV_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_alpha_g_cm2_MeV_from_material_no"].apply(null, arguments)
-};
-
-var _AT_atomic_weight_from_Z = Module["_AT_atomic_weight_from_Z"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_atomic_weight_from_Z"].apply(null, arguments)
-};
-
-var _AT_atomic_weight_from_element_acronym = Module["_AT_atomic_weight_from_element_acronym"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_atomic_weight_from_element_acronym"].apply(null, arguments)
-};
-
-var _AT_atomic_weight_from_element_acronym_single = Module["_AT_atomic_weight_from_element_acronym_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_atomic_weight_from_element_acronym_single"].apply(null, arguments)
-};
-
-var _AT_atomic_weight_from_particle_no = Module["_AT_atomic_weight_from_particle_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_atomic_weight_from_particle_no"].apply(null, arguments)
-};
-
-var _AT_average_A_from_composition = Module["_AT_average_A_from_composition"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_average_A_from_composition"].apply(null, arguments)
-};
-
-var _AT_average_A_from_material_no = Module["_AT_average_A_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_average_A_from_material_no"].apply(null, arguments)
-};
-
-var _AT_average_Z_from_composition = Module["_AT_average_Z_from_composition"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_average_Z_from_composition"].apply(null, arguments)
-};
-
-var _AT_average_Z_from_material_no = Module["_AT_average_Z_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_average_Z_from_material_no"].apply(null, arguments)
-};
-
-var _AT_beam_par_physical_to_technical = Module["_AT_beam_par_physical_to_technical"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_beam_par_physical_to_technical"].apply(null, arguments)
-};
-
-var _AT_beam_par_technical_to_physical = Module["_AT_beam_par_technical_to_physical"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_beam_par_technical_to_physical"].apply(null, arguments)
-};
-
-var _AT_beta_from_E = Module["_AT_beta_from_E"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_beta_from_E"].apply(null, arguments)
-};
-
-var _AT_beta_from_E_single = Module["_AT_beta_from_E_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_beta_from_E_single"].apply(null, arguments)
-};
-
-var _AT_characteristic_multiple_scattering_angle = Module["_AT_characteristic_multiple_scattering_angle"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_characteristic_multiple_scattering_angle"].apply(null, arguments)
-};
-
-var _AT_characteristic_multiple_scattering_angle_single = Module["_AT_characteristic_multiple_scattering_angle_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_characteristic_multiple_scattering_angle_single"].apply(null, arguments)
-};
-
-var _AT_characteristic_single_scattering_angle = Module["_AT_characteristic_single_scattering_angle"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_characteristic_single_scattering_angle"].apply(null, arguments)
-};
-
-var _AT_characteristic_single_scattering_angle_single = Module["_AT_characteristic_single_scattering_angle_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_characteristic_single_scattering_angle_single"].apply(null, arguments)
-};
-
-var _AT_check_energy_range_single_field = Module["_AT_check_energy_range_single_field"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_check_energy_range_single_field"].apply(null, arguments)
-};
-
-var _AT_check_energy_range_single_particle = Module["_AT_check_energy_range_single_particle"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_check_energy_range_single_particle"].apply(null, arguments)
-};
-
-var _AT_check_particle_no_single_field = Module["_AT_check_particle_no_single_field"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_check_particle_no_single_field"].apply(null, arguments)
-};
-
-var _AT_check_particle_no_single_particle = Module["_AT_check_particle_no_single_particle"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_check_particle_no_single_particle"].apply(null, arguments)
-};
-
-var _AT_d_max_RadicalDiffusion_Gy = Module["_AT_d_max_RadicalDiffusion_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_d_max_RadicalDiffusion_Gy"].apply(null, arguments)
-};
-
-var _AT_d_min_RadicalDiffusion_Gy = Module["_AT_d_min_RadicalDiffusion_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_d_min_RadicalDiffusion_Gy"].apply(null, arguments)
-};
-
-var _AT_density_g_cm3_from_element_acronym = Module["_AT_density_g_cm3_from_element_acronym"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_density_g_cm3_from_element_acronym"].apply(null, arguments)
-};
-
-var _AT_density_g_cm3_from_element_acronym_single = Module["_AT_density_g_cm3_from_element_acronym_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_density_g_cm3_from_element_acronym_single"].apply(null, arguments)
-};
-
-var _AT_density_g_cm3_from_material_no = Module["_AT_density_g_cm3_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_density_g_cm3_from_material_no"].apply(null, arguments)
-};
-
-var _AT_dose_Bortfeld_Gy_multi = Module["_AT_dose_Bortfeld_Gy_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_dose_Bortfeld_Gy_multi"].apply(null, arguments)
-};
-
-var _AT_dose_Bortfeld_Gy_single = Module["_AT_dose_Bortfeld_Gy_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_dose_Bortfeld_Gy_single"].apply(null, arguments)
-};
-
-var _AT_dose_Gy_from_fluence_cm2 = Module["_AT_dose_Gy_from_fluence_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_dose_Gy_from_fluence_cm2"].apply(null, arguments)
-};
-
-var _AT_dose_Gy_from_fluence_cm2_single = Module["_AT_dose_Gy_from_fluence_cm2_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_dose_Gy_from_fluence_cm2_single"].apply(null, arguments)
-};
-
-var _AT_dose_weighted_E_MeV_u = Module["_AT_dose_weighted_E_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_dose_weighted_E_MeV_u"].apply(null, arguments)
-};
-
-var _AT_dose_weighted_LET_MeV_cm2_g = Module["_AT_dose_weighted_LET_MeV_cm2_g"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_dose_weighted_LET_MeV_cm2_g"].apply(null, arguments)
-};
-
-var _AT_effective_Z_from_composition = Module["_AT_effective_Z_from_composition"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_effective_Z_from_composition"].apply(null, arguments)
-};
-
-var _AT_effective_charge_from_E_MeV_u = Module["_AT_effective_charge_from_E_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_effective_charge_from_E_MeV_u"].apply(null, arguments)
-};
-
-var _AT_effective_charge_from_E_MeV_u_single = Module["_AT_effective_charge_from_E_MeV_u_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_effective_charge_from_E_MeV_u_single"].apply(null, arguments)
-};
-
-var _AT_effective_charge_from_beta = Module["_AT_effective_charge_from_beta"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_effective_charge_from_beta"].apply(null, arguments)
-};
-
-var _AT_effective_charge_from_beta_single = Module["_AT_effective_charge_from_beta_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_effective_charge_from_beta_single"].apply(null, arguments)
-};
-
-var _AT_effective_collision_number = Module["_AT_effective_collision_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_effective_collision_number"].apply(null, arguments)
-};
-
-var _AT_effective_collision_number_single = Module["_AT_effective_collision_number_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_effective_collision_number_single"].apply(null, arguments)
-};
-
-var _AT_el_energy_loss_leading_term_MeV_cm2_g = Module["_AT_el_energy_loss_leading_term_MeV_cm2_g"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_el_energy_loss_leading_term_MeV_cm2_g"].apply(null, arguments)
-};
-
-var _AT_electron_density_cm3_from_element_acronym = Module["_AT_electron_density_cm3_from_element_acronym"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_electron_density_cm3_from_element_acronym"].apply(null, arguments)
-};
-
-var _AT_electron_density_cm3_from_element_acronym_single = Module["_AT_electron_density_cm3_from_element_acronym_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_electron_density_cm3_from_element_acronym_single"].apply(null, arguments)
-};
-
-var _AT_electron_density_m3_from_composition = Module["_AT_electron_density_m3_from_composition"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_electron_density_m3_from_composition"].apply(null, arguments)
-};
-
-var _AT_electron_density_m3_from_material_no_multi = Module["_AT_electron_density_m3_from_material_no_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_electron_density_m3_from_material_no_multi"].apply(null, arguments)
-};
-
-var _AT_electron_density_m3_from_material_no_single = Module["_AT_electron_density_m3_from_material_no_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_electron_density_m3_from_material_no_single"].apply(null, arguments)
-};
-
-var _AT_electron_density_m3_multi = Module["_AT_electron_density_m3_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_electron_density_m3_multi"].apply(null, arguments)
-};
-
-var _AT_electron_density_m3_single = Module["_AT_electron_density_m3_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_electron_density_m3_single"].apply(null, arguments)
-};
-
-var _AT_element_acronym_from_Z = Module["_AT_element_acronym_from_Z"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_element_acronym_from_Z"].apply(null, arguments)
-};
-
-var _AT_element_acronym_from_Z_single = Module["_AT_element_acronym_from_Z_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_element_acronym_from_Z_single"].apply(null, arguments)
-};
-
-var _AT_energy_Bortfeld_MeV_u = Module["_AT_energy_Bortfeld_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_Bortfeld_MeV_u"].apply(null, arguments)
-};
-
-var _AT_energy_loss_FWHM = Module["_AT_energy_loss_FWHM"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_FWHM"].apply(null, arguments)
-};
-
-var _AT_energy_loss_distribution = Module["_AT_energy_loss_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_distribution"].apply(null, arguments)
-};
-
-var _AT_energy_loss_from_lambda_gauss_multi = Module["_AT_energy_loss_from_lambda_gauss_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_from_lambda_gauss_multi"].apply(null, arguments)
-};
-
-var _AT_energy_loss_from_lambda_landau_multi = Module["_AT_energy_loss_from_lambda_landau_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_from_lambda_landau_multi"].apply(null, arguments)
-};
-
-var _AT_energy_loss_from_lambda_landau_single = Module["_AT_energy_loss_from_lambda_landau_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_from_lambda_landau_single"].apply(null, arguments)
-};
-
-var _AT_energy_loss_from_lambda_vavilov_multi = Module["_AT_energy_loss_from_lambda_vavilov_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_from_lambda_vavilov_multi"].apply(null, arguments)
-};
-
-var _AT_energy_loss_keV_Landau_FWHM = Module["_AT_energy_loss_keV_Landau_FWHM"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_keV_Landau_FWHM"].apply(null, arguments)
-};
-
-var _AT_energy_loss_keV_Landau_Mode = Module["_AT_energy_loss_keV_Landau_Mode"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_keV_Landau_Mode"].apply(null, arguments)
-};
-
-var _AT_energy_loss_keV_Vavilov_FWHM = Module["_AT_energy_loss_keV_Vavilov_FWHM"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_keV_Vavilov_FWHM"].apply(null, arguments)
-};
-
-var _AT_energy_loss_mode = Module["_AT_energy_loss_mode"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_loss_mode"].apply(null, arguments)
-};
-
-var _AT_energy_straggling_MeV2_cm2_g = Module["_AT_energy_straggling_MeV2_cm2_g"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_straggling_MeV2_cm2_g"].apply(null, arguments)
-};
-
-var _AT_energy_straggling_after_slab_E_MeV_u = Module["_AT_energy_straggling_after_slab_E_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_energy_straggling_after_slab_E_MeV_u"].apply(null, arguments)
-};
-
-var _AT_fit_Bortfeld = Module["_AT_fit_Bortfeld"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_fit_Bortfeld"].apply(null, arguments)
-};
-
-var _AT_fluence_cm2_from_dose_Gy = Module["_AT_fluence_cm2_from_dose_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_fluence_cm2_from_dose_Gy"].apply(null, arguments)
-};
-
-var _AT_fluence_cm2_from_dose_Gy_single = Module["_AT_fluence_cm2_from_dose_Gy_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_fluence_cm2_from_dose_Gy_single"].apply(null, arguments)
-};
-
-var _AT_fluence_weighted_E_MeV_u = Module["_AT_fluence_weighted_E_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_fluence_weighted_E_MeV_u"].apply(null, arguments)
-};
-
-var _AT_fluence_weighted_LET_MeV_cm2_g = Module["_AT_fluence_weighted_LET_MeV_cm2_g"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_fluence_weighted_LET_MeV_cm2_g"].apply(null, arguments)
-};
-
-var _AT_fwhm_Bortfeld_cm = Module["_AT_fwhm_Bortfeld_cm"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_fwhm_Bortfeld_cm"].apply(null, arguments)
-};
-
-var _AT_gamma_ = Module["_AT_gamma_"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_gamma_"].apply(null, arguments)
-};
-
-var _AT_gamma_from_E = Module["_AT_gamma_from_E"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_gamma_from_E"].apply(null, arguments)
-};
-
-var _AT_gamma_from_E_single = Module["_AT_gamma_from_E_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_gamma_from_E_single"].apply(null, arguments)
-};
-
-var _AT_gamma_response = Module["_AT_gamma_response"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_gamma_response"].apply(null, arguments)
-};
-
-var _AT_get_DSB_distribution = Module["_AT_get_DSB_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_DSB_distribution"].apply(null, arguments)
-};
-
-var _AT_get_error_msg = Module["_AT_get_error_msg"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_error_msg"].apply(null, arguments)
-};
-
-var _AT_get_gamma_response = Module["_AT_get_gamma_response"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_gamma_response"].apply(null, arguments)
-};
-
-var _AT_get_gamma_response_for_average_dose = Module["_AT_get_gamma_response_for_average_dose"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_gamma_response_for_average_dose"].apply(null, arguments)
-};
-
-var _AT_get_interpolated_x_from_input_2d_table = Module["_AT_get_interpolated_x_from_input_2d_table"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_interpolated_x_from_input_2d_table"].apply(null, arguments)
-};
-
-var _AT_get_interpolated_y_from_input_2d_table = Module["_AT_get_interpolated_y_from_input_2d_table"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_interpolated_y_from_input_2d_table"].apply(null, arguments)
-};
-
-var _AT_get_interpolated_y_from_input_table = Module["_AT_get_interpolated_y_from_input_table"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_interpolated_y_from_input_table"].apply(null, arguments)
-};
-
-var _AT_get_interpolated_y_from_interval = Module["_AT_get_interpolated_y_from_interval"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_interpolated_y_from_interval"].apply(null, arguments)
-};
-
-var _AT_get_ion_efficiency_from_dose_distribution = Module["_AT_get_ion_efficiency_from_dose_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_ion_efficiency_from_dose_distribution"].apply(null, arguments)
-};
-
-var _AT_get_ion_efficiency_from_response_distribution = Module["_AT_get_ion_efficiency_from_response_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_ion_efficiency_from_response_distribution"].apply(null, arguments)
-};
-
-var _AT_get_ion_response_from_dose_distribution = Module["_AT_get_ion_response_from_dose_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_ion_response_from_dose_distribution"].apply(null, arguments)
-};
-
-var _AT_get_ion_response_from_response_distribution = Module["_AT_get_ion_response_from_response_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_ion_response_from_response_distribution"].apply(null, arguments)
-};
-
-var _AT_get_material_data = Module["_AT_get_material_data"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_material_data"].apply(null, arguments)
-};
-
-var _AT_get_materials_data = Module["_AT_get_materials_data"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_materials_data"].apply(null, arguments)
-};
-
-var _AT_get_response_distribution_from_dose_distribution = Module["_AT_get_response_distribution_from_dose_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_get_response_distribution_from_dose_distribution"].apply(null, arguments)
-};
-
-var _AT_gyroradius_m = Module["_AT_gyroradius_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_gyroradius_m"].apply(null, arguments)
-};
-
-var _AT_histoOld_bin_no = Module["_AT_histoOld_bin_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histoOld_bin_no"].apply(null, arguments)
-};
-
-var _AT_histoOld_get_bin_width = Module["_AT_histoOld_get_bin_width"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histoOld_get_bin_width"].apply(null, arguments)
-};
-
-var _AT_histoOld_get_bin_widths = Module["_AT_histoOld_get_bin_widths"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histoOld_get_bin_widths"].apply(null, arguments)
-};
-
-var _AT_histoOld_log_bin_width = Module["_AT_histoOld_log_bin_width"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histoOld_log_bin_width"].apply(null, arguments)
-};
-
-var _AT_histoOld_lower_bin_limit = Module["_AT_histoOld_lower_bin_limit"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histoOld_lower_bin_limit"].apply(null, arguments)
-};
-
-var _AT_histoOld_upper_bin_limit = Module["_AT_histoOld_upper_bin_limit"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histoOld_upper_bin_limit"].apply(null, arguments)
-};
-
-var _AT_histo_add_multi = Module["_AT_histo_add_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_add_multi"].apply(null, arguments)
-};
-
-var _AT_histo_add_single = Module["_AT_histo_add_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_add_single"].apply(null, arguments)
-};
-
-var _AT_histo_bin_no = Module["_AT_histo_bin_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_bin_no"].apply(null, arguments)
-};
-
-var _AT_histo_bin_width = Module["_AT_histo_bin_width"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_bin_width"].apply(null, arguments)
-};
-
-var _AT_histo_bin_widths = Module["_AT_histo_bin_widths"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_bin_widths"].apply(null, arguments)
-};
-
-var _AT_histo_left_limit = Module["_AT_histo_left_limit"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_left_limit"].apply(null, arguments)
-};
-
-var _AT_histo_left_limits = Module["_AT_histo_left_limits"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_left_limits"].apply(null, arguments)
-};
-
-var _AT_histo_linear_bin_no = Module["_AT_histo_linear_bin_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_linear_bin_no"].apply(null, arguments)
-};
-
-var _AT_histo_linear_bin_width = Module["_AT_histo_linear_bin_width"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_linear_bin_width"].apply(null, arguments)
-};
-
-var _AT_histo_linear_left_limit = Module["_AT_histo_linear_left_limit"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_linear_left_limit"].apply(null, arguments)
-};
-
-var _AT_histo_linear_midpoint = Module["_AT_histo_linear_midpoint"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_linear_midpoint"].apply(null, arguments)
-};
-
-var _AT_histo_linear_n_bins = Module["_AT_histo_linear_n_bins"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_linear_n_bins"].apply(null, arguments)
-};
-
-var _AT_histo_linear_step = Module["_AT_histo_linear_step"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_linear_step"].apply(null, arguments)
-};
-
-var _AT_histo_logarithmic_bin_no = Module["_AT_histo_logarithmic_bin_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_logarithmic_bin_no"].apply(null, arguments)
-};
-
-var _AT_histo_logarithmic_bin_width = Module["_AT_histo_logarithmic_bin_width"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_logarithmic_bin_width"].apply(null, arguments)
-};
-
-var _AT_histo_logarithmic_left_limit = Module["_AT_histo_logarithmic_left_limit"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_logarithmic_left_limit"].apply(null, arguments)
-};
-
-var _AT_histo_logarithmic_midpoint = Module["_AT_histo_logarithmic_midpoint"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_logarithmic_midpoint"].apply(null, arguments)
-};
-
-var _AT_histo_logarithmic_n_bins = Module["_AT_histo_logarithmic_n_bins"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_logarithmic_n_bins"].apply(null, arguments)
-};
-
-var _AT_histo_logarithmic_step = Module["_AT_histo_logarithmic_step"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_logarithmic_step"].apply(null, arguments)
-};
-
-var _AT_histo_midpoint = Module["_AT_histo_midpoint"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_midpoint"].apply(null, arguments)
-};
-
-var _AT_histo_midpoints = Module["_AT_histo_midpoints"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_midpoints"].apply(null, arguments)
-};
-
-var _AT_histo_n_bins = Module["_AT_histo_n_bins"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_n_bins"].apply(null, arguments)
-};
-
-var _AT_histo_normalize = Module["_AT_histo_normalize"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_normalize"].apply(null, arguments)
-};
-
-var _AT_histo_step = Module["_AT_histo_step"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_step"].apply(null, arguments)
-};
-
-var _AT_histo_sum = Module["_AT_histo_sum"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_histo_sum"].apply(null, arguments)
-};
-
-var _AT_interparticleDistance_m = Module["_AT_interparticleDistance_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_interparticleDistance_m"].apply(null, arguments)
-};
-
-var _AT_inv_interparticleDistance_Gy = Module["_AT_inv_interparticleDistance_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inv_interparticleDistance_Gy"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_Cucinotta_m = Module["_AT_inverse_RDD_Cucinotta_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_Cucinotta_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_Cucinotta_solver_function_Gy = Module["_AT_inverse_RDD_Cucinotta_solver_function_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_Cucinotta_solver_function_Gy"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m = Module["_AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy = Module["_AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_ExtendedTarget_KatzPoint_m = Module["_AT_inverse_RDD_ExtendedTarget_KatzPoint_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_ExtendedTarget_KatzPoint_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy = Module["_AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_Geiss_m = Module["_AT_inverse_RDD_Geiss_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_Geiss_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_KatzPoint_LinearER_m = Module["_AT_inverse_RDD_KatzPoint_LinearER_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_KatzPoint_LinearER_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy = Module["_AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_KatzPoint_m = Module["_AT_inverse_RDD_KatzPoint_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_KatzPoint_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_KatzSite_m = Module["_AT_inverse_RDD_KatzSite_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_KatzSite_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RDD_Test_m = Module["_AT_inverse_RDD_Test_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RDD_Test_m"].apply(null, arguments)
-};
-
-var _AT_inverse_RadicalDiffusion_m = Module["_AT_inverse_RadicalDiffusion_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_inverse_RadicalDiffusion_m"].apply(null, arguments)
-};
-
-var _AT_kappa_multi = Module["_AT_kappa_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_kappa_multi"].apply(null, arguments)
-};
-
-var _AT_kappa_single = Module["_AT_kappa_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_kappa_single"].apply(null, arguments)
-};
-
-var _AT_kinetic_variable_single = Module["_AT_kinetic_variable_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_kinetic_variable_single"].apply(null, arguments)
-};
-
-var _AT_lambda_Landau_FWHM = Module["_AT_lambda_Landau_FWHM"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Landau_FWHM"].apply(null, arguments)
-};
-
-var _AT_lambda_Landau_FWHM_left = Module["_AT_lambda_Landau_FWHM_left"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Landau_FWHM_left"].apply(null, arguments)
-};
-
-var _AT_lambda_Landau_FWHM_right = Module["_AT_lambda_Landau_FWHM_right"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Landau_FWHM_right"].apply(null, arguments)
-};
-
-var _AT_lambda_Landau_Mean = Module["_AT_lambda_Landau_Mean"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Landau_Mean"].apply(null, arguments)
-};
-
-var _AT_lambda_Landau_Mode = Module["_AT_lambda_Landau_Mode"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Landau_Mode"].apply(null, arguments)
-};
-
-var _AT_lambda_Vavilov_FWHM = Module["_AT_lambda_Vavilov_FWHM"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Vavilov_FWHM"].apply(null, arguments)
-};
-
-var _AT_lambda_Vavilov_FWHM_left = Module["_AT_lambda_Vavilov_FWHM_left"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Vavilov_FWHM_left"].apply(null, arguments)
-};
-
-var _AT_lambda_Vavilov_FWHM_right = Module["_AT_lambda_Vavilov_FWHM_right"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Vavilov_FWHM_right"].apply(null, arguments)
-};
-
-var _AT_lambda_Vavilov_Mean = Module["_AT_lambda_Vavilov_Mean"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Vavilov_Mean"].apply(null, arguments)
-};
-
-var _AT_lambda_Vavilov_Mode = Module["_AT_lambda_Vavilov_Mode"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Vavilov_Mode"].apply(null, arguments)
-};
-
-var _AT_lambda_Vavilov_Skewness = Module["_AT_lambda_Vavilov_Skewness"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Vavilov_Skewness"].apply(null, arguments)
-};
-
-var _AT_lambda_Vavilov_Variance = Module["_AT_lambda_Vavilov_Variance"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_Vavilov_Variance"].apply(null, arguments)
-};
-
-var _AT_lambda_landau_from_energy_loss_multi = Module["_AT_lambda_landau_from_energy_loss_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_landau_from_energy_loss_multi"].apply(null, arguments)
-};
-
-var _AT_lambda_landau_from_energy_loss_single = Module["_AT_lambda_landau_from_energy_loss_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_landau_from_energy_loss_single"].apply(null, arguments)
-};
-
-var _AT_lambda_max_multi = Module["_AT_lambda_max_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_max_multi"].apply(null, arguments)
-};
-
-var _AT_lambda_max_single = Module["_AT_lambda_max_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_max_single"].apply(null, arguments)
-};
-
-var _AT_lambda_mean_multi = Module["_AT_lambda_mean_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_mean_multi"].apply(null, arguments)
-};
-
-var _AT_lambda_mean_single = Module["_AT_lambda_mean_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_mean_single"].apply(null, arguments)
-};
-
-var _AT_lambda_vavilov_from_energy_loss_multi = Module["_AT_lambda_vavilov_from_energy_loss_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_vavilov_from_energy_loss_multi"].apply(null, arguments)
-};
-
-var _AT_lambda_vavilov_from_energy_loss_single = Module["_AT_lambda_vavilov_from_energy_loss_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_lambda_vavilov_from_energy_loss_single"].apply(null, arguments)
-};
-
-var _AT_low_fluence_local_dose_distribution = Module["_AT_low_fluence_local_dose_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_low_fluence_local_dose_distribution"].apply(null, arguments)
-};
-
-var _AT_m_g_cm2_from_material_no = Module["_AT_m_g_cm2_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_m_g_cm2_from_material_no"].apply(null, arguments)
-};
-
-var _AT_mass_correction_terms = Module["_AT_mass_correction_terms"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_mass_correction_terms"].apply(null, arguments)
-};
-
-var _AT_mass_correction_terms_new = Module["_AT_mass_correction_terms_new"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_mass_correction_terms_new"].apply(null, arguments)
-};
-
-var _AT_material_index_from_material_number = Module["_AT_material_index_from_material_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_material_index_from_material_number"].apply(null, arguments)
-};
-
-var _AT_material_name_from_number = Module["_AT_material_name_from_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_material_name_from_number"].apply(null, arguments)
-};
-
-var _AT_material_number_from_name = Module["_AT_material_number_from_name"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_material_number_from_name"].apply(null, arguments)
-};
-
-var _AT_max_E_transfer_MeV = Module["_AT_max_E_transfer_MeV"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_E_transfer_MeV"].apply(null, arguments)
-};
-
-var _AT_max_E_transfer_MeV_new = Module["_AT_max_E_transfer_MeV_new"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_E_transfer_MeV_new"].apply(null, arguments)
-};
-
-var _AT_max_E_transfer_MeV_new_single = Module["_AT_max_E_transfer_MeV_new_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_E_transfer_MeV_new_single"].apply(null, arguments)
-};
-
-var _AT_max_E_transfer_MeV_single = Module["_AT_max_E_transfer_MeV_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_E_transfer_MeV_single"].apply(null, arguments)
-};
-
-var _AT_max_classic_E_transfer_MeV_new_single = Module["_AT_max_classic_E_transfer_MeV_new_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_classic_E_transfer_MeV_new_single"].apply(null, arguments)
-};
-
-var _AT_max_classic_E_transfer_MeV_single = Module["_AT_max_classic_E_transfer_MeV_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_classic_E_transfer_MeV_single"].apply(null, arguments)
-};
-
-var _AT_max_electron_range_m = Module["_AT_max_electron_range_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_electron_range_m"].apply(null, arguments)
-};
-
-var _AT_max_electron_ranges_m = Module["_AT_max_electron_ranges_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_electron_ranges_m"].apply(null, arguments)
-};
-
-var _AT_max_plateau_Bortfeld = Module["_AT_max_plateau_Bortfeld"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_plateau_Bortfeld"].apply(null, arguments)
-};
-
-var _AT_max_relativistic_E_transfer_MeV_new_single = Module["_AT_max_relativistic_E_transfer_MeV_new_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_relativistic_E_transfer_MeV_new_single"].apply(null, arguments)
-};
-
-var _AT_max_relativistic_E_transfer_MeV_single = Module["_AT_max_relativistic_E_transfer_MeV_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_max_relativistic_E_transfer_MeV_single"].apply(null, arguments)
-};
-
-var _AT_mean_energy_loss_keV = Module["_AT_mean_energy_loss_keV"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_mean_energy_loss_keV"].apply(null, arguments)
-};
-
-var _AT_mean_excitation_energy_eV_from_Z = Module["_AT_mean_excitation_energy_eV_from_Z"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_mean_excitation_energy_eV_from_Z"].apply(null, arguments)
-};
-
-var _AT_mean_excitation_energy_eV_from_Z_single = Module["_AT_mean_excitation_energy_eV_from_Z_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_mean_excitation_energy_eV_from_Z_single"].apply(null, arguments)
-};
-
-var _AT_mean_number_of_tracks_contrib = Module["_AT_mean_number_of_tracks_contrib"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_mean_number_of_tracks_contrib"].apply(null, arguments)
-};
-
-var _AT_momentum_MeV_c_u_from_E_MeV_u = Module["_AT_momentum_MeV_c_u_from_E_MeV_u"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_momentum_MeV_c_u_from_E_MeV_u"].apply(null, arguments)
-};
-
-var _AT_momentum_from_E_MeV_c_u_single = Module["_AT_momentum_from_E_MeV_c_u_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_momentum_from_E_MeV_c_u_single"].apply(null, arguments)
-};
-
-var _AT_n_bins_RadicalDiffusion = Module["_AT_n_bins_RadicalDiffusion"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_n_bins_RadicalDiffusion"].apply(null, arguments)
-};
-
-var _AT_n_bins_for_DSB_distribution = Module["_AT_n_bins_for_DSB_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_n_bins_for_DSB_distribution"].apply(null, arguments)
-};
-
-var _AT_n_bins_for_low_fluence_local_dose_distribution = Module["_AT_n_bins_for_low_fluence_local_dose_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_n_bins_for_low_fluence_local_dose_distribution"].apply(null, arguments)
-};
-
-var _AT_n_bins_for_single_impact_local_dose_distrib = Module["_AT_n_bins_for_single_impact_local_dose_distrib"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_n_bins_for_single_impact_local_dose_distrib"].apply(null, arguments)
-};
-
-var _AT_normalize = Module["_AT_normalize"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_normalize"].apply(null, arguments)
-};
-
-var _AT_nuclear_spin_from_Z_and_A = Module["_AT_nuclear_spin_from_Z_and_A"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_nuclear_spin_from_Z_and_A"].apply(null, arguments)
-};
-
-var _AT_nuclear_spin_from_particle_no_multi = Module["_AT_nuclear_spin_from_particle_no_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_nuclear_spin_from_particle_no_multi"].apply(null, arguments)
-};
-
-var _AT_nuclear_spin_from_particle_no_single = Module["_AT_nuclear_spin_from_particle_no_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_nuclear_spin_from_particle_no_single"].apply(null, arguments)
-};
-
-var _AT_p_MeV_from_material_no = Module["_AT_p_MeV_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_p_MeV_from_material_no"].apply(null, arguments)
-};
-
-var _AT_particle_name_from_particle_no = Module["_AT_particle_name_from_particle_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_particle_name_from_particle_no"].apply(null, arguments)
-};
-
-var _AT_particle_name_from_particle_no_single = Module["_AT_particle_name_from_particle_no_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_particle_name_from_particle_no_single"].apply(null, arguments)
-};
-
-var _AT_particle_no_from_Z_and_A = Module["_AT_particle_no_from_Z_and_A"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_particle_no_from_Z_and_A"].apply(null, arguments)
-};
-
-var _AT_particle_no_from_Z_and_A_single = Module["_AT_particle_no_from_Z_and_A_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_particle_no_from_Z_and_A_single"].apply(null, arguments)
-};
-
-var _AT_particle_no_from_particle_name = Module["_AT_particle_no_from_particle_name"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_particle_no_from_particle_name"].apply(null, arguments)
-};
-
-var _AT_particle_no_from_particle_name_single = Module["_AT_particle_no_from_particle_name_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_particle_no_from_particle_name_single"].apply(null, arguments)
-};
-
-var _AT_phase_from_material_no = Module["_AT_phase_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_phase_from_material_no"].apply(null, arguments)
-};
-
-var _AT_plasma_energy_J_from_material_no = Module["_AT_plasma_energy_J_from_material_no"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_plasma_energy_J_from_material_no"].apply(null, arguments)
-};
-
-var _AT_plasma_energy_J_single = Module["_AT_plasma_energy_J_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_plasma_energy_J_single"].apply(null, arguments)
-};
-
-var _AT_proton_RBE_multi = Module["_AT_proton_RBE_multi"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_proton_RBE_multi"].apply(null, arguments)
-};
-
-var _AT_proton_RBE_single = Module["_AT_proton_RBE_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_proton_RBE_single"].apply(null, arguments)
-};
-
-var _AT_r_RDD_m = Module["_AT_r_RDD_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_r_RDD_m"].apply(null, arguments)
-};
-
-var _AT_r_max_RadicalDiffusion_m = Module["_AT_r_max_RadicalDiffusion_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_r_max_RadicalDiffusion_m"].apply(null, arguments)
-};
-
-var _AT_r_min_RadicalDiffusion_m = Module["_AT_r_min_RadicalDiffusion_m"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_r_min_RadicalDiffusion_m"].apply(null, arguments)
-};
-
-var _AT_range_Bortfeld_cm = Module["_AT_range_Bortfeld_cm"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_range_Bortfeld_cm"].apply(null, arguments)
-};
-
-var _AT_range_straggling_convolution = Module["_AT_range_straggling_convolution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_range_straggling_convolution"].apply(null, arguments)
-};
-
-var _AT_reduced_target_thickness = Module["_AT_reduced_target_thickness"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_reduced_target_thickness"].apply(null, arguments)
-};
-
-var _AT_reduced_target_thickness_single = Module["_AT_reduced_target_thickness_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_reduced_target_thickness_single"].apply(null, arguments)
-};
-
-var _AT_run_CPPSC_method = Module["_AT_run_CPPSC_method"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_run_CPPSC_method"].apply(null, arguments)
-};
-
-var _AT_run_CPPSS_method = Module["_AT_run_CPPSS_method"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_run_CPPSS_method"].apply(null, arguments)
-};
-
-var _AT_run_GSM_method = Module["_AT_run_GSM_method"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_run_GSM_method"].apply(null, arguments)
-};
-
-var _AT_run_IGK_method = Module["_AT_run_IGK_method"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_run_IGK_method"].apply(null, arguments)
-};
-
-var _AT_sI_int = Module["_AT_sI_int"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_sI_int"].apply(null, arguments)
-};
-
-var _AT_scattering_angle_distribution = Module["_AT_scattering_angle_distribution"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_scattering_angle_distribution"].apply(null, arguments)
-};
-
-var _AT_scattering_angle_distribution_single = Module["_AT_scattering_angle_distribution_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_scattering_angle_distribution_single"].apply(null, arguments)
-};
-
-var _AT_screening_angle = Module["_AT_screening_angle"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_screening_angle"].apply(null, arguments)
-};
-
-var _AT_screening_angle_single = Module["_AT_screening_angle_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_screening_angle_single"].apply(null, arguments)
-};
-
-var _AT_set_user_material = Module["_AT_set_user_material"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_set_user_material"].apply(null, arguments)
-};
-
-var _AT_set_user_material_from_composition = Module["_AT_set_user_material_from_composition"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_set_user_material_from_composition"].apply(null, arguments)
-};
-
-var _AT_single_impact_dose_Gy = Module["_AT_single_impact_dose_Gy"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_single_impact_dose_Gy"].apply(null, arguments)
-};
-
-var _AT_single_impact_dose_Gy_single = Module["_AT_single_impact_dose_Gy_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_single_impact_dose_Gy_single"].apply(null, arguments)
-};
-
-var _AT_single_impact_fluence_cm2 = Module["_AT_single_impact_fluence_cm2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_single_impact_fluence_cm2"].apply(null, arguments)
-};
-
-var _AT_single_impact_fluence_cm2_single = Module["_AT_single_impact_fluence_cm2_single"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_single_impact_fluence_cm2_single"].apply(null, arguments)
-};
-
-var _AT_single_impact_local_dose_distrib = Module["_AT_single_impact_local_dose_distrib"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_single_impact_local_dose_distrib"].apply(null, arguments)
-};
-
-var _AT_step_to_N2 = Module["_AT_step_to_N2"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_step_to_N2"].apply(null, arguments)
-};
-
-var _AT_stopping_power_ratio = Module["_AT_stopping_power_ratio"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_stopping_power_ratio"].apply(null, arguments)
-};
-
-var _AT_stopping_power_source_model_name_from_number = Module["_AT_stopping_power_source_model_name_from_number"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_stopping_power_source_model_name_from_number"].apply(null, arguments)
-};
-
-var _AT_stopping_power_source_model_number_from_name = Module["_AT_stopping_power_source_model_number_from_name"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_stopping_power_source_model_number_from_name"].apply(null, arguments)
-};
-
-var _AT_sum = Module["_AT_sum"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_sum"].apply(null, arguments)
-};
-
+/** @type {function(...*):?} */
 var _AT_test_fun = Module["_AT_test_fun"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_test_fun"].apply(null, arguments)
+  return Module["asm"]["AT_test_fun"].apply(null, arguments)
 };
 
-var _AT_total_D_Gy = Module["_AT_total_D_Gy"] = function() {
+/** @type {function(...*):?} */
+var _AT_run_CPPSC_method = Module["_AT_run_CPPSC_method"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_total_D_Gy"].apply(null, arguments)
+  return Module["asm"]["AT_run_CPPSC_method"].apply(null, arguments)
 };
 
-var _AT_total_fluence_cm2 = Module["_AT_total_fluence_cm2"] = function() {
+/** @type {function(...*):?} */
+var _AT_run_CPPSS_method = Module["_AT_run_CPPSS_method"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_total_fluence_cm2"].apply(null, arguments)
+  return Module["asm"]["AT_run_CPPSS_method"].apply(null, arguments)
 };
 
-var _AT_translate_dose_into_DSB_distribution = Module["_AT_translate_dose_into_DSB_distribution"] = function() {
+/** @type {function(...*):?} */
+var _AT_GSM_sample_particle_positions = Module["_AT_GSM_sample_particle_positions"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_translate_dose_into_DSB_distribution"].apply(null, arguments)
+  return Module["asm"]["AT_GSM_sample_particle_positions"].apply(null, arguments)
 };
 
+/** @type {function(...*):?} */
+var _AT_GSM_dose_grid_from_particles_positions = Module["_AT_GSM_dose_grid_from_particles_positions"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_GSM_dose_grid_from_particles_positions"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_GSM_local_dose_distrib_from_dose_grid = Module["_AT_GSM_local_dose_distrib_from_dose_grid"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_GSM_local_dose_distrib_from_dose_grid"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_GSM_response_grid_from_dose_grid = Module["_AT_GSM_response_grid_from_dose_grid"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_GSM_response_grid_from_dose_grid"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_run_GSM_method = Module["_AT_run_GSM_method"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_run_GSM_method"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_GSM_multiple_local_dose_distrib = Module["_AT_GSM_multiple_local_dose_distrib"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_GSM_multiple_local_dose_distrib"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_GSM_local_dose_distrib = Module["_AT_GSM_local_dose_distrib"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_GSM_local_dose_distrib"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_run_IGK_method = Module["_AT_run_IGK_method"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_run_IGK_method"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_material_index_from_material_number = Module["_AT_material_index_from_material_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_material_index_from_material_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_material_name_from_number = Module["_AT_material_name_from_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_material_name_from_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_material_number_from_name = Module["_AT_material_number_from_name"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_material_number_from_name"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_density_g_cm3_from_material_no = Module["_AT_density_g_cm3_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_density_g_cm3_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_I_eV_from_material_no = Module["_AT_I_eV_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_I_eV_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_alpha_g_cm2_MeV_from_material_no = Module["_AT_alpha_g_cm2_MeV_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_alpha_g_cm2_MeV_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_p_MeV_from_material_no = Module["_AT_p_MeV_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_p_MeV_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_m_g_cm2_from_material_no = Module["_AT_m_g_cm2_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_m_g_cm2_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_average_A_from_material_no = Module["_AT_average_A_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_average_A_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_average_Z_from_material_no = Module["_AT_average_Z_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_average_Z_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_phase_from_material_no = Module["_AT_phase_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_phase_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_material_data = Module["_AT_get_material_data"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_material_data"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_materials_data = Module["_AT_get_materials_data"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_materials_data"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_plasma_energy_J_from_material_no = Module["_AT_plasma_energy_J_from_material_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_plasma_energy_J_from_material_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_electron_density_m3_from_material_no_single = Module["_AT_electron_density_m3_from_material_no_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_electron_density_m3_from_material_no_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_plasma_energy_J_single = Module["_AT_plasma_energy_J_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_plasma_energy_J_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_electron_density_m3_single = Module["_AT_electron_density_m3_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_electron_density_m3_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_electron_density_m3_from_material_no_multi = Module["_AT_electron_density_m3_from_material_no_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_electron_density_m3_from_material_no_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_electron_density_m3_multi = Module["_AT_electron_density_m3_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_electron_density_m3_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_electron_density_m3_from_composition = Module["_AT_electron_density_m3_from_composition"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_electron_density_m3_from_composition"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_average_A_from_composition = Module["_AT_average_A_from_composition"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_average_A_from_composition"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_average_Z_from_composition = Module["_AT_average_Z_from_composition"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_average_Z_from_composition"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_effective_Z_from_composition = Module["_AT_effective_Z_from_composition"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_effective_Z_from_composition"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_I_eV_from_composition = Module["_AT_I_eV_from_composition"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_I_eV_from_composition"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_set_user_material = Module["_AT_set_user_material"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_set_user_material"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_set_user_material_from_composition = Module["_AT_set_user_material_from_composition"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_set_user_material_from_composition"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_particle_no_from_Z_and_A_single = Module["_AT_particle_no_from_Z_and_A_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_particle_no_from_Z_and_A_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_particle_no_from_Z_and_A = Module["_AT_particle_no_from_Z_and_A"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_particle_no_from_Z_and_A"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_A_from_particle_no_single = Module["_AT_A_from_particle_no_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_A_from_particle_no_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_A_from_particle_no = Module["_AT_A_from_particle_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_A_from_particle_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Z_from_particle_no_single = Module["_AT_Z_from_particle_no_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Z_from_particle_no_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Z_from_particle_no = Module["_AT_Z_from_particle_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Z_from_particle_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_atomic_weight_from_Z = Module["_AT_atomic_weight_from_Z"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_atomic_weight_from_Z"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_atomic_weight_from_particle_no = Module["_AT_atomic_weight_from_particle_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_atomic_weight_from_particle_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_I_eV_from_particle_no = Module["_AT_I_eV_from_particle_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_I_eV_from_particle_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_nuclear_spin_from_particle_no_multi = Module["_AT_nuclear_spin_from_particle_no_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_nuclear_spin_from_particle_no_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_nuclear_spin_from_particle_no_single = Module["_AT_nuclear_spin_from_particle_no_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_nuclear_spin_from_particle_no_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_nuclear_spin_from_Z_and_A = Module["_AT_nuclear_spin_from_Z_and_A"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_nuclear_spin_from_Z_and_A"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_particle_name_from_particle_no_single = Module["_AT_particle_name_from_particle_no_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_particle_name_from_particle_no_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_particle_no_from_particle_name_single = Module["_AT_particle_no_from_particle_name_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_particle_no_from_particle_name_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_particle_name_from_particle_no = Module["_AT_particle_name_from_particle_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_particle_name_from_particle_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_particle_no_from_particle_name = Module["_AT_particle_no_from_particle_name"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_particle_no_from_particle_name"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Z_from_element_acronym_single = Module["_AT_Z_from_element_acronym_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Z_from_element_acronym_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Z_from_element_acronym = Module["_AT_Z_from_element_acronym"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Z_from_element_acronym"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_element_acronym_from_Z_single = Module["_AT_element_acronym_from_Z_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_element_acronym_from_Z_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_element_acronym_from_Z = Module["_AT_element_acronym_from_Z"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_element_acronym_from_Z"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_atomic_weight_from_element_acronym_single = Module["_AT_atomic_weight_from_element_acronym_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_atomic_weight_from_element_acronym_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_atomic_weight_from_element_acronym = Module["_AT_atomic_weight_from_element_acronym"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_atomic_weight_from_element_acronym"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_density_g_cm3_from_element_acronym_single = Module["_AT_density_g_cm3_from_element_acronym_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_density_g_cm3_from_element_acronym_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_density_g_cm3_from_element_acronym = Module["_AT_density_g_cm3_from_element_acronym"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_density_g_cm3_from_element_acronym"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_I_eV_from_element_acronym_single = Module["_AT_I_eV_from_element_acronym_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_I_eV_from_element_acronym_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_I_eV_from_element_acronym = Module["_AT_I_eV_from_element_acronym"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_I_eV_from_element_acronym"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_electron_density_cm3_from_element_acronym_single = Module["_AT_electron_density_cm3_from_element_acronym_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_electron_density_cm3_from_element_acronym_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_electron_density_cm3_from_element_acronym = Module["_AT_electron_density_cm3_from_element_acronym"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_electron_density_cm3_from_element_acronym"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Stopping_Power_Mass_MeV_cm2_g_int = Module["_AT_Stopping_Power_Mass_MeV_cm2_g_int"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Stopping_Power_Mass_MeV_cm2_g_int"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_CSDA_range_g_cm2_single = Module["_AT_CSDA_range_g_cm2_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_CSDA_range_g_cm2_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_CSDA_range_g_cm2_multi = Module["_AT_CSDA_range_g_cm2_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_CSDA_range_g_cm2_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_CSDA_range_difference_solver = Module["_AT_CSDA_range_difference_solver"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_CSDA_range_difference_solver"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_CSDA_energy_after_slab_E_MeV_u_single = Module["_AT_CSDA_energy_after_slab_E_MeV_u_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_CSDA_energy_after_slab_E_MeV_u_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_CSDA_energy_after_slab_E_MeV_u_multi = Module["_AT_CSDA_energy_after_slab_E_MeV_u_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_CSDA_energy_after_slab_E_MeV_u_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_WEPL_single = Module["_AT_WEPL_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_WEPL_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_WEPL_multi = Module["_AT_WEPL_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_WEPL_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_ButtsKatz_range_g_cm2 = Module["_AT_ER_ButtsKatz_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_ButtsKatz_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_Waligorski_range_g_cm2 = Module["_AT_ER_Waligorski_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_Waligorski_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_Edmund_range_g_cm2 = Module["_AT_ER_Edmund_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_Edmund_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_Geiss_range_g_cm2 = Module["_AT_ER_Geiss_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_Geiss_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_Scholz_range_g_cm2 = Module["_AT_ER_Scholz_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_Scholz_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_Scholz_new_range_g_cm2 = Module["_AT_ER_Scholz_new_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_Scholz_new_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_Tabata_range_g_cm2 = Module["_AT_ER_Tabata_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_Tabata_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_PowerLaw_alpha = Module["_AT_ER_PowerLaw_alpha"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_PowerLaw_alpha"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_Tabata_constants = Module["_AT_ER_Tabata_constants"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_Tabata_constants"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ER_AM_RadDiff_range_g_cm2 = Module["_AT_ER_AM_RadDiff_range_g_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ER_AM_RadDiff_range_g_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_electron_ranges_m = Module["_AT_max_electron_ranges_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_electron_ranges_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_electron_range_m = Module["_AT_max_electron_range_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_electron_range_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
 var _AT_xi_keV = Module["_AT_xi_keV"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_AT_xi_keV"].apply(null, arguments)
+  return Module["asm"]["AT_xi_keV"].apply(null, arguments)
 };
 
-var ___emscripten_environ_constructor = Module["___emscripten_environ_constructor"] = function() {
+/** @type {function(...*):?} */
+var _AT_mean_energy_loss_keV = Module["_AT_mean_energy_loss_keV"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["___emscripten_environ_constructor"].apply(null, arguments)
+  return Module["asm"]["AT_mean_energy_loss_keV"].apply(null, arguments)
 };
 
-var ___errno_location = Module["___errno_location"] = function() {
+/** @type {function(...*):?} */
+var _AT_kappa_single = Module["_AT_kappa_single"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["___errno_location"].apply(null, arguments)
+  return Module["asm"]["AT_kappa_single"].apply(null, arguments)
 };
 
-var __get_daylight = Module["__get_daylight"] = function() {
+/** @type {function(...*):?} */
+var _AT_kappa_multi = Module["_AT_kappa_multi"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["__get_daylight"].apply(null, arguments)
+  return Module["asm"]["AT_kappa_multi"].apply(null, arguments)
 };
 
-var __get_environ = Module["__get_environ"] = function() {
+/** @type {function(...*):?} */
+var _AT_Landau_PDF = Module["_AT_Landau_PDF"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["__get_environ"].apply(null, arguments)
+  return Module["asm"]["AT_Landau_PDF"].apply(null, arguments)
 };
 
-var __get_timezone = Module["__get_timezone"] = function() {
+/** @type {function(...*):?} */
+var _AT_Landau_IDF = Module["_AT_Landau_IDF"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["__get_timezone"].apply(null, arguments)
+  return Module["asm"]["AT_Landau_IDF"].apply(null, arguments)
 };
 
-var __get_tzname = Module["__get_tzname"] = function() {
+/** @type {function(...*):?} */
+var _AT_lambda_mean_multi = Module["_AT_lambda_mean_multi"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["__get_tzname"].apply(null, arguments)
+  return Module["asm"]["AT_lambda_mean_multi"].apply(null, arguments)
 };
 
-var _emscripten_get_sbrk_ptr = Module["_emscripten_get_sbrk_ptr"] = function() {
+/** @type {function(...*):?} */
+var _AT_lambda_mean_single = Module["_AT_lambda_mean_single"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_emscripten_get_sbrk_ptr"].apply(null, arguments)
+  return Module["asm"]["AT_lambda_mean_single"].apply(null, arguments)
 };
 
+/** @type {function(...*):?} */
+var _AT_lambda_max_multi = Module["_AT_lambda_max_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_max_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_max_single = Module["_AT_lambda_max_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_max_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_landau_from_energy_loss_single = Module["_AT_lambda_landau_from_energy_loss_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_landau_from_energy_loss_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_landau_from_energy_loss_multi = Module["_AT_lambda_landau_from_energy_loss_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_landau_from_energy_loss_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_from_lambda_landau_single = Module["_AT_energy_loss_from_lambda_landau_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_from_lambda_landau_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_from_lambda_landau_multi = Module["_AT_energy_loss_from_lambda_landau_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_from_lambda_landau_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_from_lambda_vavilov_multi = Module["_AT_energy_loss_from_lambda_vavilov_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_from_lambda_vavilov_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Landau_energy_loss_distribution = Module["_AT_Landau_energy_loss_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Landau_energy_loss_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Vavilov_PDF = Module["_AT_Vavilov_PDF"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Vavilov_PDF"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Vavilov_IDF = Module["_AT_Vavilov_IDF"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Vavilov_IDF"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_vavilov_from_energy_loss_single = Module["_AT_lambda_vavilov_from_energy_loss_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_vavilov_from_energy_loss_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_vavilov_from_energy_loss_multi = Module["_AT_lambda_vavilov_from_energy_loss_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_vavilov_from_energy_loss_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Vavilov_energy_loss_distribution = Module["_AT_Vavilov_energy_loss_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Vavilov_energy_loss_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_distribution = Module["_AT_energy_loss_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gauss_energy_loss_distribution = Module["_AT_Gauss_energy_loss_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gauss_energy_loss_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gauss_PDF = Module["_AT_Gauss_PDF"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gauss_PDF"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Vavilov_Mode = Module["_AT_lambda_Vavilov_Mode"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Vavilov_Mode"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Vavilov_FWHM_left = Module["_AT_lambda_Vavilov_FWHM_left"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Vavilov_FWHM_left"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Vavilov_FWHM_right = Module["_AT_lambda_Vavilov_FWHM_right"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Vavilov_FWHM_right"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Vavilov_FWHM = Module["_AT_lambda_Vavilov_FWHM"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Vavilov_FWHM"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Landau_FWHM_left = Module["_AT_lambda_Landau_FWHM_left"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Landau_FWHM_left"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_keV_Vavilov_FWHM = Module["_AT_energy_loss_keV_Vavilov_FWHM"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_keV_Vavilov_FWHM"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Vavilov_Mean = Module["_AT_lambda_Vavilov_Mean"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Vavilov_Mean"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Vavilov_Variance = Module["_AT_lambda_Vavilov_Variance"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Vavilov_Variance"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Vavilov_Skewness = Module["_AT_lambda_Vavilov_Skewness"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Vavilov_Skewness"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Landau_Mode = Module["_AT_lambda_Landau_Mode"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Landau_Mode"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_keV_Landau_Mode = Module["_AT_energy_loss_keV_Landau_Mode"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_keV_Landau_Mode"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Landau_FWHM_right = Module["_AT_lambda_Landau_FWHM_right"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Landau_FWHM_right"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Landau_FWHM = Module["_AT_lambda_Landau_FWHM"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Landau_FWHM"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_keV_Landau_FWHM = Module["_AT_energy_loss_keV_Landau_FWHM"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_keV_Landau_FWHM"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_lambda_Landau_Mean = Module["_AT_lambda_Landau_Mean"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_lambda_Landau_Mean"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gauss_IDF = Module["_AT_Gauss_IDF"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gauss_IDF"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_from_lambda_gauss_multi = Module["_AT_energy_loss_from_lambda_gauss_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_from_lambda_gauss_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gauss_Mode = Module["_AT_Gauss_Mode"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gauss_Mode"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gauss_Mean = Module["_AT_Gauss_Mean"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gauss_Mean"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gauss_FWHM = Module["_AT_Gauss_FWHM"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gauss_FWHM"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_mode = Module["_AT_energy_loss_mode"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_mode"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_loss_FWHM = Module["_AT_energy_loss_FWHM"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_loss_FWHM"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_error_msg = Module["_AT_get_error_msg"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_error_msg"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_check_energy_range_single_particle = Module["_AT_check_energy_range_single_particle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_check_energy_range_single_particle"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_check_energy_range_single_field = Module["_AT_check_energy_range_single_field"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_check_energy_range_single_field"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_check_particle_no_single_particle = Module["_AT_check_particle_no_single_particle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_check_particle_no_single_particle"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_check_particle_no_single_field = Module["_AT_check_particle_no_single_field"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_check_particle_no_single_field"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gamma_index_from_material_number = Module["_AT_Gamma_index_from_material_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gamma_index_from_material_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gamma_name_from_number = Module["_AT_Gamma_name_from_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gamma_name_from_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Gamma_number_of_parameters = Module["_AT_Gamma_number_of_parameters"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Gamma_number_of_parameters"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_gamma_response = Module["_AT_gamma_response"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_gamma_response"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_gamma_response_for_average_dose = Module["_AT_get_gamma_response_for_average_dose"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_gamma_response_for_average_dose"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_response_distribution_from_dose_distribution = Module["_AT_get_response_distribution_from_dose_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_response_distribution_from_dose_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_ion_response_from_response_distribution = Module["_AT_get_ion_response_from_response_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_ion_response_from_response_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_ion_response_from_dose_distribution = Module["_AT_get_ion_response_from_dose_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_ion_response_from_dose_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_ion_efficiency_from_dose_distribution = Module["_AT_get_ion_efficiency_from_dose_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_ion_efficiency_from_dose_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_ion_efficiency_from_response_distribution = Module["_AT_get_ion_efficiency_from_response_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_ion_efficiency_from_response_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_gamma_response = Module["_AT_get_gamma_response"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_gamma_response"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_linear_left_limit = Module["_AT_histo_linear_left_limit"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_linear_left_limit"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_logarithmic_left_limit = Module["_AT_histo_logarithmic_left_limit"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_logarithmic_left_limit"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_left_limit = Module["_AT_histo_left_limit"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_left_limit"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_left_limits = Module["_AT_histo_left_limits"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_left_limits"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_linear_bin_width = Module["_AT_histo_linear_bin_width"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_linear_bin_width"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_logarithmic_bin_width = Module["_AT_histo_logarithmic_bin_width"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_logarithmic_bin_width"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_bin_width = Module["_AT_histo_bin_width"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_bin_width"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_bin_widths = Module["_AT_histo_bin_widths"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_bin_widths"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_linear_midpoint = Module["_AT_histo_linear_midpoint"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_linear_midpoint"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_logarithmic_midpoint = Module["_AT_histo_logarithmic_midpoint"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_logarithmic_midpoint"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_midpoint = Module["_AT_histo_midpoint"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_midpoint"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_midpoints = Module["_AT_histo_midpoints"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_midpoints"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_linear_step = Module["_AT_histo_linear_step"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_linear_step"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_logarithmic_step = Module["_AT_histo_logarithmic_step"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_logarithmic_step"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_step = Module["_AT_histo_step"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_step"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_linear_n_bins = Module["_AT_histo_linear_n_bins"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_linear_n_bins"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_logarithmic_n_bins = Module["_AT_histo_logarithmic_n_bins"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_logarithmic_n_bins"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_n_bins = Module["_AT_histo_n_bins"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_n_bins"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_linear_bin_no = Module["_AT_histo_linear_bin_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_linear_bin_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_logarithmic_bin_no = Module["_AT_histo_logarithmic_bin_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_logarithmic_bin_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_bin_no = Module["_AT_histo_bin_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_bin_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_add_single = Module["_AT_histo_add_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_add_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_add_multi = Module["_AT_histo_add_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_add_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_sum = Module["_AT_histo_sum"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_sum"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histo_normalize = Module["_AT_histo_normalize"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histo_normalize"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_N2_to_step = Module["_AT_N2_to_step"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_N2_to_step"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_step_to_N2 = Module["_AT_step_to_N2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_step_to_N2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histoOld_log_bin_width = Module["_AT_histoOld_log_bin_width"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histoOld_log_bin_width"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histoOld_lower_bin_limit = Module["_AT_histoOld_lower_bin_limit"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histoOld_lower_bin_limit"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histoOld_upper_bin_limit = Module["_AT_histoOld_upper_bin_limit"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histoOld_upper_bin_limit"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histoOld_get_bin_width = Module["_AT_histoOld_get_bin_width"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histoOld_get_bin_width"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histoOld_get_bin_widths = Module["_AT_histoOld_get_bin_widths"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histoOld_get_bin_widths"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_histoOld_bin_no = Module["_AT_histoOld_bin_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_histoOld_bin_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_KatzExtTarget_inactivation_probability = Module["_AT_KatzModel_KatzExtTarget_inactivation_probability"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_KatzExtTarget_inactivation_probability"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_CucinottaExtTarget_inactivation_probability = Module["_AT_KatzModel_CucinottaExtTarget_inactivation_probability"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_CucinottaExtTarget_inactivation_probability"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_inactivation_probability = Module["_AT_KatzModel_inactivation_probability"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_inactivation_probability"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m = Module["_AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_KatzExtTarget_inactivation_cross_section_integrand_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2 = Module["_AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_KatzExtTarget_inactivation_cross_section_m2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m = Module["_AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_integrand_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2 = Module["_AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_CucinottaExtTarget_inactivation_cross_section_m2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_inactivation_cross_section_m2 = Module["_AT_KatzModel_inactivation_cross_section_m2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_inactivation_cross_section_m2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth = Module["_AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_KatzExtTarget_ButtsKatz_TrackWidth"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_KatzExtTarget_Zhang_TrackWidth = Module["_AT_KatzModel_KatzExtTarget_Zhang_TrackWidth"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_KatzExtTarget_Zhang_TrackWidth"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_inactivation_cross_section_approximation_m2 = Module["_AT_KatzModel_inactivation_cross_section_approximation_m2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_inactivation_cross_section_approximation_m2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_single_field_survival_from_inactivation_cross_section = Module["_AT_KatzModel_single_field_survival_from_inactivation_cross_section"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_single_field_survival_from_inactivation_cross_section"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_single_field_survival = Module["_AT_KatzModel_single_field_survival"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_single_field_survival"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_mixed_field_survival = Module["_AT_KatzModel_mixed_field_survival"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_mixed_field_survival"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_KatzModel_single_field_survival_optimized_for_fluence_vector = Module["_AT_KatzModel_single_field_survival_optimized_for_fluence_vector"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_KatzModel_single_field_survival_optimized_for_fluence_vector"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_D_RDD_Gy_int = Module["_AT_D_RDD_Gy_int"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_D_RDD_Gy_int"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_sI_int = Module["_AT_sI_int"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_sI_int"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_P_RDD = Module["_AT_P_RDD"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_P_RDD"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_characteristic_single_scattering_angle_single = Module["_AT_characteristic_single_scattering_angle_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_characteristic_single_scattering_angle_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_characteristic_single_scattering_angle = Module["_AT_characteristic_single_scattering_angle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_characteristic_single_scattering_angle"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_screening_angle_single = Module["_AT_screening_angle_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_screening_angle_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_screening_angle = Module["_AT_screening_angle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_screening_angle"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_effective_collision_number_single = Module["_AT_effective_collision_number_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_effective_collision_number_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_effective_collision_number = Module["_AT_effective_collision_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_effective_collision_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_reduced_target_thickness_single = Module["_AT_reduced_target_thickness_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_reduced_target_thickness_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_reduced_target_thickness = Module["_AT_reduced_target_thickness"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_reduced_target_thickness"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_characteristic_multiple_scattering_angle_single = Module["_AT_characteristic_multiple_scattering_angle_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_characteristic_multiple_scattering_angle_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_characteristic_multiple_scattering_angle = Module["_AT_characteristic_multiple_scattering_angle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_characteristic_multiple_scattering_angle"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Moliere_function_f0 = Module["_AT_Moliere_function_f0"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Moliere_function_f0"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Moliere_function_f1 = Module["_AT_Moliere_function_f1"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Moliere_function_f1"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Moliere_function_f2 = Module["_AT_Moliere_function_f2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Moliere_function_f2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_scattering_angle_distribution_single = Module["_AT_scattering_angle_distribution_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_scattering_angle_distribution_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_scattering_angle_distribution = Module["_AT_scattering_angle_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_scattering_angle_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Highland_angle_single = Module["_AT_Highland_angle_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Highland_angle_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Highland_angle = Module["_AT_Highland_angle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Highland_angle"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_range_straggling_convolution = Module["_AT_range_straggling_convolution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_range_straggling_convolution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_gamma_ = Module["_AT_gamma_"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_gamma_"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Dyx = Module["_AT_Dyx"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Dyx"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_sum = Module["_AT_sum"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_sum"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_normalize = Module["_AT_normalize"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_normalize"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_interpolated_y_from_input_table = Module["_AT_get_interpolated_y_from_input_table"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_interpolated_y_from_input_table"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_interpolated_y_from_interval = Module["_AT_get_interpolated_y_from_interval"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_interpolated_y_from_interval"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_interpolated_y_from_input_2d_table = Module["_AT_get_interpolated_y_from_input_2d_table"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_interpolated_y_from_input_2d_table"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_interpolated_x_from_input_2d_table = Module["_AT_get_interpolated_x_from_input_2d_table"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_interpolated_x_from_input_2d_table"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_MeV_u_from_E_MeV = Module["_AT_E_MeV_u_from_E_MeV"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_MeV_u_from_E_MeV"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_MeV_from_E_MeV_u = Module["_AT_E_MeV_from_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_MeV_from_E_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_beta_from_E_single = Module["_AT_beta_from_E_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_beta_from_E_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_gamma_from_E_single = Module["_AT_gamma_from_E_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_gamma_from_E_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_beta_from_E = Module["_AT_beta_from_E"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_beta_from_E"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_gamma_from_E = Module["_AT_gamma_from_E"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_gamma_from_E"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_from_beta_single = Module["_AT_E_from_beta_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_from_beta_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_from_gamma_single = Module["_AT_E_from_gamma_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_from_gamma_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_from_beta = Module["_AT_E_from_beta"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_from_beta"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_from_gamma = Module["_AT_E_from_gamma"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_from_gamma"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_MeV_u_from_momentum_single = Module["_AT_E_MeV_u_from_momentum_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_MeV_u_from_momentum_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_MeV_u_from_momentum_MeV_c_u = Module["_AT_E_MeV_u_from_momentum_MeV_c_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_MeV_u_from_momentum_MeV_c_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_effective_charge_from_beta_single = Module["_AT_effective_charge_from_beta_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_effective_charge_from_beta_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_effective_charge_from_beta = Module["_AT_effective_charge_from_beta"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_effective_charge_from_beta"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_effective_charge_from_E_MeV_u_single = Module["_AT_effective_charge_from_E_MeV_u_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_effective_charge_from_E_MeV_u_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_effective_charge_from_E_MeV_u = Module["_AT_effective_charge_from_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_effective_charge_from_E_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_mean_excitation_energy_eV_from_Z_single = Module["_AT_mean_excitation_energy_eV_from_Z_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_mean_excitation_energy_eV_from_Z_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_mean_excitation_energy_eV_from_Z = Module["_AT_mean_excitation_energy_eV_from_Z"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_mean_excitation_energy_eV_from_Z"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_mass_correction_terms_new = Module["_AT_mass_correction_terms_new"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_mass_correction_terms_new"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_relativistic_E_transfer_MeV_new_single = Module["_AT_max_relativistic_E_transfer_MeV_new_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_relativistic_E_transfer_MeV_new_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_classic_E_transfer_MeV_new_single = Module["_AT_max_classic_E_transfer_MeV_new_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_classic_E_transfer_MeV_new_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_E_transfer_MeV_new_single = Module["_AT_max_E_transfer_MeV_new_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_E_transfer_MeV_new_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_E_transfer_MeV_new = Module["_AT_max_E_transfer_MeV_new"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_E_transfer_MeV_new"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_mass_correction_terms = Module["_AT_mass_correction_terms"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_mass_correction_terms"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_relativistic_E_transfer_MeV_single = Module["_AT_max_relativistic_E_transfer_MeV_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_relativistic_E_transfer_MeV_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_classic_E_transfer_MeV_single = Module["_AT_max_classic_E_transfer_MeV_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_classic_E_transfer_MeV_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_E_transfer_MeV_single = Module["_AT_max_E_transfer_MeV_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_E_transfer_MeV_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_E_transfer_MeV = Module["_AT_max_E_transfer_MeV"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_E_transfer_MeV"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_momentum_from_E_MeV_c_u_single = Module["_AT_momentum_from_E_MeV_c_u_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_momentum_from_E_MeV_c_u_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_momentum_MeV_c_u_from_E_MeV_u = Module["_AT_momentum_MeV_c_u_from_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_momentum_MeV_c_u_from_E_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_straggling_MeV2_cm2_g = Module["_AT_energy_straggling_MeV2_cm2_g"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_straggling_MeV2_cm2_g"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_straggling_after_slab_E_MeV_u = Module["_AT_energy_straggling_after_slab_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_straggling_after_slab_E_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_dose_Gy_from_fluence_cm2_single = Module["_AT_dose_Gy_from_fluence_cm2_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_dose_Gy_from_fluence_cm2_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_dose_Gy_from_fluence_cm2 = Module["_AT_dose_Gy_from_fluence_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_dose_Gy_from_fluence_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_fluence_cm2_from_dose_Gy_single = Module["_AT_fluence_cm2_from_dose_Gy_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_fluence_cm2_from_dose_Gy_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_fluence_cm2_from_dose_Gy = Module["_AT_fluence_cm2_from_dose_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_fluence_cm2_from_dose_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_interparticleDistance_m = Module["_AT_interparticleDistance_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_interparticleDistance_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_beam_par_physical_to_technical = Module["_AT_beam_par_physical_to_technical"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_beam_par_physical_to_technical"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_beam_par_technical_to_physical = Module["_AT_beam_par_technical_to_physical"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_beam_par_technical_to_physical"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inv_interparticleDistance_Gy = Module["_AT_inv_interparticleDistance_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inv_interparticleDistance_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_single_impact_fluence_cm2_single = Module["_AT_single_impact_fluence_cm2_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_single_impact_fluence_cm2_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_single_impact_fluence_cm2 = Module["_AT_single_impact_fluence_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_single_impact_fluence_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_single_impact_dose_Gy_single = Module["_AT_single_impact_dose_Gy_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_single_impact_dose_Gy_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_single_impact_dose_Gy = Module["_AT_single_impact_dose_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_single_impact_dose_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_total_D_Gy = Module["_AT_total_D_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_total_D_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_total_fluence_cm2 = Module["_AT_total_fluence_cm2"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_total_fluence_cm2"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_fluence_weighted_E_MeV_u = Module["_AT_fluence_weighted_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_fluence_weighted_E_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_dose_weighted_E_MeV_u = Module["_AT_dose_weighted_E_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_dose_weighted_E_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_fluence_weighted_LET_MeV_cm2_g = Module["_AT_fluence_weighted_LET_MeV_cm2_g"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_fluence_weighted_LET_MeV_cm2_g"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_dose_weighted_LET_MeV_cm2_g = Module["_AT_dose_weighted_LET_MeV_cm2_g"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_dose_weighted_LET_MeV_cm2_g"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_stopping_power_ratio = Module["_AT_stopping_power_ratio"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_stopping_power_ratio"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_mean_number_of_tracks_contrib = Module["_AT_mean_number_of_tracks_contrib"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_mean_number_of_tracks_contrib"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_kinetic_variable_single = Module["_AT_kinetic_variable_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_kinetic_variable_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Rutherford_SDCS = Module["_AT_Rutherford_SDCS"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Rutherford_SDCS"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Rutherford_scatter_cross_section = Module["_AT_Rutherford_scatter_cross_section"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Rutherford_scatter_cross_section"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_gyroradius_m = Module["_AT_gyroradius_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_gyroradius_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_range_Bortfeld_cm = Module["_AT_range_Bortfeld_cm"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_range_Bortfeld_cm"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_fwhm_Bortfeld_cm = Module["_AT_fwhm_Bortfeld_cm"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_fwhm_Bortfeld_cm"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_max_plateau_Bortfeld = Module["_AT_max_plateau_Bortfeld"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_max_plateau_Bortfeld"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_energy_Bortfeld_MeV_u = Module["_AT_energy_Bortfeld_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_energy_Bortfeld_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_fit_Bortfeld = Module["_AT_fit_Bortfeld"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_fit_Bortfeld"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_dose_Bortfeld_Gy_single = Module["_AT_dose_Bortfeld_Gy_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_dose_Bortfeld_Gy_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_dose_Bortfeld_Gy_multi = Module["_AT_dose_Bortfeld_Gy_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_dose_Bortfeld_Gy_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_LET_t_Wilkens_keV_um_single = Module["_AT_LET_t_Wilkens_keV_um_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_LET_t_Wilkens_keV_um_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_LET_t_Wilkens_keV_um_multi = Module["_AT_LET_t_Wilkens_keV_um_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_LET_t_Wilkens_keV_um_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_LET_d_Wilkens_keV_um_single = Module["_AT_LET_d_Wilkens_keV_um_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_LET_d_Wilkens_keV_um_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_LET_d_Wilkens_keV_um_multi = Module["_AT_LET_d_Wilkens_keV_um_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_LET_d_Wilkens_keV_um_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_proton_RBE_single = Module["_AT_proton_RBE_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_proton_RBE_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_proton_RBE_multi = Module["_AT_proton_RBE_multi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_proton_RBE_multi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_index_from_RDD_number = Module["_AT_RDD_index_from_RDD_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_index_from_RDD_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_name_from_number = Module["_AT_RDD_name_from_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_name_from_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_number_from_name = Module["_AT_RDD_number_from_name"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_number_from_name"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_number_of_parameters = Module["_AT_RDD_number_of_parameters"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_number_of_parameters"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_r_min_m = Module["_AT_RDD_r_min_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_r_min_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_a0_m = Module["_AT_RDD_a0_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_a0_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_precalculated_constant_Gy = Module["_AT_RDD_precalculated_constant_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_precalculated_constant_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_d_min_Gy = Module["_AT_RDD_d_min_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_d_min_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_d_max_Gy = Module["_AT_RDD_d_max_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_d_max_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_f1_parameters_single_field = Module["_AT_RDD_f1_parameters_single_field"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_f1_parameters_single_field"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_f1_parameters_mixed_field = Module["_AT_RDD_f1_parameters_mixed_field"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_f1_parameters_mixed_field"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_D_RDD_Gy = Module["_AT_D_RDD_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_D_RDD_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_r_RDD_m = Module["_AT_r_RDD_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_r_RDD_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy = Module["_AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_ExtendedTarget_KatzPoint_integrand_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration = Module["_AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_ExtendedTarget_KatzPoint_Gy_by_integration"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_ExtendedTarget_KatzPoint_Gy = Module["_AT_RDD_ExtendedTarget_KatzPoint_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_ExtendedTarget_KatzPoint_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy = Module["_AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_ExtendedTarget_KatzPoint_solver_function_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_ExtendedTarget_KatzPoint_m = Module["_AT_inverse_RDD_ExtendedTarget_KatzPoint_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_ExtendedTarget_KatzPoint_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy = Module["_AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_ExtendedTarget_CucinottaPoint_integrand_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration = Module["_AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_ExtendedTarget_CucinottaPoint_Gy_by_integration"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_ExtendedTarget_CucinottaPoint_Gy = Module["_AT_RDD_ExtendedTarget_CucinottaPoint_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_ExtendedTarget_CucinottaPoint_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy = Module["_AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_ExtendedTarget_CucinottaPoint_solver_function_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m = Module["_AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_ExtendedTarget_CucinottaPoint_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_LinearER_Daverage_Gy = Module["_AT_RDD_Katz_LinearER_Daverage_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_LinearER_Daverage_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_PowerLawER_DaverageKernel = Module["_AT_RDD_Katz_PowerLawER_DaverageKernel"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_PowerLawER_DaverageKernel"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_PowerLawER_DaverageKernel_approx = Module["_AT_RDD_Katz_PowerLawER_DaverageKernel_approx"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_PowerLawER_DaverageKernel_approx"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_PowerLawER_Daverage_Gy = Module["_AT_RDD_Katz_PowerLawER_Daverage_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_PowerLawER_Daverage_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_Ddelta_average_integrand_m = Module["_AT_RDD_Cucinotta_Ddelta_average_integrand_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_Ddelta_average_integrand_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_Ddelta_average_Gy = Module["_AT_RDD_Cucinotta_Ddelta_average_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_Ddelta_average_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_Dexc_average_Gy = Module["_AT_RDD_Cucinotta_Dexc_average_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_Dexc_average_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_Cnorm = Module["_AT_RDD_Cucinotta_Cnorm"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_Cnorm"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Geiss_average_Gy = Module["_AT_RDD_Geiss_average_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Geiss_average_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_LinearER_dEdx_J_m = Module["_AT_RDD_Katz_LinearER_dEdx_J_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_LinearER_dEdx_J_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_PowerLawER_dEdx_J_m = Module["_AT_RDD_Katz_PowerLawER_dEdx_J_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_PowerLawER_dEdx_J_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_LinearER_DSite_Gy = Module["_AT_RDD_Katz_LinearER_DSite_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_LinearER_DSite_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_PowerLawER_DSite_Gy = Module["_AT_RDD_Katz_PowerLawER_DSite_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_PowerLawER_DSite_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_KatzSite_Gy = Module["_AT_RDD_KatzSite_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_KatzSite_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_KatzSite_m = Module["_AT_inverse_RDD_KatzSite_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_KatzSite_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Test_Gy = Module["_AT_RDD_Test_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Test_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_Test_m = Module["_AT_inverse_RDD_Test_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_Test_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Geiss_Gy = Module["_AT_RDD_Geiss_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Geiss_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_Geiss_m = Module["_AT_inverse_RDD_Geiss_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_Geiss_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_coeff_Gy = Module["_AT_RDD_Katz_coeff_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_coeff_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_coeff_Gy_general = Module["_AT_RDD_Katz_coeff_Gy_general"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_coeff_Gy_general"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_LinearER_Dpoint_Gy = Module["_AT_RDD_Katz_LinearER_Dpoint_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_LinearER_Dpoint_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Katz_PowerLawER_Dpoint_Gy = Module["_AT_RDD_Katz_PowerLawER_Dpoint_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Katz_PowerLawER_Dpoint_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_KatzPoint_Gy = Module["_AT_RDD_KatzPoint_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_KatzPoint_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_KatzPoint_LinearER_m = Module["_AT_inverse_RDD_KatzPoint_LinearER_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_KatzPoint_LinearER_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy = Module["_AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_KatzPoint_PowerLawER_solver_function_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_KatzPoint_m = Module["_AT_inverse_RDD_KatzPoint_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_KatzPoint_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_f_shortRange = Module["_AT_RDD_Cucinotta_f_shortRange"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_f_shortRange"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_f_longRange = Module["_AT_RDD_Cucinotta_f_longRange"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_f_longRange"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_Ddelta_Gy = Module["_AT_RDD_Cucinotta_Ddelta_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_Ddelta_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_Cucinotta_Dexc_Gy = Module["_AT_RDD_Cucinotta_Dexc_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_Cucinotta_Dexc_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_CucinottaPoint_Gy = Module["_AT_RDD_CucinottaPoint_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_CucinottaPoint_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_Cucinotta_solver_function_Gy = Module["_AT_inverse_RDD_Cucinotta_solver_function_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_Cucinotta_solver_function_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RDD_Cucinotta_m = Module["_AT_inverse_RDD_Cucinotta_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RDD_Cucinotta_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_RadicalDiffusion_get_energy_idx = Module["_AT_RDD_RadicalDiffusion_get_energy_idx"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_RadicalDiffusion_get_energy_idx"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_RDD_RadicalDiffusion_Gy = Module["_AT_RDD_RadicalDiffusion_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_RDD_RadicalDiffusion_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_r_min_RadicalDiffusion_m = Module["_AT_r_min_RadicalDiffusion_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_r_min_RadicalDiffusion_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_d_max_RadicalDiffusion_Gy = Module["_AT_d_max_RadicalDiffusion_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_d_max_RadicalDiffusion_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_r_max_RadicalDiffusion_m = Module["_AT_r_max_RadicalDiffusion_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_r_max_RadicalDiffusion_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_n_bins_RadicalDiffusion = Module["_AT_n_bins_RadicalDiffusion"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_n_bins_RadicalDiffusion"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_inverse_RadicalDiffusion_m = Module["_AT_inverse_RadicalDiffusion_m"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_inverse_RadicalDiffusion_m"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_d_min_RadicalDiffusion_Gy = Module["_AT_d_min_RadicalDiffusion_Gy"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_d_min_RadicalDiffusion_Gy"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_E_RadicalDiffusion_MeV_u = Module["_AT_E_RadicalDiffusion_MeV_u"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_E_RadicalDiffusion_MeV_u"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_get_number_of_bytes_in_file = Module["_AT_SPC_get_number_of_bytes_in_file"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_get_number_of_bytes_in_file"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_fast_read_buffer = Module["_AT_SPC_fast_read_buffer"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_fast_read_buffer"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_decompose_size = Module["_AT_SPC_decompose_size"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_decompose_size"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_decompose_header = Module["_AT_SPC_decompose_header"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_decompose_header"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_decompose_data = Module["_AT_SPC_decompose_data"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_decompose_data"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_get_number_of_bins_from_filename_fast = Module["_AT_SPC_get_number_of_bins_from_filename_fast"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_get_number_of_bins_from_filename_fast"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_read_header_from_filename_fast = Module["_AT_SPC_read_header_from_filename_fast"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_read_header_from_filename_fast"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_read_data_from_filename_fast = Module["_AT_SPC_read_data_from_filename_fast"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_read_data_from_filename_fast"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_read_from_filename_fast = Module["_AT_SPC_read_from_filename_fast"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_read_from_filename_fast"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_number_of_bins_at_range = Module["_AT_SPC_number_of_bins_at_range"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_number_of_bins_at_range"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SPC_spectrum_at_range = Module["_AT_SPC_spectrum_at_range"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SPC_spectrum_at_range"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Mass_Stopping_Power = Module["_AT_Mass_Stopping_Power"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Mass_Stopping_Power"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Mass_Stopping_Power_with_no = Module["_AT_Mass_Stopping_Power_with_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Mass_Stopping_Power_with_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Stopping_Power = Module["_AT_Stopping_Power"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Stopping_Power"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Stopping_Power_with_no = Module["_AT_Stopping_Power_with_no"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Stopping_Power_with_no"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Energy_MeV_u_from_Stopping_Power_single = Module["_AT_Energy_MeV_u_from_Stopping_Power_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Energy_MeV_u_from_Stopping_Power_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_stopping_power_source_model_name_from_number = Module["_AT_stopping_power_source_model_name_from_number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_stopping_power_source_model_name_from_number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_stopping_power_source_model_number_from_name = Module["_AT_stopping_power_source_model_number_from_name"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_stopping_power_source_model_number_from_name"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Bethe_wrapper = Module["_AT_Bethe_wrapper"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Bethe_wrapper"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Bethe_energy_loss_MeV_cm2_g = Module["_AT_Bethe_energy_loss_MeV_cm2_g"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Bethe_energy_loss_MeV_cm2_g"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Bethe_energy_loss_MeV_cm2_g_single = Module["_AT_Bethe_energy_loss_MeV_cm2_g_single"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Bethe_energy_loss_MeV_cm2_g_single"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_el_energy_loss_leading_term_MeV_cm2_g = Module["_AT_el_energy_loss_leading_term_MeV_cm2_g"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_el_energy_loss_leading_term_MeV_cm2_g"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Bethe_Stopping_Number = Module["_AT_Bethe_Stopping_Number"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Bethe_Stopping_Number"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_FromFile_wrapper = Module["_AT_FromFile_wrapper"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_FromFile_wrapper"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_ICRU_wrapper = Module["_AT_ICRU_wrapper"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_ICRU_wrapper"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_PSTAR_wrapper = Module["_AT_PSTAR_wrapper"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_PSTAR_wrapper"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_n_bins_for_single_impact_local_dose_distrib = Module["_AT_n_bins_for_single_impact_local_dose_distrib"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_n_bins_for_single_impact_local_dose_distrib"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_single_impact_local_dose_distrib = Module["_AT_single_impact_local_dose_distrib"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_single_impact_local_dose_distrib"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_n_bins_for_low_fluence_local_dose_distribution = Module["_AT_n_bins_for_low_fluence_local_dose_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_n_bins_for_low_fluence_local_dose_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_low_fluence_local_dose_distribution = Module["_AT_low_fluence_local_dose_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_low_fluence_local_dose_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Kellerer_normalize = Module["_AT_Kellerer_normalize"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Kellerer_normalize"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Kellerer_interpolation = Module["_AT_Kellerer_interpolation"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Kellerer_interpolation"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Kellerer_reset = Module["_AT_Kellerer_reset"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Kellerer_reset"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Kellerer_zero = Module["_AT_Kellerer_zero"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Kellerer_zero"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Kellerer_shrink = Module["_AT_Kellerer_shrink"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Kellerer_shrink"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_Kellerer_folding = Module["_AT_Kellerer_folding"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_Kellerer_folding"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_SuccessiveConvolutions = Module["_AT_SuccessiveConvolutions"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_SuccessiveConvolutions"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_n_bins_for_DSB_distribution = Module["_AT_n_bins_for_DSB_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_n_bins_for_DSB_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_get_DSB_distribution = Module["_AT_get_DSB_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_get_DSB_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var _AT_translate_dose_into_DSB_distribution = Module["_AT_translate_dose_into_DSB_distribution"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["AT_translate_dose_into_DSB_distribution"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
 var _fflush = Module["_fflush"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_fflush"].apply(null, arguments)
+  return Module["asm"]["fflush"].apply(null, arguments)
 };
 
-var _free = Module["_free"] = function() {
+/** @type {function(...*):?} */
+var ___errno_location = Module["___errno_location"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_free"].apply(null, arguments)
+  return Module["asm"]["__errno_location"].apply(null, arguments)
 };
 
-var _llvm_bswap_i32 = Module["_llvm_bswap_i32"] = function() {
+/** @type {function(...*):?} */
+var __get_tzname = Module["__get_tzname"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_llvm_bswap_i32"].apply(null, arguments)
+  return Module["asm"]["_get_tzname"].apply(null, arguments)
 };
 
+/** @type {function(...*):?} */
+var __get_daylight = Module["__get_daylight"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_get_daylight"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var __get_timezone = Module["__get_timezone"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_get_timezone"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
 var _malloc = Module["_malloc"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_malloc"].apply(null, arguments)
+  return Module["asm"]["malloc"].apply(null, arguments)
 };
 
-var _memcpy = Module["_memcpy"] = function() {
+/** @type {function(...*):?} */
+var _free = Module["_free"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_memcpy"].apply(null, arguments)
+  return Module["asm"]["free"].apply(null, arguments)
 };
 
-var _memset = Module["_memset"] = function() {
+/** @type {function(...*):?} */
+var ___set_stack_limit = Module["___set_stack_limit"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["_memset"].apply(null, arguments)
+  return Module["asm"]["__set_stack_limit"].apply(null, arguments)
 };
 
-var establishStackSpace = Module["establishStackSpace"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["establishStackSpace"].apply(null, arguments)
-};
-
-var stackAlloc = Module["stackAlloc"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["stackAlloc"].apply(null, arguments)
-};
-
-var stackRestore = Module["stackRestore"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["stackRestore"].apply(null, arguments)
-};
-
+/** @type {function(...*):?} */
 var stackSave = Module["stackSave"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["stackSave"].apply(null, arguments)
 };
 
-var dynCall_ddi = Module["dynCall_ddi"] = function() {
+/** @type {function(...*):?} */
+var stackAlloc = Module["stackAlloc"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_ddi"].apply(null, arguments)
+  return Module["asm"]["stackAlloc"].apply(null, arguments)
 };
 
-var dynCall_di = Module["dynCall_di"] = function() {
+/** @type {function(...*):?} */
+var stackRestore = Module["stackRestore"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_di"].apply(null, arguments)
+  return Module["asm"]["stackRestore"].apply(null, arguments)
 };
 
-var dynCall_idii = Module["dynCall_idii"] = function() {
+/** @type {function(...*):?} */
+var __growWasmMemory = Module["__growWasmMemory"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_idii"].apply(null, arguments)
+  return Module["asm"]["__growWasmMemory"].apply(null, arguments)
 };
 
+/** @type {function(...*):?} */
 var dynCall_ii = Module["dynCall_ii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["dynCall_ii"].apply(null, arguments)
 };
 
-var dynCall_iidii = Module["dynCall_iidii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iidii"].apply(null, arguments)
-};
-
-var dynCall_iidiiii = Module["dynCall_iidiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iidiiii"].apply(null, arguments)
-};
-
-var dynCall_iii = Module["dynCall_iii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iii"].apply(null, arguments)
-};
-
-var dynCall_iiidddddd = Module["dynCall_iiidddddd"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiidddddd"].apply(null, arguments)
-};
-
+/** @type {function(...*):?} */
 var dynCall_iiii = Module["dynCall_iiii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["dynCall_iiii"].apply(null, arguments)
 };
 
-var dynCall_iiiidd = Module["dynCall_iiiidd"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiiidd"].apply(null, arguments)
-};
-
-var dynCall_iiiii = Module["dynCall_iiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiiii"].apply(null, arguments)
-};
-
-var dynCall_iiiiii = Module["dynCall_iiiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiiiii"].apply(null, arguments)
-};
-
-var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiiiiii"].apply(null, arguments)
-};
-
-var dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiiiiiii"].apply(null, arguments)
-};
-
-var dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiiiiiiii"].apply(null, arguments)
-};
-
+/** @type {function(...*):?} */
 var dynCall_jiji = Module["dynCall_jiji"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["dynCall_jiji"].apply(null, arguments)
 };
 
-var dynCall_vi = Module["dynCall_vi"] = function() {
+/** @type {function(...*):?} */
+var dynCall_iidiiii = Module["dynCall_iidiiii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_vi"].apply(null, arguments)
+  return Module["asm"]["dynCall_iidiiii"].apply(null, arguments)
 };
 
-var dynCall_viddiiii = Module["dynCall_viddiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_viddiiii"].apply(null, arguments)
-};
-
+/** @type {function(...*):?} */
 var dynCall_vii = Module["dynCall_vii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["dynCall_vii"].apply(null, arguments)
 };
 
+/** @type {function(...*):?} */
+var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_viiii = Module["dynCall_viiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viiii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_ddi = Module["dynCall_ddi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_ddi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_viddiiii = Module["dynCall_viddiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_viddiiii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiidddddd = Module["dynCall_iiidddddd"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiidddddd"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiiiii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiidd = Module["dynCall_iiiidd"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiidd"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiiii = Module["dynCall_iiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iii = Module["dynCall_iii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iidii = Module["dynCall_iidii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iidii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiii = Module["dynCall_iiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_vi = Module["dynCall_vi"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_vi"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_idii = Module["dynCall_idii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_idii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiiiiiii"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
+var dynCall_di = Module["dynCall_di"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_di"].apply(null, arguments)
+};
+
+/** @type {function(...*):?} */
 var dynCall_viii = Module["dynCall_viii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["dynCall_viii"].apply(null, arguments)
 };
 
-var dynCall_viiii = Module["dynCall_viiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_viiii"].apply(null, arguments)
-};
-;
 
 
+/**
+ * @license
+ * Copyright 2010 The Emscripten Authors
+ * SPDX-License-Identifier: MIT
+ */
 
 // === Auto-generated postamble setup entry stuff ===
 
@@ -7493,20 +7933,11 @@ if (!Object.getOwnPropertyDescriptor(Module, "setValue")) Module["setValue"] = f
 if (!Object.getOwnPropertyDescriptor(Module, "getValue")) Module["getValue"] = function() { abort("'getValue' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "allocate")) Module["allocate"] = function() { abort("'allocate' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "getMemory")) Module["getMemory"] = function() { abort("'getMemory' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
-if (!Object.getOwnPropertyDescriptor(Module, "AsciiToString")) Module["AsciiToString"] = function() { abort("'AsciiToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "stringToAscii")) Module["stringToAscii"] = function() { abort("'stringToAscii' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "UTF8ArrayToString")) Module["UTF8ArrayToString"] = function() { abort("'UTF8ArrayToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "UTF8ToString")) Module["UTF8ToString"] = function() { abort("'UTF8ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF8Array")) Module["stringToUTF8Array"] = function() { abort("'stringToUTF8Array' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF8")) Module["stringToUTF8"] = function() { abort("'stringToUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF8")) Module["lengthBytesUTF8"] = function() { abort("'lengthBytesUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "UTF16ToString")) Module["UTF16ToString"] = function() { abort("'UTF16ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF16")) Module["stringToUTF16"] = function() { abort("'stringToUTF16' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF16")) Module["lengthBytesUTF16"] = function() { abort("'lengthBytesUTF16' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "UTF32ToString")) Module["UTF32ToString"] = function() { abort("'UTF32ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF32")) Module["stringToUTF32"] = function() { abort("'stringToUTF32' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF32")) Module["lengthBytesUTF32"] = function() { abort("'lengthBytesUTF32' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "allocateUTF8")) Module["allocateUTF8"] = function() { abort("'allocateUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "stackTrace")) Module["stackTrace"] = function() { abort("'stackTrace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "addOnPreRun")) Module["addOnPreRun"] = function() { abort("'addOnPreRun' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "addOnInit")) Module["addOnInit"] = function() { abort("'addOnInit' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
@@ -7518,8 +7949,6 @@ if (!Object.getOwnPropertyDescriptor(Module, "writeArrayToMemory")) Module["writ
 if (!Object.getOwnPropertyDescriptor(Module, "writeAsciiToMemory")) Module["writeAsciiToMemory"] = function() { abort("'writeAsciiToMemory' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "addRunDependency")) Module["addRunDependency"] = function() { abort("'addRunDependency' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
 if (!Object.getOwnPropertyDescriptor(Module, "removeRunDependency")) Module["removeRunDependency"] = function() { abort("'removeRunDependency' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
-if (!Object.getOwnPropertyDescriptor(Module, "ENV")) Module["ENV"] = function() { abort("'ENV' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "FS")) Module["FS"] = function() { abort("'FS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "FS_createFolder")) Module["FS_createFolder"] = function() { abort("'FS_createFolder' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
 if (!Object.getOwnPropertyDescriptor(Module, "FS_createPath")) Module["FS_createPath"] = function() { abort("'FS_createPath' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
 if (!Object.getOwnPropertyDescriptor(Module, "FS_createDataFile")) Module["FS_createDataFile"] = function() { abort("'FS_createDataFile' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
@@ -7528,7 +7957,6 @@ if (!Object.getOwnPropertyDescriptor(Module, "FS_createLazyFile")) Module["FS_cr
 if (!Object.getOwnPropertyDescriptor(Module, "FS_createLink")) Module["FS_createLink"] = function() { abort("'FS_createLink' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
 if (!Object.getOwnPropertyDescriptor(Module, "FS_createDevice")) Module["FS_createDevice"] = function() { abort("'FS_createDevice' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
 if (!Object.getOwnPropertyDescriptor(Module, "FS_unlink")) Module["FS_unlink"] = function() { abort("'FS_unlink' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") };
-if (!Object.getOwnPropertyDescriptor(Module, "GL")) Module["GL"] = function() { abort("'GL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "dynamicAlloc")) Module["dynamicAlloc"] = function() { abort("'dynamicAlloc' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "loadDynamicLibrary")) Module["loadDynamicLibrary"] = function() { abort("'loadDynamicLibrary' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "loadWebAssemblyModule")) Module["loadWebAssemblyModule"] = function() { abort("'loadWebAssemblyModule' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
@@ -7543,25 +7971,95 @@ if (!Object.getOwnPropertyDescriptor(Module, "prettyPrint")) Module["prettyPrint
 if (!Object.getOwnPropertyDescriptor(Module, "makeBigInt")) Module["makeBigInt"] = function() { abort("'makeBigInt' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "dynCall")) Module["dynCall"] = function() { abort("'dynCall' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "getCompilerSetting")) Module["getCompilerSetting"] = function() { abort("'getCompilerSetting' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "stackSave")) Module["stackSave"] = function() { abort("'stackSave' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "stackRestore")) Module["stackRestore"] = function() { abort("'stackRestore' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "stackAlloc")) Module["stackAlloc"] = function() { abort("'stackAlloc' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "establishStackSpace")) Module["establishStackSpace"] = function() { abort("'establishStackSpace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "print")) Module["print"] = function() { abort("'print' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "printErr")) Module["printErr"] = function() { abort("'printErr' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "getTempRet0")) Module["getTempRet0"] = function() { abort("'getTempRet0' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "setTempRet0")) Module["setTempRet0"] = function() { abort("'setTempRet0' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "callMain")) Module["callMain"] = function() { abort("'callMain' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "abort")) Module["abort"] = function() { abort("'abort' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
-if (!Object.getOwnPropertyDescriptor(Module, "Pointer_stringify")) Module["Pointer_stringify"] = function() { abort("'Pointer_stringify' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stringToNewUTF8")) Module["stringToNewUTF8"] = function() { abort("'stringToNewUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "abortOnCannotGrowMemory")) Module["abortOnCannotGrowMemory"] = function() { abort("'abortOnCannotGrowMemory' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "emscripten_realloc_buffer")) Module["emscripten_realloc_buffer"] = function() { abort("'emscripten_realloc_buffer' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "ENV")) Module["ENV"] = function() { abort("'ENV' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "setjmpId")) Module["setjmpId"] = function() { abort("'setjmpId' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "ERRNO_CODES")) Module["ERRNO_CODES"] = function() { abort("'ERRNO_CODES' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "ERRNO_MESSAGES")) Module["ERRNO_MESSAGES"] = function() { abort("'ERRNO_MESSAGES' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "setErrNo")) Module["setErrNo"] = function() { abort("'setErrNo' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "DNS")) Module["DNS"] = function() { abort("'DNS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "GAI_ERRNO_MESSAGES")) Module["GAI_ERRNO_MESSAGES"] = function() { abort("'GAI_ERRNO_MESSAGES' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "Protocols")) Module["Protocols"] = function() { abort("'Protocols' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "Sockets")) Module["Sockets"] = function() { abort("'Sockets' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "UNWIND_CACHE")) Module["UNWIND_CACHE"] = function() { abort("'UNWIND_CACHE' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "readAsmConstArgs")) Module["readAsmConstArgs"] = function() { abort("'readAsmConstArgs' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "jstoi_q")) Module["jstoi_q"] = function() { abort("'jstoi_q' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "jstoi_s")) Module["jstoi_s"] = function() { abort("'jstoi_s' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "reallyNegative")) Module["reallyNegative"] = function() { abort("'reallyNegative' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "formatString")) Module["formatString"] = function() { abort("'formatString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "PATH")) Module["PATH"] = function() { abort("'PATH' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "PATH_FS")) Module["PATH_FS"] = function() { abort("'PATH_FS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "SYSCALLS")) Module["SYSCALLS"] = function() { abort("'SYSCALLS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "syscallMmap2")) Module["syscallMmap2"] = function() { abort("'syscallMmap2' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "syscallMunmap")) Module["syscallMunmap"] = function() { abort("'syscallMunmap' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "JSEvents")) Module["JSEvents"] = function() { abort("'JSEvents' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "specialHTMLTargets")) Module["specialHTMLTargets"] = function() { abort("'specialHTMLTargets' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "demangle")) Module["demangle"] = function() { abort("'demangle' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "demangleAll")) Module["demangleAll"] = function() { abort("'demangleAll' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "jsStackTrace")) Module["jsStackTrace"] = function() { abort("'jsStackTrace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stackTrace")) Module["stackTrace"] = function() { abort("'stackTrace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "getEnvStrings")) Module["getEnvStrings"] = function() { abort("'getEnvStrings' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToI64")) Module["writeI53ToI64"] = function() { abort("'writeI53ToI64' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToI64Clamped")) Module["writeI53ToI64Clamped"] = function() { abort("'writeI53ToI64Clamped' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToI64Signaling")) Module["writeI53ToI64Signaling"] = function() { abort("'writeI53ToI64Signaling' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToU64Clamped")) Module["writeI53ToU64Clamped"] = function() { abort("'writeI53ToU64Clamped' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToU64Signaling")) Module["writeI53ToU64Signaling"] = function() { abort("'writeI53ToU64Signaling' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "readI53FromI64")) Module["readI53FromI64"] = function() { abort("'readI53FromI64' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "readI53FromU64")) Module["readI53FromU64"] = function() { abort("'readI53FromU64' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "convertI32PairToI53")) Module["convertI32PairToI53"] = function() { abort("'convertI32PairToI53' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "convertU32PairToI53")) Module["convertU32PairToI53"] = function() { abort("'convertU32PairToI53' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "Browser")) Module["Browser"] = function() { abort("'Browser' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "FS")) Module["FS"] = function() { abort("'FS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "MEMFS")) Module["MEMFS"] = function() { abort("'MEMFS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "TTY")) Module["TTY"] = function() { abort("'TTY' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "PIPEFS")) Module["PIPEFS"] = function() { abort("'PIPEFS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "SOCKFS")) Module["SOCKFS"] = function() { abort("'SOCKFS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "GL")) Module["GL"] = function() { abort("'GL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGet")) Module["emscriptenWebGLGet"] = function() { abort("'emscriptenWebGLGet' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetTexPixelData")) Module["emscriptenWebGLGetTexPixelData"] = function() { abort("'emscriptenWebGLGetTexPixelData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetUniform")) Module["emscriptenWebGLGetUniform"] = function() { abort("'emscriptenWebGLGetUniform' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetVertexAttrib")) Module["emscriptenWebGLGetVertexAttrib"] = function() { abort("'emscriptenWebGLGetVertexAttrib' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "AL")) Module["AL"] = function() { abort("'AL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "SDL_unicode")) Module["SDL_unicode"] = function() { abort("'SDL_unicode' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "SDL_ttfContext")) Module["SDL_ttfContext"] = function() { abort("'SDL_ttfContext' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "SDL_audio")) Module["SDL_audio"] = function() { abort("'SDL_audio' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "SDL")) Module["SDL"] = function() { abort("'SDL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "SDL_gfx")) Module["SDL_gfx"] = function() { abort("'SDL_gfx' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "GLUT")) Module["GLUT"] = function() { abort("'GLUT' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "EGL")) Module["EGL"] = function() { abort("'EGL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "GLFW_Window")) Module["GLFW_Window"] = function() { abort("'GLFW_Window' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "GLFW")) Module["GLFW"] = function() { abort("'GLFW' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "GLEW")) Module["GLEW"] = function() { abort("'GLEW' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "IDBStore")) Module["IDBStore"] = function() { abort("'IDBStore' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "runAndAbortIfError")) Module["runAndAbortIfError"] = function() { abort("'runAndAbortIfError' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 if (!Object.getOwnPropertyDescriptor(Module, "warnOnce")) Module["warnOnce"] = function() { abort("'warnOnce' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stackSave")) Module["stackSave"] = function() { abort("'stackSave' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stackRestore")) Module["stackRestore"] = function() { abort("'stackRestore' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stackAlloc")) Module["stackAlloc"] = function() { abort("'stackAlloc' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "AsciiToString")) Module["AsciiToString"] = function() { abort("'AsciiToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stringToAscii")) Module["stringToAscii"] = function() { abort("'stringToAscii' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "UTF16ToString")) Module["UTF16ToString"] = function() { abort("'UTF16ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF16")) Module["stringToUTF16"] = function() { abort("'stringToUTF16' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF16")) Module["lengthBytesUTF16"] = function() { abort("'lengthBytesUTF16' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "UTF32ToString")) Module["UTF32ToString"] = function() { abort("'UTF32ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF32")) Module["stringToUTF32"] = function() { abort("'stringToUTF32' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF32")) Module["lengthBytesUTF32"] = function() { abort("'lengthBytesUTF32' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "allocateUTF8")) Module["allocateUTF8"] = function() { abort("'allocateUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
+if (!Object.getOwnPropertyDescriptor(Module, "allocateUTF8OnStack")) Module["allocateUTF8OnStack"] = function() { abort("'allocateUTF8OnStack' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") };
 Module["writeStackCookie"] = writeStackCookie;
 Module["checkStackCookie"] = checkStackCookie;
 Module["abortStackOverflow"] = abortStackOverflow;if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_NORMAL")) Object.defineProperty(Module, "ALLOC_NORMAL", { configurable: true, get: function() { abort("'ALLOC_NORMAL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_STACK")) Object.defineProperty(Module, "ALLOC_STACK", { configurable: true, get: function() { abort("'ALLOC_STACK' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_DYNAMIC")) Object.defineProperty(Module, "ALLOC_DYNAMIC", { configurable: true, get: function() { abort("'ALLOC_DYNAMIC' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_NONE")) Object.defineProperty(Module, "ALLOC_NONE", { configurable: true, get: function() { abort("'ALLOC_NONE' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)") } });
-if (!Object.getOwnPropertyDescriptor(Module, "calledRun")) Object.defineProperty(Module, "calledRun", { configurable: true, get: function() { abort("'calledRun' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ). Alternatively, forcing filesystem support (-s FORCE_FILESYSTEM=1) can export this for you") } });
 
 
 
@@ -7610,6 +8108,7 @@ function run(args) {
     // or while the async setStatus time below was happening
     if (calledRun) return;
     calledRun = true;
+    Module['calledRun'] = true;
 
     if (ABORT) return;
 
@@ -7680,6 +8179,7 @@ function checkUnflushedContent() {
   }
 }
 
+/** @param {boolean|number=} implicit */
 function exit(status, implicit) {
   checkUnflushedContent();
 
