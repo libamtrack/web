@@ -1,5 +1,6 @@
 import React from "react";
-import { Modal, List, Button, Icon } from 'antd';
+import { Modal, List, Button} from 'antd';
+import Icon from '@ant-design/icons';
 
 const confirm = Modal.confirm;
 

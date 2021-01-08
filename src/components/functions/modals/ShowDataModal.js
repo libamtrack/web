@@ -1,5 +1,6 @@
 import React from "react";
-import { Row, Col, Modal, Button, Icon, Tooltip } from 'antd';
+import { Row, Col, Modal, Button, Tooltip } from 'antd';
+import Icon from '@ant-design/icons';
 
 const ShowDataSeriesModal = (props) => {
     let i = 0;
