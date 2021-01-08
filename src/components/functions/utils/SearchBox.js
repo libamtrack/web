@@ -1,6 +1,7 @@
 import React from "react";
 import {Link, Redirect} from 'react-router-dom';
-import {AutoComplete, Button, Icon, Input} from 'antd';
+import {AutoComplete, Button, Input} from 'antd';
+import Icon from '@ant-design/icons';
 
 export default class SearchBox extends React.Component {
     state = {

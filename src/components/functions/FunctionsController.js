@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Breadcrumb, Icon, Spin, Tooltip} from 'antd';
+import {Breadcrumb, Spin, Tooltip} from 'antd';
+import Icon from '@ant-design/icons';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';

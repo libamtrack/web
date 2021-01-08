@@ -1,64 +1,47 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const path = require('path');
-const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
+const path = require("path");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-var Visualizer = require('webpack-visualizer-plugin');
 
-const htmlPlugin = new HtmlWebPackPlugin({
-    template: "./src/index.html",
-    filename: "./index.html"
-});
-const copyStatic = new CopyWebpackPlugin([
-    {
-        from: 'src/static/',
-        to: "static/"
-    }
-]);
-const copyWasm = new CopyWebpackPlugin([
-    {
-        from: 'src/libat.wasm',
-        to: ""
-    }
-]);
 
 module.exports = {
     entry: ['@babel/polyfill', './src/index.js'],
-    node: {
-        fs: 'empty'
-    },
-    target: 'web',
     output: {
-        path: path.join(__dirname, "dist"),
+        path: path.resolve(process.cwd(), 'dist'),
         filename: "bundle.js"
     },
-
     module: {
         rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
-            },
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"]
             },
             {
-                test: /\.(png|jpg|gif)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {}
-                    }
-                ]
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ["babel-loader"]
+            },
+            {
+                test: /\.(png|jpg|gif|ico)$/,
+                loader: 'file-loader',
             },
         ]
     },
-    plugins: [htmlPlugin, copyStatic, copyWasm, new BundleAnalyzerPlugin({"openAnalyzer":false, "analyzerMode":"static"}),
-        new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('production')
-    }), new Visualizer({"filename":"report.html"})]
+    plugins: [
+        new CleanWebpackPlugin({
+            cleanStaleWebpackAssets: false,
+
+        }),
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, "src", "index.html")
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: "src/static" , to : "static"},
+                { from: "src/libat.wasm"},
+            ]
+        }),
+        new BundleAnalyzerPlugin({"openAnalyzer":false, "analyzerMode":"static"})
+    ]
 };
