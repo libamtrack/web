@@ -14,13 +14,13 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
-            },
-            {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: ["babel-loader"]
+            },
+            {
+                test: /\.css$/,
+                use: ["style-loader", "css-loader"]
             },
             {
                 test: /\.(png|jpg|gif|ico)$/,
@@ -31,7 +31,6 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin({
             cleanStaleWebpackAssets: false,
-
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, "src", "index.html")
