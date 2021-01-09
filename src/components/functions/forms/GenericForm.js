@@ -1,13 +1,14 @@
 import React from 'react';
 
 import Button from "antd/es/button/button";
-import Form from "antd/es/form/Form";
+// import Form from "antd/es/form/Form";
+import { Form as LegacyForm } from '@ant-design/compatible';
 import Input from "antd/es/input/Input";
 import Tooltip from "antd/es/tooltip/index";
 import Select from "antd/es/select/index";
 
 
-const FormItem = Form.Item;
+const FormItem = LegacyForm.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
@@ -51,14 +52,14 @@ class FormGenerator extends React.Component {
         }
 
         return (
-            <Form onSubmit={this.handleSubmit} layout='horizontal' >
+            <LegacyForm onSubmit={this.handleSubmit} layout='horizontal' >
                 <div>
                     {generatedForm}
                 </div>
                     <FormItem style={{ margin: 6 }} label={" "} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan }} colon={false}>
                         <Button style={{ width: inputFieldWidth }} type='primary' htmlType='submit'>Submit</Button>
                     </FormItem>
-            </Form>
+            </LegacyForm>
         );
     };
 
@@ -358,5 +359,5 @@ class FormGenerator extends React.Component {
     }
 }
 
-const GenericForm = Form.create()(FormGenerator);
+const GenericForm = LegacyForm.create()(FormGenerator);
 export default GenericForm;

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Breadcrumb, Spin, Tooltip} from 'antd';
-import Icon from '@ant-design/icons';
+import {EditOutlined} from '@ant-design/icons';
 import PlotComponent from './plots/PlotComponent.js';
 import MoreOptionsForm from './forms/MoreOptionsForm.js';
 import GenericForm from './forms/GenericForm.js';
@@ -12,7 +12,8 @@ import packageJson from '../../../package.json';
 import {Link} from "react-router-dom";
 import ErrorModal from "./modals/ErrorModal";
 import Script from 'react-load-script'
-import {Col, Row} from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import FormItem from "antd/es/form/FormItem";
 
 export default class FunctionsController extends Component {
@@ -96,8 +97,10 @@ export default class FunctionsController extends Component {
                 <h3>{this.state.json.visibleName.concat(" ")}
                     <a href={packageJson.repository.concat("/edit/master/src/".concat(this.props.jsonPath))}>
                         <Tooltip title="Edit this page on GitHub!">
-                            <Icon type="edit" style={{ fontSize: 20, color: 'black' }} theme='twoTone' />
+                            <EditOutlined />
+                            {/*<EditTwoTone style={{ fontSize: 20, color: 'black' }}/>*/}
                         </Tooltip>
+                        {/*<EditTwoTone/>*/}
                     </a>
                 </h3>
                 {this.state.json.description}
