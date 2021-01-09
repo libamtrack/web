@@ -49,6 +49,7 @@
     "@babel/polyfill": "7.12.1",
     "@babel/preset-env": "7.12.11",
     "@babel/preset-react": "7.12.10",
+    "@babel/runtime": "7.12.5",
     "@webpack-cli/serve": "1.2.1",
     "babel-loader": "8.2.2",
     "copy-webpack-plugin": "7.0.0",
@@ -75,21 +76,21 @@
   ],
   "dependencies": {
     "@axetroy/react-download": "1.1.1",
-    "antd": "3.26.20",
-    "@ant-design/icons": "~2.1.1",
-    "@ant-design/icons-react": "~2.0.1",
-    "babel-plugin-wildcard": "6.0.0",
+    "antd": "^4.10.0",
+    "@ant-design/compatible": "^1.0.8",
+    "@ant-design/icons": "^4.3.0",
+    "babel-plugin-wildcard": "^6.0.0",
     "bootstrap": "4.5.3",
     "jquery": "1.9.1 - 3",
     "plotly.js-basic-dist": "1.54.1",
     "popper.js": "^1.16.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
     "react-load-script": "0.0.6",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0"
   },
   "resolutions": {
-    "@babel/preset-env": "7.5.5"
+    "@babel/runtime": "^7.12.5"
   }
 }

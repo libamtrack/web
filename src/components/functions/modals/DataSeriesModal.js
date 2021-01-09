@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, List, Button} from 'antd';
-import Icon from '@ant-design/icons';
+import {DeleteOutlined, DownloadOutlined, EditTwoTone, TableOutlined} from '@ant-design/icons';
 
 const confirm = Modal.confirm;
 
@@ -37,12 +37,12 @@ export default class DataSeriesModal extends React.Component {
                     renderItem={series => (
                         <List.Item actions={
                             [
-                                <a onClick={() => this.props.showRenameModal(series.name)}>Rename <Icon type="edit" /></a>,
-                                <a onClick={() => this.props.showDataSeries(series.name)}>Show <Icon type="table" /></a>,
-                                <a onClick={() => this.props.downloadDataSeries(series)}>Download <Icon type="download" /></a>,
+                                <a onClick={() => this.props.showRenameModal(series.name)}>Rename <EditTwoTone /></a>,
+                                <a onClick={() => this.props.showDataSeries(series.name)}>Show <TableOutlined /></a>,
+                                <a onClick={() => this.props.downloadDataSeries(series)}>Download <DownloadOutlined /></a>,
                                 <a onClick={() => this.showConfirm(
                                     () => this.props.deleteDataSeries(series.name)
-                                )}>Delete <Icon type="delete" /></a>
+                                )}>Delete <DeleteOutlined /></a>
                             ]}>
                             <List.Item.Meta title={series.name} />
                         </List.Item>

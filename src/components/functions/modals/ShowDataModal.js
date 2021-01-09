@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Modal, Button, Tooltip } from 'antd';
-import Icon from '@ant-design/icons';
+import {EditTwoTone} from '@ant-design/icons';
 
 const ShowDataSeriesModal = (props) => {
     let i = 0;
@@ -13,8 +13,8 @@ const ShowDataSeriesModal = (props) => {
                         props.setModalVisible(props.name, false);
                         props.showRenameModal(props.dataSeriesName);
                     }}>
-                        <Tooltip title={"Edit name"}>
-                            <Icon type="edit" />
+                        <Tooltip title="Edit name">
+                            <EditTwoTone/>
                         </Tooltip>
                     </a>
                 </div>
@@ -39,7 +39,7 @@ const ShowDataSeriesModal = (props) => {
                 </div>
             }
         >
-            <Row type='flex' gutter={20} align="center">
+            <Row type='flex' gutter={20} align="middle">
                 <Col span={10} align="center">
                     <p>{"x"}</p>
                     {props.xList.map(x => (
