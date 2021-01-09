@@ -105,16 +105,16 @@ class MainPage extends React.Component {
                 this.setState({
                     rows:
                         (<div>
-                            <Row key={1} type='flex' gutter={10} align="middle" justify="center" style={{ paddingBottom: 25, paddingLeft: 25, paddingRight: 25 }}>
+                            <Row key={1} type='flex' gutter={10} justify="center" style={{ paddingBottom: 25, paddingLeft: 25, paddingRight: 25 }}>
                                 {this.state.introText}
                             </Row>
-                            <Row key={2} type='flex' gutter={10} align="middle" justify="center" style={{ paddingBottom: 25 }}>
+                            <Row key={2} type='flex' gutter={10} justify="center" style={{ paddingBottom: 25 }}>
                                 <SearchBox
                                     searchFuns={this.state.funs}
                                     searchStyle={searchStyle}
                                 />
                             </Row>
-                            <Row key={3} type='flex' gutter={10} align="middle" justify="center" style={{ paddingBottom: 25 }}>
+                            <Row key={3} type='flex' gutter={10} justify="center" style={{ paddingBottom: 25 }}>
                                 {categoriesForColumns.map((colums, index) => (
                                     <Col span={6} key={index} style={{ paddingLeft: 10, width: 320}}>
                                         {colums.map(category => (
