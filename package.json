@@ -4,10 +4,7 @@
   "private": false,
   "description": "Libamtrack Web Gui",
   "homepage": "https://libamtrack.github.io/web",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/libamtrack/web.git"
-  },
+  "repository": "https://github.com/libamtrack/web",
   "scripts": {
     "watch": "webpack --watch",
     "start": "webpack serve --compress --mode development --open",
