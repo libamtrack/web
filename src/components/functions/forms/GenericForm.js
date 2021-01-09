@@ -1,8 +1,11 @@
 import React from 'react';
 
 import Button from "antd/es/button/button";
-// import Form from "antd/es/form/Form";
+
+// temporary workaround, waiting for https://github.com/libamtrack/web/issues/596 to be fixed
+// Form needs to be migrated to ant design v4
 import { Form as LegacyForm } from '@ant-design/compatible';
+
 import Input from "antd/es/input/Input";
 import Tooltip from "antd/es/tooltip/index";
 import Select from "antd/es/select/index";

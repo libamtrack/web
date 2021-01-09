@@ -1,12 +1,14 @@
 {
   "name": "LibamtrackWeb",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": false,
   "description": "Libamtrack Web Gui",
   "homepage": "https://libamtrack.github.io/web",
-  "repository": "https://github.com/libamtrack/web",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/libamtrack/web.git"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
     "start": "webpack serve --compress --mode development --open",
     "build": "webpack --mode production",
@@ -40,7 +42,7 @@
     "provides",
     "auxiliary"
   ],
-  "author": "Arkadiusz Dudzik & Piotr Zmilczak",
+  "author": "Arkadiusz Dudzik, Piotr Zmilczak, Leszek Grzanka",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@babel/cli": "7.12.10",
