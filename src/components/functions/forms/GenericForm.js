@@ -5,6 +5,7 @@ import Button from "antd/es/button/button";
 // temporary workaround, waiting for https://github.com/libamtrack/web/issues/596 to be fixed
 // Form needs to be migrated to ant design v4
 import { Form as LegacyForm } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 
 import Input from "antd/es/input/Input";
 import Tooltip from "antd/es/tooltip/index";
@@ -111,7 +112,7 @@ class FormGenerator extends React.Component {
 
         return (
             <div>
-                <FormItem style={{ margin: 6 }} label={"Start " + label} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan }}>
+                <FormItem style={{ margin: 6 }} label={"Start " + label} labelCol={{ span: textLabelForInputSpan }} wrapperCol={{ span: inputFieldSpan}}>
                     <Tooltip title={"Insert start value"}>
                         {getFieldDecorator(startName, {
                             rules: [{

@@ -97,7 +97,7 @@ export default class FunctionsController extends Component {
                 <h3>{this.state.json.visibleName.concat(" ")}
                     <a href={packageJson.repository.concat("/edit/master/src/".concat(this.props.jsonPath))}>
                         <Tooltip title="Edit this page on GitHub!">
-                            <EditOutlined />
+                            <EditOutlined style={{ fontSize : 'small' }}/>
                         </Tooltip>
                     </a>
                 </h3>
