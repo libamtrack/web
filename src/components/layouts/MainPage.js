@@ -6,11 +6,8 @@ import FunctionsView from '../layouts/FunctionsView.js';
 import SearchBox from "../functions/utils/SearchBox";
 import Layout from "antd/es/layout/layout";
 import Row from "antd/es/row/index";
-import Col from "react-bootstrap/es/Col";
-import ListGroup from "react-bootstrap/es/ListGroup";
-import ListGroupItem from "react-bootstrap/es/ListGroupItem";
-import Route from "react-router-dom/es/Route";
-import Link from "react-router-dom/es/Link";
+import {Col, ListGroup, ListGroupItem} from "react-bootstrap";
+import {Route, Link} from "react-router-dom";
 import packageJson from '../../../package.json';
 
 const { Header, Content, Footer } = Layout;
@@ -75,14 +72,14 @@ class MainPage extends React.Component {
                     this.state.introText = confData.introText;
                     this.state.dictionariesPaths = confData.dictionaries;
                     
-                    let bundleAnalyzeReportOnlyAtWebDev = packageJson.homepage.indexOf("web_dev") === -1 ? "" : <Row><a href="report.html" target="_blank">{"See the bundle.js analyze"}</a></Row>;
+                    let bundleAnalyzeReportOnlyAtWebDev = packageJson.homepage.indexOf("web_dev") === -1 ? "" : <Row justify="center"><a href="report.html" target="_blank">{"See the bundle.js analyze"}</a></Row>;
                     
                     this.state.footer = 
                     <Footer key={"footer"} style={{ textAlign: 'center', background: '#fff' }}>
-                        <Row>{confData.footerText1} Find code at
+                        <Row justify="center">{confData.footerText1} Find code at
                         <a href={packageJson.repository}><img key={"githubImg"} src={githubLogo} align="center" style={{ 'height': '25px', 'width': '62px', 'marginLeft': '3px', 'marginBottom': '3px'}}/></a></Row>
-                        <Row style={{  'font-size': '10px', 'font-style': 'italic' }}>{confData.footerText2}</Row>
-                        <Row style={{  'font-size': '10px', 'font-style': 'italic' }}>{"Deploy date: " + confData.deployDate + " from branch: "
+                        <Row justify="center" style={{  'fontSize': '10px', 'fontStyle': 'italic' }}>{confData.footerText2}</Row>
+                        <Row justify="center" style={{  'fontSize': '10px', 'fontStyle': 'italic' }}>{"Deploy date: " + confData.deployDate + " from branch: "
                         + confData.deployBranch + " and commit number: " + confData.deployCommit}</Row>
                         {bundleAnalyzeReportOnlyAtWebDev}
                     </Footer>;
@@ -108,16 +105,16 @@ class MainPage extends React.Component {
                 this.setState({
                     rows:
                         (<div>
-                            <Row key={1} type='flex' gutter={10} align="center" style={{ paddingBottom: 25, paddingLeft: 25, paddingRight: 25 }}>
+                            <Row key={1} type='flex' gutter={10} justify="center" style={{ paddingBottom: 25, paddingLeft: 25, paddingRight: 25 }}>
                                 {this.state.introText}
                             </Row>
-                            <Row key={2} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
+                            <Row key={2} type='flex' gutter={10} justify="center" style={{ paddingBottom: 25 }}>
                                 <SearchBox
                                     searchFuns={this.state.funs}
                                     searchStyle={searchStyle}
                                 />
                             </Row>
-                            <Row key={3} type='flex' gutter={10} align="center" style={{ paddingBottom: 25 }}>
+                            <Row key={3} type='flex' gutter={10} justify="center" style={{ paddingBottom: 25 }}>
                                 {categoriesForColumns.map((colums, index) => (
                                     <Col span={6} key={index} style={{ paddingLeft: 10, width: 320}}>
                                         {colums.map(category => (
@@ -158,7 +155,7 @@ class MainPage extends React.Component {
                     <Layout key={"mainLayout"} className="layout">
                         {/*LOGO*/}
                         <Header key={"logoHeader"} style={{ background: "#fff", height: "200px" }}>
-                            <Row key={"logoRow"} type='flex' gutter={8} align="center">
+                            <Row key={"logoRow"} type='flex' gutter={8} align="middle" justify="center">
                                 <img key={"logoImg"} src={logo} align="center" className="App-logo" alt="logo" />
                             </Row>
                         </Header>

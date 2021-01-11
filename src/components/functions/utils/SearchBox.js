@@ -1,6 +1,6 @@
 import React from "react";
 import {Link, Redirect} from 'react-router-dom';
-import {AutoComplete, Button, Icon, Input} from 'antd';
+import {AutoComplete, Button, Input} from 'antd';
 
 export default class SearchBox extends React.Component {
     state = {
@@ -39,15 +39,12 @@ export default class SearchBox extends React.Component {
                 filterOption={(inputValue, option) =>
                     option.props.text.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
                 placeholder="Search functions"
-                optionLabelProp="text"
             >
-                <Input
-                    suffix={(
-                        <Button className="search-btn" size={size} style={buttonStyle} type="primary">
-                            <Icon type="search" />
-                        </Button>
-                    )}
-                />
+                <Input suffix={
+                    <Button shape="round" type="primary" size={size} style={buttonStyle}>
+                        Search
+                    </Button>
+                }/>
             </AutoComplete>
         );
     }
