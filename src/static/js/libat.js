@@ -6871,10 +6871,10 @@ var _AT_max_plateau_Bortfeld = Module["_AT_max_plateau_Bortfeld"] = function() {
 };
 
 /** @type {function(...*):?} */
-var _AT_energy_Bortfeld_MeV_u = Module["_AT_energy_Bortfeld_MeV_u"] = function() {
+var _AT_energy_Bortfeld_MeV = Module["_AT_energy_Bortfeld_MeV"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["AT_energy_Bortfeld_MeV_u"].apply(null, arguments)
+  return Module["asm"]["AT_energy_Bortfeld_MeV"].apply(null, arguments)
 };
 
 /** @type {function(...*):?} */
