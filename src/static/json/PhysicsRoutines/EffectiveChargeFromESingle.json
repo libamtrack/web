@@ -8,8 +8,8 @@
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy [MeV/amu]",
-      "placeholder": "Energy [MeV/amu]",
+      "label": "Energy [MeV/u]",
+      "placeholder": "Energy [MeV/u]",
       "defaultValue": "10",
       "validations": {
         "type": "float",

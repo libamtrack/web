@@ -23,7 +23,7 @@
     {
       "type": "input",
       "parameterName": "E_MeV_u",
-      "label": "Energy [MeV/amu]",
+      "label": "Energy [MeV/u]",
       "placeholder": "150",
       "defaultValue": "150",
       "description": "Energy per unit mass",

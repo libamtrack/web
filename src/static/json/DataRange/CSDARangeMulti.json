@@ -3,7 +3,7 @@
     "functionName": "AT_CSDA_range_g_cm2_multi",
     "description": "CSDA range using the PSTAR stopping power data. It is possible to calculate a range until final energy is reached, instead of until full particle stop.",
     "plot": true,
-    "xTitle": "Initial energy [MeV/amu]",
+    "xTitle": "Initial energy [MeV/u]",
     "yTitle": "CSDA range [g/cm^2]",
     "resultPrecision": 6,
     "formItems": [
@@ -12,7 +12,7 @@
             "parameterName": "E_initial_MeV_u",
             "startholder": "0.0",
             "endholder": "500",
-            "label": "energy [MeV/amu]",
+            "label": "energy [MeV/u]",
             "intervalType": "points",
             "stepDefaultValue": "1",
             "pointsDefaultNumber": "500",
@@ -25,7 +25,7 @@
         {
             "type": "input",
             "parameterName": "E_final_MeV_u",
-            "label": "Final Energy [MeV/amu]",
+            "label": "Final Energy [MeV/u]",
             "placeholder": "Final energy",
             "asManyAsPoints": true,
             "defaultValue": "0",

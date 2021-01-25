@@ -3,13 +3,13 @@
   "functionName": "AT_CSDA_energy_after_slab_E_MeV_u_single",
   "description": "The ion energy after passing a slab of material (CSDA approach, Bethe-Bloch stopping power)",
   "plot": false,
-  "resultUnit": "MeV/amu",
+  "resultUnit": "MeV/u",
   "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",
       "parameterName": "E_initial_MeV_u",
-      "label": "Initial Energy [MeV/amu]",
+      "label": "Initial Energy [MeV/u]",
       "placeholder": "Initial energy",
       "defaultValue": "150",
       "validations": {

@@ -2,14 +2,14 @@
   "visibleName": "Dose from fluence and energy",
   "functionName": "AT_dose_Gy_from_fluence_cm2",
   "description": "Entrance dose delivered by fixed number of particles with various kinetic energies. Calculated assuming validity of track-segment condition.",
-  "xTitle": "Energy[MeV/amu]",
+  "xTitle": "Energy[MeV/u]",
   "yTitle": "Dose [Gy]",
   "plot": true,
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "label": "energy [MeV/amu]",
+      "label": "energy [MeV/u]",
       "startholder": "20",
       "endholder": "200",
       "intervalType": "points",
