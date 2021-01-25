@@ -5,43 +5,6 @@
   "footerText2": "This project has received funding from the European Union's H2020 Research and Innovation Programme, under Grant Agreement No: 730983",
   "categories": [
     {
-      "name": "Energy And Momentum",
-      "style": {
-        "background": "#3727AA",
-        "border": "3727AA",
-        "color": "white"
-      },
-      "functionsStyle": {
-        "color": "black"
-      },
-      "functions": [
-        {
-          "name": "Relativistic β vs energy",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromE.json"
-        },
-        {
-          "name": "Energy vs relativistic β",
-          "jsonConfigPath": "/PhysicsRoutines/EFromBeta.json"
-        },
-        {
-          "name": "Relativistic γ vs energy",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromE.json"
-        },
-        {
-          "name": "Energy vs relativistic  γ",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGamma.json"
-        },
-        {
-          "name": "Momentum vs energy",
-          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromE.json"
-        },
-        {
-          "name": "Energy vs momentum",
-          "jsonConfigPath": "/PhysicsRoutines/EFromMomentum.json"
-        }
-      ]
-    },
-    {
       "name": "Proton-therapy analytical models",
       "style": {
         "background": "#3727AA",
@@ -82,7 +45,7 @@
       },
       "functions": [
         {
-          "name": "CSDA range of proton/ion",
+          "name": "CSDA range vs energy",
           "jsonConfigPath": "/DataRange/CSDARangeMulti.json"
         },
         {
@@ -92,10 +55,6 @@
         {
           "name": "Stopping power vs energy",
           "jsonConfigPath": "/StoppingPower/StoppingPowerWithNo.json"
-        },
-        {
-          "name": "Dose from fluence and energy",
-          "jsonConfigPath": "/PhysicsRoutines/DoseFromFluence.json"
         },
         {
           "name": "Energy loss distribution",
@@ -115,20 +74,61 @@
       },
       "functions": [
         {
-          "name": "Radial Dose Distribution",
+          "name": "Radial dose distribution",
           "jsonConfigPath": "/RDD/RDD.json"
         },
         {
-          "name": "Track width",
+          "name": "delta-electron range vs ion energy",
           "jsonConfigPath": "/ElectronRange/MaxElectronRangesM.json"
         },
         {
-          "name": "Ion effective charge",
+          "name": "Ion effective charge vs energy",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromE.json"
         },
         {
-          "name": "Inactivation cross section",
+          "name": "Inactivation cross section vs energy",
           "jsonConfigPath": "/TrackStructure/InactivationCrossSection.json"
+        },
+        {
+          "name": "Relativistic beta vs energy",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromE.json"
+        }
+      ]
+    },
+    {
+      "name": "Converters",
+      "style": {
+        "background": "#3727AA",
+        "border": "3727AA",
+        "color": "white"
+      },
+      "functionsStyle": {
+        "color": "black"
+      },
+      "functions": [
+        {
+          "name": "beta from energy",
+          "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
+        },
+        {
+          "name": "energy from beta",
+          "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
+        },
+        {
+          "name": "gamma from energy",
+          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
+        },
+        {
+          "name": "energy from gamma",
+          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
+        },
+        {
+          "name": "momentum from energy",
+          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
+        },
+        {
+          "name": "energy from momentum",
+          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
         }
       ]
     },
@@ -148,32 +148,8 @@
           "jsonConfigPath": "/DataRange/CSDARangeSingle.json"
         },
         {
-          "name": "Effective Charge from energy",
+          "name": "Ion effective charge from energy",
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
-        },
-        {
-          "name": "β from energy",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
-        },
-        {
-          "name": "Energy from β",
-          "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
-        },
-        {
-          "name": "γ From Energy",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
-        },
-        {
-          "name": "Energy From γ",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
-        },
-        {
-          "name": "Momentum from energy",
-          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
-        },
-        {
-          "name": "Energy from momentum",
-          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
         },
         {
           "name": "Energy from range and FWHM",
@@ -188,7 +164,7 @@
           "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabSingle.json"
         },
         {
-          "name": "Track width",
+          "name": "delta-electron range from ion energy",
           "jsonConfigPath": "/ElectronRange/MaxElectronRangeMSingle.json"
         }
 
@@ -238,7 +214,7 @@
     }
 
   ],
-  "deployDate":"Mon Jan 25 17:32:03 CET 2021",
+  "deployDate":"Mon Jan 25 17:37:35 CET 2021",
   "deployBranch":"master",
-  "deployCommit":"8aed5a9"
+  "deployCommit":"09676a2"
 }
