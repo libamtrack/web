@@ -107,28 +107,36 @@
       },
       "functions": [
         {
+          "name": "energy from MeV per u to MeV",
+          "jsonConfigPath": "/Converters/EMeVuFromEMeV.json"
+        },
+        {
+          "name": "energy from MeV to MeV per u",
+          "jsonConfigPath": "/Converters/EMeVfromEMeVu.json"
+        },
+        {
           "name": "beta from energy",
-          "jsonConfigPath": "/PhysicsRoutines/BetaFromESingle.json"
+          "jsonConfigPath": "/Converters/BetaFromESingle.json"
         },
         {
           "name": "energy from beta",
-          "jsonConfigPath": "/PhysicsRoutines/EFromBetaSingle.json"
+          "jsonConfigPath": "/Converters/EFromBetaSingle.json"
         },
         {
           "name": "gamma from energy",
-          "jsonConfigPath": "/PhysicsRoutines/GammaFromESingle.json"
+          "jsonConfigPath": "/Converters/GammaFromESingle.json"
         },
         {
           "name": "energy from gamma",
-          "jsonConfigPath": "/PhysicsRoutines/EFromGammaSingle.json"
+          "jsonConfigPath": "/Converters/EFromGammaSingle.json"
         },
         {
           "name": "momentum from energy",
-          "jsonConfigPath": "/PhysicsRoutines/RelMomentumFromESingle.json"
+          "jsonConfigPath": "/Converters/RelMomentumFromESingle.json"
         },
         {
           "name": "energy from momentum",
-          "jsonConfigPath": "/PhysicsRoutines/EFromMomentumSingle.json"
+          "jsonConfigPath": "/Converters/EFromMomentumSingle.json"
         }
       ]
     },
