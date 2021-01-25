@@ -1,5 +1,6 @@
 export default function AT_E_MeV_from_E_MeV_u(parameters) {
     let at_e_mev_from_e_mev_u = Module.cwrap('AT_E_MeV_from_E_MeV_u', 'number', ['number', 'number']);
+    let at_atomic_weight_from_particle_no = Module.cwrap('AT_atomic_weight_from_particle_no_single', 'number', ['number']);
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.E_MeV_u === "undefined"){
@@ -16,8 +17,9 @@ export default function AT_E_MeV_from_E_MeV_u(parameters) {
     let particle_no = parameters.particle_no;
 
     /*********************CALL FUNCTION******************************/
-    let result = at_e_mev_from_e_mev_u(E_MeV_u, particle_no);
+    let E_MeV = at_e_mev_from_e_mev_u(E_MeV_u, particle_no);
+    let particle_mass = at_atomic_weight_from_particle_no(particle_no);
 
 
-    return result;
+    return [E_MeV, particle_mass];
 }

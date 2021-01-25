@@ -3,10 +3,10 @@
   "functionName": "AT_E_MeV_u_from_E_MeV",
   "description": "Change of energy units from MeV/u to MeV (note that proton mass is slightly higher than 1u, hence this conversion is also important for protons)",
   "plot": false,
-  "resultPrecision": 4,
+  "resultPrecision": [4, 9],
   "isMathJaxSupported": true,
-  "resultLabel": "Energy",
-  "resultUnit": "MeV/u" ,
+  "resultLabel": ["Energy: ", "Particle mass: "],
+  "resultUnit": ["MeV/u", "u"] ,
   "formItems": [
     {
       "type": "input",
