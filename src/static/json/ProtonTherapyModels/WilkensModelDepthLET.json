@@ -1,7 +1,7 @@
 {
   "visibleName": "Proton depth-LET curve",
   "functionName": "AT_LET_Wilkens_keV_um",
-  "description": "\"Analytical model of proton depth-LET curve according to Wilkens model. The model assumes a pencil-beam like source, includes range straggling and initial kinetic energy spread.\",",
+  "description": "Analytical model of proton depth-LET curve according to Wilkens model. The model assumes a pencil-beam like source, includes range straggling and initial kinetic energy spread.",
   "xTitle": "Depth [cm]",
   "yTitle": "LET [keV/um]",
   "plot": true,
