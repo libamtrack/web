@@ -3,7 +3,7 @@
   "functionName": "AT_momentum_MeV_c_u_from_E_MeV_u",
   "description": "Relativistic momentum as a function of kinetic energy",
   "xTitle": "Energy [MeV/u]",
-  "yTitle": "Momentum [MeV/c/amu]",
+  "yTitle": "Momentum [MeV/c/u]",
   "plot": true,
   "formItems": [
     {
