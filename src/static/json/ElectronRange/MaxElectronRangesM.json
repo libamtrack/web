@@ -2,14 +2,14 @@
   "visibleName": "Track width",
   "functionName": "AT_max_electron_ranges_m",
   "description": "Returns the track width (maximum electron range) for a given parametrization",
-  "xTitle": "Energy [MeV/amu]",
+  "xTitle": "Energy [MeV/u]",
   "yTitle": "track radius [um]",
   "plot": true,
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "label": "energy [MeV/amu]",
+      "label": "energy [MeV/u]",
       "startholder": "0.1",
       "endholder": "500",
       "intervalType": "points",
