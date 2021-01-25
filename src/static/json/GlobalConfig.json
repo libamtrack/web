@@ -107,11 +107,11 @@
       },
       "functions": [
         {
-          "name": "energy from MeV per u to MeV",
+          "name": "energy from MeV to MeV per u",
           "jsonConfigPath": "/Converters/EMeVuFromEMeV.json"
         },
         {
-          "name": "energy from MeV to MeV per u",
+          "name": "energy from MeV per u to MeV",
           "jsonConfigPath": "/Converters/EMeVfromEMeVu.json"
         },
         {
