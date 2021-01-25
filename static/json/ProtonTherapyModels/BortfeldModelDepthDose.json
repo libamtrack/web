@@ -26,7 +26,7 @@
     },
     {
       "type": "input",
-      "parameterName": "E_MeV_u",
+      "parameterName": "E_MeV",
       "label": "Energy [MeV]",
       "placeholder": "150.0",
       "defaultValue": "150.0",
@@ -38,7 +38,7 @@
     },
     {
       "type": "input",
-      "parameterName": "sigma_E_MeV_u",
+      "parameterName": "sigma_E_MeV",
       "label": "Energy spread (σ) [MeV]",
       "placeholder": "1.5",
       "defaultValue": "1.5",
