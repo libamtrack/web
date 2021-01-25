@@ -30,18 +30,18 @@ export default function AT_biological_dose_proton(parameters) {
     let entrance_dose_Gy = parameters.entrance_dose_Gy;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let E_MeV_u = parameters.E_MeV_u;
+    let E_MeV = parameters.E_MeV;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.sigma_E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.sigma_E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let sigma_E_MeV_u = parameters.sigma_E_MeV_u;
+    let sigma_E_MeV = parameters.sigma_E_MeV;
 
     /*** default value of eps parameter ***/
     let eps = -1;
@@ -73,16 +73,16 @@ export default function AT_biological_dose_proton(parameters) {
 
     /*********************CALL FUNCTION******************************/
 
-    let entrance_dose_for_unit_fluence_Gy = at_dose_bortfeld_gy_single(0.0, 1.0, E_MeV_u, sigma_E_MeV_u, 1, eps);
+    let entrance_dose_for_unit_fluence_Gy = at_dose_bortfeld_gy_single(0.0, 1.0, E_MeV, sigma_E_MeV, 1, eps);
     let fluence_cm2 = entrance_dose_Gy / entrance_dose_for_unit_fluence_Gy;
 
 
     // start with rbe table
-    at_proton_rbe_multi(n, z_cmHeap, entrance_dose_Gy, E_MeV_u, sigma_E_MeV_u, eps, ref_alpha_beta_ratio, rbe_model_no, rbeReturnHeap.byteOffset);
+    at_proton_rbe_multi(n, z_cmHeap, entrance_dose_Gy, E_MeV, sigma_E_MeV, eps, ref_alpha_beta_ratio, rbe_model_no, rbeReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(rbeReturnHeap.buffer, rbeReturnHeap.byteOffset, rbeReturnData.length);
 
     // calculate dose table
-    at_dose_bortfeld_gy_multi(n, z_cmHeap, E_MeV_u, fluence_cm2, sigma_E_MeV_u, 1, eps, dose_GyReturnHeap.byteOffset);
+    at_dose_bortfeld_gy_multi(n, z_cmHeap, E_MeV, fluence_cm2, sigma_E_MeV, 1, eps, dose_GyReturnHeap.byteOffset);
     let doseFromArray = new Float64Array(dose_GyReturnHeap.buffer, dose_GyReturnHeap.byteOffset, dose_GyReturnData.length);
 
     // multiply RBE with dose
