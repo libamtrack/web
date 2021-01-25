@@ -27,11 +27,11 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     z_cmHeap.set(new Uint8Array(z_cmData.buffer));
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let E_MeV_u = parameters.E_MeV_u;
+    let E_MeV = parameters.E_MeV;
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.entrance_dose_Gy === "undefined"){
@@ -41,11 +41,11 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     let entrance_dose_Gy = parameters.entrance_dose_Gy;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.sigma_E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.sigma_E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let sigma_E_MeV_u = parameters.sigma_E_MeV_u;
+    let sigma_E_MeV = parameters.sigma_E_MeV;
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.material_no === "undefined"){
@@ -70,10 +70,10 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     /*********************CALL FUNCTION******************************/
 
     // dose calculated at depth z_cm = 0 (entrance) and fluence_cm = 1 (unit fluence)
-    let entrance_dose_for_unit_fluence_Gy = at_dose_bortfeld_gy_single(0.0, 1.0, E_MeV_u, sigma_E_MeV_u, material_no, eps);
+    let entrance_dose_for_unit_fluence_Gy = at_dose_bortfeld_gy_single(0.0, 1.0, E_MeV, sigma_E_MeV, material_no, eps);
     let fluence_cm2 = entrance_dose_Gy / entrance_dose_for_unit_fluence_Gy;
 
-    let result = at_dose_bortfeld_gy_multi(n, z_cmHeap, fluence_cm2, E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_GyReturnHeap.byteOffset);
+    let result = at_dose_bortfeld_gy_multi(n, z_cmHeap, fluence_cm2, E_MeV, sigma_E_MeV, material_no, eps, dose_GyReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(dose_GyReturnHeap.buffer, dose_GyReturnHeap.byteOffset, dose_GyReturnData.length);
 
     Module._free(z_cmHeap.byteOffset);
@@ -87,9 +87,9 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     let search_direction = 1;
 
     /*********************CALL FUNCTION******************************/
-    let range_cm = at_range_bortfeld_cm(E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_drop, search_direction);
-    let fwhm_cm = at_fwhm_bortfeld_cm(E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_drop, search_direction);
-    let max_plateau = at_max_plateau_bortfeld(E_MeV_u, sigma_E_MeV_u, material_no, eps, dose_drop, search_direction);
+    let range_cm = at_range_bortfeld_cm(E_MeV, sigma_E_MeV, material_no, eps, dose_drop, search_direction);
+    let fwhm_cm = at_fwhm_bortfeld_cm(E_MeV, sigma_E_MeV, material_no, eps, dose_drop, search_direction);
+    let max_plateau = at_max_plateau_bortfeld(E_MeV, sigma_E_MeV, material_no, eps, dose_drop, search_direction);
 
     let combined ={'data' : [].slice.call(resultFromArray) , 'metadata' : [range_cm,fwhm_cm,max_plateau] };
 

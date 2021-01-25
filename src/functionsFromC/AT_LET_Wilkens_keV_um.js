@@ -22,18 +22,18 @@ export default function AT_LET_Wilkens_keV_um(parameters) {
     z_cmHeap.set(new Uint8Array(z_cmData.buffer));
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let E_MeV_u = parameters.E_MeV_u;
+    let E_MeV = parameters.E_MeV;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.sigma_E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.sigma_E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let sigma_E_MeV_u = parameters.sigma_E_MeV_u;
+    let sigma_E_MeV = parameters.sigma_E_MeV;
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.material_no === "undefined"){
@@ -58,9 +58,9 @@ export default function AT_LET_Wilkens_keV_um(parameters) {
     /*********************CALL FUNCTION******************************/
 
     if( averaging === 1 ){ // dose-
-        let result = at_let_d_wilkens_kev_um_multi(n, z_cmHeap, E_MeV_u, sigma_E_MeV_u, material_no, LET_keV_umReturnHeap.byteOffset);
+        let result = at_let_d_wilkens_kev_um_multi(n, z_cmHeap, E_MeV, sigma_E_MeV, material_no, LET_keV_umReturnHeap.byteOffset);
     } else { // track
-        let result = at_let_t_wilkens_kev_um_multi(n, z_cmHeap, E_MeV_u, sigma_E_MeV_u, material_no, LET_keV_umReturnHeap.byteOffset);
+        let result = at_let_t_wilkens_kev_um_multi(n, z_cmHeap, E_MeV, sigma_E_MeV, material_no, LET_keV_umReturnHeap.byteOffset);
     }
     let resultFromArray = new Float64Array(LET_keV_umReturnHeap.buffer, LET_keV_umReturnHeap.byteOffset, LET_keV_umReturnData.length);
 

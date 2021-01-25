@@ -28,18 +28,18 @@ export default function AT_RBE_proton(parameters) {
     let entrance_dose_Gy = parameters.entrance_dose_Gy;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let E_MeV_u = parameters.E_MeV_u;
+    let E_MeV = parameters.E_MeV;
 
     /*********************STANDARD PARAMETER*************************/
-    if(typeof parameters.sigma_E_MeV_u === "undefined"){
-        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+    if(typeof parameters.sigma_E_MeV === "undefined"){
+        alert("MESSAGE TO DEVELOPER: NO PARAMETER sigma_E_MeV IN OBJECT PASSED TO THIS FUNCTIONS");
         return "error";
     }
-    let sigma_E_MeV_u = parameters.sigma_E_MeV_u;
+    let sigma_E_MeV = parameters.sigma_E_MeV;
 
     /*** default value of eps parameter ***/
     let eps = -1;
@@ -65,7 +65,7 @@ export default function AT_RBE_proton(parameters) {
     let rbeReturnHeap = new Uint8Array(Module.HEAPF64.buffer, rbeReturnDataPointer, rbeReturnDataBytesNumber);
 
     /*********************CALL FUNCTION******************************/
-    let result = at_proton_rbe_multi(n, z_cmHeap, entrance_dose_Gy, E_MeV_u, sigma_E_MeV_u, eps, ref_alpha_beta_ratio, rbe_model_no, rbeReturnHeap.byteOffset);
+    let result = at_proton_rbe_multi(n, z_cmHeap, entrance_dose_Gy, E_MeV, sigma_E_MeV, eps, ref_alpha_beta_ratio, rbe_model_no, rbeReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(rbeReturnHeap.buffer, rbeReturnHeap.byteOffset, rbeReturnData.length);
 
     Module._free(z_cmHeap.byteOffset);
