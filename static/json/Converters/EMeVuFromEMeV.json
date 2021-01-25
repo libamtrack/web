@@ -1,7 +1,7 @@
 {
-  "visibleName": "Energy unit conversion: [MeV/u]->[MeV]",
+  "visibleName": "Energy unit conversion: [MeV]->[MeV/u]",
   "functionName": "AT_E_MeV_u_from_E_MeV",
-  "description": "Change of energy units from MeV/u to MeV (note that proton mass is slightly higher than 1u, hence this conversion is also important for protons)",
+  "description": "Change of energy units from MeV to MeV/u (note that proton mass is slightly higher than 1u, hence this conversion is also important for protons)",
   "plot": false,
   "resultPrecision": [4, 9],
   "isMathJaxSupported": true,

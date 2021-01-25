@@ -107,11 +107,11 @@
       },
       "functions": [
         {
-          "name": "energy from MeV per u to MeV",
+          "name": "energy from MeV to MeV per u",
           "jsonConfigPath": "/Converters/EMeVuFromEMeV.json"
         },
         {
-          "name": "energy from MeV to MeV per u",
+          "name": "energy from MeV per u to MeV",
           "jsonConfigPath": "/Converters/EMeVfromEMeVu.json"
         },
         {
@@ -222,7 +222,7 @@
     }
 
   ],
-  "deployDate":"Mon Jan 25 20:16:59 CET 2021",
+  "deployDate":"Mon Jan 25 20:40:25 CET 2021",
   "deployBranch":"master",
-  "deployCommit":"aa28f6a"
+  "deployCommit":"5a11fb0"
 }

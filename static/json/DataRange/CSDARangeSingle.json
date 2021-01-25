@@ -9,7 +9,7 @@
     {
       "type": "input",
       "parameterName": "E_initial_MeV_u",
-      "label": "Initial Energy [MeV/amu]",
+      "label": "Initial Energy [MeV/u]",
       "placeholder": "Initial energy",
       "defaultValue": "100",
       "validations": {
@@ -21,7 +21,7 @@
     {
       "type": "input",
       "parameterName": "E_final_MeV_u",
-      "label": "Final Energy [MeV/amu]",
+      "label": "Final Energy [MeV/u]",
       "placeholder": "Final energy",
       "defaultValue": "0",
       "validations": {

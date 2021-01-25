@@ -2,14 +2,14 @@
   "visibleName": "Ion effective charge",
   "functionName": "AT_effective_charge_from_E_MeV_u",
   "description": "Effective charge according to Barkas-Bethe-approximation for particles with given kinetic energy per nucleon",
-  "xTitle": "Energy [MeV/amu]",
+  "xTitle": "Energy [MeV/u]",
   "yTitle": "Effective Charge",
   "plot": true,
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
-      "label": "energy [MeV/amu]",
+      "label": "energy [MeV/u]",
       "startholder": "0.01",
       "endholder": "100",
       "intervalType": "points",
