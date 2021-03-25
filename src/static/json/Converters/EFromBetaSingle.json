@@ -1,8 +1,8 @@
 {
   "visibleName": "Energy from relativistic β",
   "functionName": "AT_E_from_beta_single",
-  "description": "Returns energy per nucleon of particle with relativistic β",
-  "resultUnit": "MeV",
+  "description": "Returns energy per atomic mass unit of particle with relativistic β",
+  "resultUnit": "MeV/u",
   "resultPrecision": 3,
   "plot": false,
   "formItems": [
