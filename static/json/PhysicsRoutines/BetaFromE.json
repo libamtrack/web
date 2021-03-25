@@ -1,7 +1,7 @@
 {
   "visibleName": "Relativistic β from energy",
   "functionName": "AT_beta_from_E",
-  "description": "Relativistic speed β (v/c) of particle as a function of energy per nucleon",
+  "description": "Relativistic speed β (v/c) of particle as a function of energy per atomic mass unit",
   "xTitle": "Energy [MeV/u]",
   "yTitle": "β (v/c)",
   "plot": true,
