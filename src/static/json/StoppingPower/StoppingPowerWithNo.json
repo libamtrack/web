@@ -2,7 +2,7 @@
   "visibleName": "Stopping power",
   "functionName": "AT_Stopping_Power_with_no",
   "description": "Electronic stopping power for a specified projectile and material type",
-  "xTitle": "Energy [MeV]",
+  "xTitle": "Energy [MeV/u]",
   "yTitle": "Stopping power [keV/um]",
   "plot": true,
   "formItems": [

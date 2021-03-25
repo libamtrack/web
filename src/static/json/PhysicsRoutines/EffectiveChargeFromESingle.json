@@ -1,7 +1,7 @@
 {
   "visibleName": "Effective Charge",
   "functionName": "AT_effective_charge_from_E_MeV_u_single",
-  "description": "Ion effective charge according to Barkas-Bethe-approximation for particle with given energy per nucleon",
+  "description": "Ion effective charge according to Barkas-Bethe-approximation for particle with given energy per atomic mass unit",
   "plot": false,
   "resultPrecision": 6,
   "formItems": [
