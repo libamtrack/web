@@ -5,7 +5,6 @@
   "xTitle": "Energy [MeV/u]",
   "yTitle": "RBE",
   "plot": true,
-  "unit": "",
   "formItems": [
     {
       "type": "entry_module",
@@ -15,7 +14,7 @@
       "endholder": "500",
       "intervalType": "points",
       "stepDefaultValue": "1",
-      "pointsDefaultNumber": "30",
+      "pointsDefaultNumber": "100",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -120,9 +119,9 @@
   ],
   "moreOptions": {
     "visible": true,
-    "defaultXAxisType": "linear",
+    "defaultXAxisType": "log",
     "defaultYAxisType": "linear",
-    "plotType": "points"
+    "plotType": "lines"
   },
   "modals": {
     "dataSeries": true,
