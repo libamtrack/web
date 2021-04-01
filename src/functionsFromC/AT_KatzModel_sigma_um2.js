@@ -68,8 +68,8 @@ export default function AT_KatzModel_sigma_um2(parameters) {
     let result = at_katzmodel_sigma_um2(n, E_MeV_uHeap, particle_no, m, D0_Gy, a0_um, katz_model_flavour, stop_power_source, sigma_um2ReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(sigma_um2ReturnHeap.buffer, sigma_um2ReturnHeap.byteOffset, sigma_um2ReturnData.length);
 
-    Module._free(E_MeV_uHeap.byteOffset);
-    Module._free(sigma_um2ReturnHeap.byteOffset);
+    // Module._free(E_MeV_uHeap.byteOffset);
+    // Module._free(sigma_um2ReturnHeap.byteOffset);
 
     return [].slice.call(resultFromArray);
 }

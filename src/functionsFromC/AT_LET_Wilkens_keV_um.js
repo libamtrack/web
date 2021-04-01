@@ -64,8 +64,8 @@ export default function AT_LET_Wilkens_keV_um(parameters) {
     }
     let resultFromArray = new Float64Array(LET_keV_umReturnHeap.buffer, LET_keV_umReturnHeap.byteOffset, LET_keV_umReturnData.length);
 
-    Module._free(z_cmHeap.byteOffset);
-    Module._free(LET_keV_umReturnHeap.byteOffset);
+    // Module._free(z_cmHeap.byteOffset);
+    // Module._free(LET_keV_umReturnHeap.byteOffset);
 
     return [].slice.call(resultFromArray);
 }
