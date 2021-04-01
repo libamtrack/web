@@ -1,5 +1,5 @@
 export default function AT_KatzModel_inactivation_cross_section_m2(parameters) {
-    let at_katzmodel_inactivation_cross_section_m2 = Module.cwrap('AT_KatzModel_inactivation_cross_section_m2', 'number', ['number', 'array', 'number', 'number', 'number', 'array', 'number', 'array', 'number', 'number']);
+    let at_katzmodel_inactivation_cross_section_m2 = Module.cwrap('AT_KatzModel_inactivation_cross_section_m2', 'number', ['number', 'array', 'number', 'number', 'array', 'number', 'array', 'number', 'number']);
 
     /*********************STANDARD PARAMETER*************************/
     if(typeof parameters.n === "undefined"){
@@ -26,9 +26,6 @@ export default function AT_KatzModel_inactivation_cross_section_m2(parameters) {
         return "error";
     }
     let particle_no = parameters.particle_no;
-
-    /*********************STANDARD PARAMETER*************************/
-    let material_no = 1; // water
 
     /*********************STANDARD PARAMETER*************************/
 
@@ -94,7 +91,7 @@ export default function AT_KatzModel_inactivation_cross_section_m2(parameters) {
     let inactivation_cross_section_m2ReturnHeap = new Uint8Array(Module.HEAPF64.buffer, inactivation_cross_section_m2ReturnDataPointer, inactivation_cross_section_m2ReturnDataBytesNumber);
 
     /*********************CALL FUNCTION******************************/
-    let result = at_katzmodel_inactivation_cross_section_m2(n, E_MeV_uHeap, particle_no, material_no, rdd_model, rdd_parametersHeap, er_model, gamma_parametersHeap, stop_power_source, inactivation_cross_section_m2ReturnHeap.byteOffset);
+    let result = at_katzmodel_inactivation_cross_section_m2(n, E_MeV_uHeap, particle_no, rdd_model, rdd_parametersHeap, er_model, gamma_parametersHeap, stop_power_source, inactivation_cross_section_m2ReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(inactivation_cross_section_m2ReturnHeap.buffer, inactivation_cross_section_m2ReturnHeap.byteOffset, inactivation_cross_section_m2ReturnData.length);
 
     // multiply RBE with dose

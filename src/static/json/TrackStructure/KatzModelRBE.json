@@ -1,0 +1,132 @@
+{
+  "visibleName": "Relative Biological Effectiveness",
+  "functionName": "AT_KatzModel_RBE",
+  "description": "Relative Biological Effectiveness",
+  "xTitle": "Energy [MeV/u]",
+  "yTitle": "RBE",
+  "plot": true,
+  "unit": "",
+  "formItems": [
+    {
+      "type": "entry_module",
+      "parameterName": "E_MeV_u",
+      "label": "energy [MeV/u]",
+      "startholder": "2",
+      "endholder": "500",
+      "intervalType": "points",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "30",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": false,
+      "defaultValue": 6012,
+      "description": "Choose particle type"
+    },
+    {
+      "type": "input",
+      "parameterName": "m",
+      "label": "m",
+      "placeholder": "1.0",
+      "defaultValue": "2.36",
+      "validations": {
+        "type": "float",
+        "min": "1.0",
+        "max": "5.0"
+      }
+    },
+
+    {
+      "type": "input",
+      "parameterName": "D0_Gy",
+      "label": "D₀ [Gy]",
+      "placeholder": "1.0",
+      "defaultValue": "1.1",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "sigma0_um2",
+      "label": "sigma₀ [um^2]",
+      "asManyAsPoints": false,
+      "placeholder": "1.0",
+      "defaultValue": "140.8",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "kappa",
+      "label": "kappa",
+      "asManyAsPoints": false,
+      "placeholder": "1.",
+      "defaultValue": "1204.0",
+      "validations": {
+        "type": "float",
+        "min": "-2.",
+        "max": "5000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "a0_um",
+      "label": "a₀ [um]",
+      "asManyAsPoints": false,
+      "placeholder": "-1.0",
+      "defaultValue": "-1.0",
+      "validations": {
+        "type": "float",
+        "min": "-2.0",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "level",
+      "label": "survival level",
+      "asManyAsPoints": false,
+      "placeholder": "0.1",
+      "defaultValue": "0.1",
+      "validations": {
+        "type": "float",
+        "min": "0.0000001",
+        "max": "1.0"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "katz_model_flavour",
+      "label": "model flavour",
+      "values": "katz_flavour",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose RDD and ER model"
+    }
+  ],
+  "moreOptions": {
+    "visible": true,
+    "defaultXAxisType": "linear",
+    "defaultYAxisType": "linear",
+    "plotType": "points"
+  },
+  "modals": {
+    "dataSeries": true,
+    "download": true,
+    "deleteAll": true
+  }
+}
