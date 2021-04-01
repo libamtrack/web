@@ -1,5 +1,5 @@
 export default function AT_KatzModel_RBE(parameters) {
-	let at_katzmodel_rbe = Module.cwrap('AT_KatzModel_RBE', 'number', ['number', 'array', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'undefined', 'number', 'number', 'number']);
+	let at_katzmodel_rbe = Module.cwrap('AT_KatzModel_RBE', 'number', ['number', 'array', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
 	/*********************STANDARD PARAMETER*************************/
 	if(typeof parameters.n === "undefined"){

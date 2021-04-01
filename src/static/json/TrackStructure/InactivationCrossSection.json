@@ -1,6 +1,6 @@
 {
   "visibleName": "Inactivation cross section",
-  "functionName": "AT_inactivation_cross_section_Katz_um2",
+  "functionName": "AT_KatzModel_sigma_um2",
   "description": "Inactivation cross section",
   "xTitle": "Energy [MeV/u]",
   "yTitle": "Cross-section [um²]",
@@ -33,14 +33,14 @@
     },
     {
       "type": "input",
-      "parameterName": "a0_um",
-      "label": "a₀ [um]",
-      "placeholder": "0.2",
-      "defaultValue": "0.2",
+      "parameterName": "m",
+      "label": "m",
+      "placeholder": "1.0",
+      "defaultValue": "1.0",
       "validations": {
         "type": "float",
-        "min": "0.000001",
-        "max": "1000000.0"
+        "min": "1.0",
+        "max": "5.0"
       }
     },
     {
@@ -57,21 +57,21 @@
     },
     {
       "type": "input",
-      "parameterName": "m",
-      "label": "m",
-      "placeholder": "1.0",
-      "defaultValue": "1.0",
+      "parameterName": "a0_um",
+      "label": "a₀ [um]",
+      "placeholder": "0.2",
+      "defaultValue": "0.2",
       "validations": {
         "type": "float",
-        "min": "1.0",
-        "max": "5.0"
+        "min": "0.000001",
+        "max": "1000000.0"
       }
     },
     {
       "type": "select",
-      "parameterName": "rdd_er_no",
-      "label": "RDD and ER model",
-      "values": "katz_rdd_er",
+      "parameterName": "katz_model_flavour",
+      "label": "model flavour",
+      "values": "katz_flavour",
       "asManyAsPoints": false,
       "defaultValue": 1,
       "description": "Choose RDD and ER model"
