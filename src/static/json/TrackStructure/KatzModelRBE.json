@@ -113,7 +113,7 @@
       "label": "model flavour",
       "values": "katz_flavour",
       "asManyAsPoints": false,
-      "defaultValue": 1,
+      "defaultValue": 2,
       "description": "Choose RDD and ER model"
     }
   ],
