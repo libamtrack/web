@@ -1,21 +1,20 @@
 {
-  "visibleName": "Inactivation cross section",
-  "functionName": "AT_KatzModel_sigma_um2",
-  "description": "Inactivation cross section",
+  "visibleName": "Relative Biological Effectiveness",
+  "functionName": "AT_KatzModel_RBE",
+  "description": "Relative biological effectiveness",
   "xTitle": "Energy [MeV/u]",
-  "yTitle": "Cross-section [um²]",
+  "yTitle": "RBE",
   "plot": true,
-  "unit": "um²",
   "formItems": [
     {
       "type": "entry_module",
       "parameterName": "E_MeV_u",
       "label": "energy [MeV/u]",
-      "startholder": "1",
-      "endholder": "20",
+      "startholder": "2",
+      "endholder": "500",
       "intervalType": "points",
-      "stepDefaultValue": "0.01",
-      "pointsDefaultNumber": "20",
+      "stepDefaultValue": "1",
+      "pointsDefaultNumber": "100",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -28,7 +27,7 @@
       "label": "Particle",
       "values": "particles",
       "asManyAsPoints": false,
-      "defaultValue": 18040,
+      "defaultValue": 6012,
       "description": "Choose particle type"
     },
     {
@@ -36,19 +35,20 @@
       "parameterName": "m",
       "label": "m",
       "placeholder": "1.0",
-      "defaultValue": "1.0",
+      "defaultValue": "2.36",
       "validations": {
         "type": "float",
         "min": "1.0",
         "max": "5.0"
       }
     },
+
     {
       "type": "input",
       "parameterName": "D0_Gy",
       "label": "D₀ [Gy]",
-      "placeholder": "61.0",
-      "defaultValue": "61.0",
+      "placeholder": "1.0",
+      "defaultValue": "1.1",
       "validations": {
         "type": "float",
         "min": "0.000001",
@@ -57,14 +57,54 @@
     },
     {
       "type": "input",
-      "parameterName": "a0_um",
-      "label": "a₀ [um]",
-      "placeholder": "0.2",
-      "defaultValue": "0.2",
+      "parameterName": "sigma0_um2",
+      "label": "sigma₀ [um^2]",
+      "asManyAsPoints": false,
+      "placeholder": "1.0",
+      "defaultValue": "140.8",
       "validations": {
         "type": "float",
         "min": "0.000001",
         "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "kappa",
+      "label": "kappa",
+      "asManyAsPoints": false,
+      "placeholder": "1.",
+      "defaultValue": "1204.0",
+      "validations": {
+        "type": "float",
+        "min": "-2.",
+        "max": "5000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "a0_um",
+      "label": "a₀ [um]",
+      "asManyAsPoints": false,
+      "placeholder": "-1.0",
+      "defaultValue": "-1.0",
+      "validations": {
+        "type": "float",
+        "min": "-2.0",
+        "max": "1000000.0"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "level",
+      "label": "survival level",
+      "asManyAsPoints": false,
+      "placeholder": "0.1",
+      "defaultValue": "0.1",
+      "validations": {
+        "type": "float",
+        "min": "0.0000001",
+        "max": "1.0"
       }
     },
     {
@@ -73,15 +113,15 @@
       "label": "model flavour",
       "values": "katz_flavour",
       "asManyAsPoints": false,
-      "defaultValue": 1,
+      "defaultValue": 2,
       "description": "Choose RDD and ER model"
     }
   ],
   "moreOptions": {
     "visible": true,
-    "defaultXAxisType": "linear",
+    "defaultXAxisType": "log",
     "defaultYAxisType": "linear",
-    "plotType": "points"
+    "plotType": "lines"
   },
   "modals": {
     "dataSeries": true,
