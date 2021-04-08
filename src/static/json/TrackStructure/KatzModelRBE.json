@@ -1,7 +1,7 @@
 {
   "visibleName": "Relative Biological Effectiveness",
   "functionName": "AT_KatzModel_RBE",
-  "description": "Relative Biological Effectiveness",
+  "description": "Relative biological effectiveness",
   "xTitle": "Energy [MeV/u]",
   "yTitle": "RBE",
   "plot": true,
