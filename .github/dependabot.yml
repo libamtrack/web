@@ -11,6 +11,4 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    # Add reviewers
-    reviewers:
-      - "grzanka"
+
