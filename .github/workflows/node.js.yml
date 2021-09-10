@@ -73,11 +73,11 @@ jobs:
     
       - name: Prepare production version to deploy        
         run: |
-          npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+          npm run build
 
       - name: Deploy to production server 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: peaceiris/actions-gh-pages@v3
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
         with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: dist # The folder the action should deploy
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
