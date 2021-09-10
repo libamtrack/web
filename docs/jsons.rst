@@ -14,7 +14,7 @@ Global configuration JSON file looks like below
     {
         "applicationTitle": "Libamtrack",
         "introText": "libamtrack provides computational routines for the prediction of detector response and radiobiological efficiency in heavy charged particle beams.",
-        "footerText": "LibatrackWeb ©2018",
+        "footerText": "LibatrackWeb ©2021",
         "categories": [],
         "dictionaries": [],
     }
