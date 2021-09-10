@@ -55,5 +55,5 @@ jobs:
 #        if: github.ref == 'refs/heads/master'    
         run: |
           git remote set-url origin git@github.com:libamtrack/web_dev.git
-          npm run deploy -- -u "github-actions-bot <support+actions@github.com>" -r "git@github.com:yaptide/web_dev.git"    
+          npm run deploy -- -u "github-actions-bot <support+actions@github.com>" -r "git@github.com:libamtrack/web_dev.git"    
     
