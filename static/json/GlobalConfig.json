@@ -222,7 +222,7 @@
     }
 
   ],
-  "deployDate":"NO_DEPLOY_DATE",
-  "deployBranch":"NO_DEPLOY_BRANCH",
-  "deployCommit":"NO_DEPLOY_COMMIT"
+  "deployDate":"Fri Sep 10 18:14:49 UTC 2021",
+  "deployBranch":"refs/tags/v0.2.0",
+  "deployCommit":"6df5f0d726b80e0907c9421835f053fdb006653c"
 }
