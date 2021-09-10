@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'LibamtrackWeb'
-copyright = '2018, Arkadiusz Dudzik, Piotr Zmilczak'
-author = 'Arkadiusz Dudzik, Piotr Zmilczak'
+copyright = '2021, Arkadiusz Dudzik, Piotr Zmilczak, Leszek Grzanka'
+author = 'Arkadiusz Dudzik, Piotr Zmilczak, Leszek Grzanka'
 
 # The short X.Y version
 version = ''
@@ -174,5 +174,5 @@ epub_exclude_files = ['search.html']
 
 rst_epilog = """
 .. _node.js: https://nodejs.org/en/
-.. _JSFunctionGenerator: https://marwin1991.github.io/cToJsFunctionsGenerator/
+.. _JSFunctionGenerator: https://libamtrack.github.io/c2JsGenerator/
 """

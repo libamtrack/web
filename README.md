@@ -1,10 +1,8 @@
 # LibamtrackWeb
 
-
-
 ## App
-[See online](https://libamtrack.github.io/web/)
+Libamtrack web interface is available at [libamtrack.github.io](https://libamtrack.github.io/web/)
 
 ## Documentation
-[See docs](https://libamtrackweb.readthedocs.io/en/latest/)
+Documentation for libamtrack web interface developers is at [libamtrackweb.readthedocs.io](https://libamtrackweb.readthedocs.io/en/latest/)
 

@@ -41,6 +41,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
+      - name: Use Node.js
+        uses: actions/setup-node@v2.4.0
+        with:
+           node-version: '16'
+
       - name: Install 🔧 
         run: npm install
 
@@ -60,9 +65,19 @@ jobs:
           # Private SSH key to register in the SSH agent
           ssh-private-key: ${{ secrets.WEBDEV }}
 
-      - name: Deploy
+      - name: Deploy to development server
         if: github.ref == 'refs/heads/master'    
         run: |
           git remote set-url origin git@github.com:libamtrack/web_dev.git
           npm run deploy -- -u "github-actions-bot <support+actions@github.com>" -r "git@github.com:libamtrack/web_dev.git"    
     
+      - name: Prepare production version to deploy        
+        run: |
+          npm run build
+
+      - name: Deploy to production server 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
