@@ -6,8 +6,11 @@ name: Node.js CI
 on:
   push:
     branches: [ master ]
+    tags: '*'
   pull_request:
     branches: [ master ]
+  release:
+    types: [ published ]
 
 # see https://github.community/t/treating-warnings-as-errors-because-process-env-ci-true/18032
 env:
