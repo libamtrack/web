@@ -44,6 +44,15 @@ jobs:
       - name: Install 🔧 
         run: npm install
 
+      - name: Adjust build info
+        run: |
+          sed -i '6s/web/web_dev/' package.json
+          TZ=Europe/Warsaw
+          current_date_time="`date`"
+          sed -i 's/NO_DEPLOY_DATE/'"$current_date_time"'/' ./src/static/json/GlobalConfig.json
+          sed -i 's~NO_DEPLOY_BRANCH~'"$TRAVIS_BRANCH"'~' ./src/static/json/GlobalConfig.json
+          sed -i 's/NO_DEPLOY_COMMIT/'"${TRAVIS_COMMIT:0:7}"'/' ./src/static/json/GlobalConfig.json
+
       - name: webfactory/ssh-agent
 #        if: github.ref == 'refs/heads/master'    
         uses: webfactory/ssh-agent@v0.5.3
