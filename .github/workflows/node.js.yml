@@ -50,8 +50,8 @@ jobs:
           TZ=Europe/Warsaw
           current_date_time="`date`"
           sed -i 's/NO_DEPLOY_DATE/'"$current_date_time"'/' ./src/static/json/GlobalConfig.json
-          sed -i 's~NO_DEPLOY_BRANCH~'"$TRAVIS_BRANCH"'~' ./src/static/json/GlobalConfig.json
-          sed -i 's/NO_DEPLOY_COMMIT/'"${TRAVIS_COMMIT:0:7}"'/' ./src/static/json/GlobalConfig.json
+          sed -i 's~NO_DEPLOY_BRANCH~'"${{ github.ref }}"'~' ./src/static/json/GlobalConfig.json
+          sed -i 's/NO_DEPLOY_COMMIT/'"${{ github.sha }}"'/' ./src/static/json/GlobalConfig.json
 
       - name: webfactory/ssh-agent
 #        if: github.ref == 'refs/heads/master'    
