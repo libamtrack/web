@@ -222,7 +222,7 @@
     }
 
   ],
-  "deployDate":"Wed Mar 31 12:26:05 CEST 2021",
-  "deployBranch":"master",
-  "deployCommit":"03e57c8"
+  "deployDate":"NO_DEPLOY_DATE",
+  "deployBranch":"NO_DEPLOY_BRANCH",
+  "deployCommit":"NO_DEPLOY_COMMIT"
 }
