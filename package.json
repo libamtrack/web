@@ -63,7 +63,7 @@
     "react-bootstrap": "^1.6.3",
     "react-plotly.js": "^2.5.1",
     "recursive-readdir": "2.2.2",
-    "style-loader": "2.0.0",
+    "style-loader": "3.2.1",
     "webpack": "5.52.1",
     "webpack-bundle-analyzer": "4.4.2",
     "webpack-cli": "^4.8.0",
