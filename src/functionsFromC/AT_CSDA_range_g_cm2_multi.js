@@ -21,18 +21,6 @@ export default function AT_CSDA_range_g_cm2_multi(parameters) {
 	E_initial_MeV_uHeap.set(new Uint8Array(E_initial_MeV_uData.buffer));
 
 	/*********************INPUT ARRAY********************************/
-	if (typeof parameters.E_final_MeV_u === "undefined") {
-		alert("MESSAGE TO DEVELOPER: NO PARAMETER E_final_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
-		return "error";
-	}
-	let E_final_MeV_u = parameters.E_final_MeV_u;
-	let E_final_MeV_uData = new Float64Array(E_final_MeV_u);
-	let E_final_MeV_uDataBytesNumber = E_final_MeV_uData.length * E_final_MeV_uData.BYTES_PER_ELEMENT;
-	let E_final_MeV_uDataPointer = Module._malloc(E_final_MeV_uDataBytesNumber);
-	let E_final_MeV_uHeap = new Uint8Array(Module.HEAPF64.buffer, E_final_MeV_uDataPointer, E_final_MeV_uDataBytesNumber);
-	E_final_MeV_uHeap.set(new Uint8Array(E_final_MeV_uData.buffer));
-
-	/*********************INPUT ARRAY********************************/
 	if (typeof parameters.particle_no === "undefined") {
 		alert("MESSAGE TO DEVELOPER: NO PARAMETER particle_no IN OBJECT PASSED TO THIS FUNCTIONS");
 		return "error";
@@ -58,7 +46,14 @@ export default function AT_CSDA_range_g_cm2_multi(parameters) {
 	let CSDA_range_g_cm2ReturnHeap = new Uint8Array(Module.HEAPF64.buffer, CSDA_range_g_cm2ReturnDataPointer, CSDA_range_g_cm2ReturnDataBytesNumber);
 
 	/*********************CALL FUNCTION******************************/
-	let result = at_csda_range_g_cm2_multi(n, E_initial_MeV_uHeap, E_final_MeV_uHeap, particle_noHeap, material_no, CSDA_range_g_cm2ReturnHeap.byteOffset);
+
+	// calculate CSDA range for completely slowing down ions
+	let E_final_MeV_uData = new Float64Array(n);
+	for (let i = 0; i < E_final_MeV_uData.length; i++) {
+		E_final_MeV_uData[i] = 0.0;
+	}
+
+	let result = at_csda_range_g_cm2_multi(n, E_initial_MeV_uHeap, E_final_MeV_uData, particle_noHeap, material_no, CSDA_range_g_cm2ReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(CSDA_range_g_cm2ReturnHeap.buffer, CSDA_range_g_cm2ReturnHeap.byteOffset, CSDA_range_g_cm2ReturnData.length);
 
 	Module._free(E_initial_MeV_uHeap.byteOffset);
