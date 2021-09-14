@@ -33,6 +33,26 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - uses: actions/download-artifact@v2
+      with:
+            name: wasm files
+            path: src
+
+    - name: Display structure of downloaded files
+      run: ls -R
+      working-directory: src
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: wasm files
+        path: src/static/js
+
+    - name: Display structure of downloaded files
+      run: ls -R
+      working-directory: src/static/js
+
+
     - run: npm ci
     - run: npm run build --if-present
 #    - run: npm test
