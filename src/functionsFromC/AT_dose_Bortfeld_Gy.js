@@ -76,10 +76,6 @@ export default function AT_dose_Bortfeld_Gy(parameters) {
     let result = at_dose_bortfeld_gy_multi(n, z_cmHeap, fluence_cm2, E_MeV, sigma_E_MeV, material_no, eps, dose_GyReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(dose_GyReturnHeap.buffer, dose_GyReturnHeap.byteOffset, dose_GyReturnData.length);
 
-    Module._free(z_cmHeap.byteOffset);
-    Module._free(dose_GyReturnHeap.byteOffset);
-
-
     /*********************STANDARD PARAMETER*************************/
     let dose_drop = -1;
 
