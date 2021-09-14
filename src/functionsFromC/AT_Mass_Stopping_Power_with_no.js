@@ -56,9 +56,5 @@ export default function AT_Mass_Stopping_Power_with_no(parameters) {
 	let result = at_mass_stopping_power_with_no(stopping_power_source_no, n, E_MeV_uHeap, particle_noHeap, material_no, stopping_power_MeV_cm2_gReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(stopping_power_MeV_cm2_gReturnHeap.buffer, stopping_power_MeV_cm2_gReturnHeap.byteOffset, stopping_power_MeV_cm2_gReturnData.length);
 
-	Module._free(E_MeV_uHeap.byteOffset);
-	Module._free(particle_noHeap.byteOffset);
-	Module._free(stopping_power_MeV_cm2_gReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

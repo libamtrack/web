@@ -56,10 +56,5 @@ export default function AT_CSDA_range_g_cm2_multi(parameters) {
 	let result = at_csda_range_g_cm2_multi(n, E_initial_MeV_uHeap, E_final_MeV_uData, particle_noHeap, material_no, CSDA_range_g_cm2ReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(CSDA_range_g_cm2ReturnHeap.buffer, CSDA_range_g_cm2ReturnHeap.byteOffset, CSDA_range_g_cm2ReturnData.length);
 
-	Module._free(E_initial_MeV_uHeap.byteOffset);
-	Module._free(E_final_MeV_uHeap.byteOffset);
-	Module._free(particle_noHeap.byteOffset);
-	Module._free(CSDA_range_g_cm2ReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

@@ -57,9 +57,5 @@ export default function AT_CSDA_energy_after_slab_E_MeV_u_multi(parameters) {
 	let result = at_csda_energy_after_slab_e_mev_u_multi(n, E_initial_MeV_uHeap, particle_noHeap, material_no, slab_thickness_m, E_final_MeV_uReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(E_final_MeV_uReturnHeap.buffer, E_final_MeV_uReturnHeap.byteOffset, E_final_MeV_uReturnData.length);
 
-	Module._free(E_initial_MeV_uHeap.byteOffset);
-	Module._free(particle_noHeap.byteOffset);
-	Module._free(E_final_MeV_uReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

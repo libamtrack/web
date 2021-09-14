@@ -49,9 +49,5 @@ export default function AT_energy_straggling_MeV2_cm2_g(parameters) {
 	let result = at_energy_straggling_mev2_cm2_g(n, E_MeV_uHeap, particle_noHeap, material_no, dsE2dz_MeV2_cm2_gReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(dsE2dz_MeV2_cm2_gReturnHeap.buffer, dsE2dz_MeV2_cm2_gReturnHeap.byteOffset, dsE2dz_MeV2_cm2_gReturnData.length);
 
-	Module._free(E_MeV_uHeap.byteOffset);
-	Module._free(particle_noHeap.byteOffset);
-	Module._free(dsE2dz_MeV2_cm2_gReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

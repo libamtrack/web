@@ -30,8 +30,5 @@ export default function AT_beta_from_E(parameters) {
 	let result = at_beta_from_e(n, E_MeV_uHeap, betaReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(betaReturnHeap.buffer, betaReturnHeap.byteOffset, betaReturnData.length);
 
-	Module._free(E_MeV_uHeap.byteOffset);
-	Module._free(betaReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

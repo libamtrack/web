@@ -82,8 +82,5 @@ export default function AT_energy_loss_distributions(parameters) {
 
     let resultFromArray = new Float64Array(fDdDReturnHeap.buffer, fDdDReturnHeap.byteOffset, fDdDReturnData.length);
 
-    Module._free(energy_loss_keVHeap.byteOffset);
-    Module._free(fDdDReturnHeap.byteOffset);
-
     return [].slice.call(resultFromArray);
 }
