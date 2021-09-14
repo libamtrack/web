@@ -44,6 +44,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+
+      - name: Test submodule checkout
+        run: |
+          ls -al
+          ls -al library
+
       - uses: mymindstorm/setup-emsdk@v7
 
       - name: Cache compiled GSL
