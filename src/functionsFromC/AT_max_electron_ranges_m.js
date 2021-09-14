@@ -45,8 +45,5 @@ export default function AT_max_electron_ranges_m(parameters) {
 	let result = at_max_electron_ranges_m(number_of_particles, E_MeV_uHeap, material_no, er_model, max_electron_range_mReturnHeap.byteOffset);
 	let resultFromArray = (new Float64Array(max_electron_range_mReturnHeap.buffer, max_electron_range_mReturnHeap.byteOffset, max_electron_range_mReturnData.length)).map(function(x) { return x * 1e6; });;
 
-	Module._free(E_MeV_uHeap.byteOffset);
-	Module._free(max_electron_range_mReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

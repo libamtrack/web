@@ -30,8 +30,5 @@ export default function AT_gamma_from_E(parameters) {
 	let result = at_gamma_from_e(n, E_MeV_uHeap, gammaReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(gammaReturnHeap.buffer, gammaReturnHeap.byteOffset, gammaReturnData.length);
 
-	Module._free(E_MeV_uHeap.byteOffset);
-	Module._free(gammaReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

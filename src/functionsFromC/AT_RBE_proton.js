@@ -68,8 +68,5 @@ export default function AT_RBE_proton(parameters) {
     let result = at_proton_rbe_multi(n, z_cmHeap, entrance_dose_Gy, E_MeV, sigma_E_MeV, eps, ref_alpha_beta_ratio, rbe_model_no, rbeReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(rbeReturnHeap.buffer, rbeReturnHeap.byteOffset, rbeReturnData.length);
 
-    Module._free(z_cmHeap.byteOffset);
-    Module._free(rbeReturnHeap.byteOffset);
-
     return [].slice.call(resultFromArray);
 }

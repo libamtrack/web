@@ -42,9 +42,5 @@ export default function AT_effective_charge_from_beta(parameters) {
 	let result = at_effective_charge_from_beta(n, betaHeap, ZHeap, effective_chargeReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(effective_chargeReturnHeap.buffer, effective_chargeReturnHeap.byteOffset, effective_chargeReturnData.length);
 
-	Module._free(betaHeap.byteOffset);
-	Module._free(ZHeap.byteOffset);
-	Module._free(effective_chargeReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

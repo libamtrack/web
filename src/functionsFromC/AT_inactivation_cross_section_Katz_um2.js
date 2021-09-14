@@ -102,10 +102,5 @@ export default function AT_KatzModel_inactivation_cross_section_m2(parameters) {
         resultFromArray[i] *= 1e6 * 1e6; // m2 -> um2
     }
 
-    Module._free(E_MeV_uHeap.byteOffset);
-    Module._free(rdd_parametersHeap.byteOffset);
-    Module._free(gamma_parametersHeap.byteOffset);
-    Module._free(inactivation_cross_section_m2ReturnHeap.byteOffset);
-
     return [].slice.call(resultFromArray);
 }

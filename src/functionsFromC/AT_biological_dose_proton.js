@@ -90,9 +90,5 @@ export default function AT_biological_dose_proton(parameters) {
         resultFromArray[i] *= doseFromArray[i];
     }
 
-    Module._free(z_cmHeap.byteOffset);
-    Module._free(rbeReturnHeap.byteOffset);
-    Module._free(dose_GyReturnHeap.byteOffset);
-
     return [].slice.call(resultFromArray);
 }

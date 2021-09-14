@@ -68,10 +68,5 @@ export default function AT_dose_Gy_from_fluence_cm2(parameters) {
 	let result = at_dose_gy_from_fluence_cm2(n, E_MeV_uHeap, particle_noHeap, fluence_cm2Heap, material_no, stopping_power_source_no, dose_GyReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(dose_GyReturnHeap.buffer, dose_GyReturnHeap.byteOffset, dose_GyReturnData.length);
 
-	Module._free(E_MeV_uHeap.byteOffset);
-	Module._free(particle_noHeap.byteOffset);
-	Module._free(fluence_cm2Heap.byteOffset);
-	Module._free(dose_GyReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }

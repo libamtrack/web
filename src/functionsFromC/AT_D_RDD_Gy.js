@@ -91,9 +91,5 @@ export default function AT_D_RDD_Gy(parameters) {
     let result = at_d_rdd_gy(n, r_mHeap, E_MeV_u, particle_no, material_no, rdd_model, rdd_parameterHeap, er_model, stopping_power_source_no, D_RDD_GyReturnHeap.byteOffset);
     let resultFromArray = new Float64Array(D_RDD_GyReturnHeap.buffer, D_RDD_GyReturnHeap.byteOffset, D_RDD_GyReturnData.length);
 
-    Module._free(r_mHeap.byteOffset);
-    Module._free(rdd_parameterHeap.byteOffset);
-    Module._free(D_RDD_GyReturnHeap.byteOffset);
-
     return [].slice.call(resultFromArray);
 }

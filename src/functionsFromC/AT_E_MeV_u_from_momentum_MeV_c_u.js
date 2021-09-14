@@ -30,8 +30,5 @@ export default function AT_E_MeV_u_from_momentum_MeV_c_u(parameters) {
 	let result = at_e_mev_u_from_momentum_mev_c_u(n, momentum_MeV_c_uHeap, E_MeV_uReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(E_MeV_uReturnHeap.buffer, E_MeV_uReturnHeap.byteOffset, E_MeV_uReturnData.length);
 
-	Module._free(momentum_MeV_c_uHeap.byteOffset);
-	Module._free(E_MeV_uReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }
