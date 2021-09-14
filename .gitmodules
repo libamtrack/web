@@ -1,0 +1,4 @@
+[submodule "library"]
+	path = library
+	url = https://github.com/libamtrack/library.git
+	branch = v0.12.0
