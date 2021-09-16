@@ -92,8 +92,5 @@ export default function AT_KatzModel_RBE(parameters) {
 	let result = at_katzmodel_rbe(n, E_MeV_uHeap, particle_no, m, D0_Gy, sigma0_um2, kappa, a0_um, katz_model_flavour, approximate, stopping_power_source_no, level, rbeReturnHeap.byteOffset);
 	let resultFromArray = new Float64Array(rbeReturnHeap.buffer, rbeReturnHeap.byteOffset, rbeReturnData.length);
 
-	// Module._free(E_MeV_uHeap.byteOffset);
-	// Module._free(rbeReturnHeap.byteOffset);
-
 	return [].slice.call(resultFromArray);
 }
