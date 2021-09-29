@@ -168,6 +168,10 @@
           "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
         },
         {
+          "name": "Fluence from dose and energy",
+          "jsonConfigPath": "/PhysicsRoutines/FluenceFromDoseSingle.json"
+        },
+        {
           "name": "CSDA Energy After Slab",
           "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabSingle.json"
         },

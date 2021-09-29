@@ -1,0 +1,64 @@
+{
+  "visibleName": "Fluence from dose and energy",
+  "functionName": "AT_fluence_cm2_from_dose_Gy",
+  "description": "Entrance fluence delivered by particles with given type, dose and kinetic energy. Calculated assuming validity of track-segment condition.",
+  "plot": false,
+  "resultUnit": "1/cm2",
+  "resultPrecision": 3,
+  "resultLabel": "Fluence",
+  "formItems": [
+    {
+      "type": "input",
+      "parameterName": "D_Gy",
+      "label": "Dose [Gy]",
+      "placeholder": "2",
+      "defaultValue": "2",
+      "description": "dose in Gy",
+      "validations": {
+        "type": "float",
+        "min": "1e-3",
+        "max": "1e18"
+      }
+    },
+    {
+      "type": "input",
+      "parameterName": "E_MeV_u",
+      "label": "Energy [MeV/u]",
+      "placeholder": "150",
+      "defaultValue": "150",
+      "description": "Energy per unit mass",
+      "validations": {
+        "type": "float",
+        "min": "1e-6",
+        "max": "1e9"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": false,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    },
+    {
+      "type": "select",
+      "parameterName": "material_no",
+      "label": "Material",
+      "values": "materials",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose material type"
+    },
+    {
+      "type": "select",
+      "parameterName": "stopping_power_source_no",
+      "label": "Source",
+      "values": "stopping_power_source_no",
+      "asManyAsPoints": false,
+      "defaultValue": 2,
+      "description": "Choose source type"
+    }
+  ]
+}
