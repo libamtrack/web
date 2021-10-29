@@ -7,4 +7,4 @@ RUN mkdir $HOME/gsl-latest
 RUN tar -xzf gsl-latest.tar.gz -C $HOME/gsl-latest
 RUN mv $HOME/gsl-latest/** $HOME/gsl-latest/gsl
 RUN mkdir $HOME/usr
-RUN cd $HOME/emsdk && source ./emsdk_env.sh && cd $HOME/gsl-latest/gsl/ && emconfigure ./configure --prefix=$HOME/usr --disable-shared && emmake make -j2 && emmake make install
+RUN cd $HOME/emsdk && . ./emsdk_env.sh && cd $HOME/gsl-latest/gsl/ && emconfigure ./configure --prefix=$HOME/usr --disable-shared && emmake make -j2 && emmake make install
