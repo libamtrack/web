@@ -155,7 +155,7 @@ jobs:
 
       - name: webfactory/ssh-agent
         if: github.ref == 'refs/heads/master'    
-        uses: webfactory/ssh-agent@v0.5.3
+        uses: webfactory/ssh-agent@v0.5.4
         with:
           # Private SSH key to register in the SSH agent
           ssh-private-key: ${{ secrets.WEBDEV }}
