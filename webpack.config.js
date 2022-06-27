@@ -11,6 +11,9 @@ module.exports = {
         path: path.resolve(process.cwd(), 'dist'),
         filename: "bundle.js"
     },
+    devServer: {
+        allowedHosts: ['.gitpod.io', 'github.io'],
+      },
     module: {
         rules: [
             {
