@@ -7,12 +7,10 @@ ports:
 
 tasks:
   - init: |
-      cp $HOME/usr/lib/libgsl.a library/distributions/JavaScript/
-      cp $HOME/usr/lib/libgslcblas.a library/distributions/JavaScript/
       cd $HOME/emsdk && source ./emsdk_env.sh && cd /workspace/web/library/distributions/JavaScript && GSL_INCLUDE_DIRS=$HOME/usr/include GSL_LIBRARY=$HOME/usr/lib/libgsl.a GSL_CBLAS_LIBRARY=$HOME/usr/lib/libgslcblas.a  ./compile_to_js.sh
-      cp /workspace/web/library/distributions/JavaScript/libat.js src/
-      cp /workspace/web/library/distributions/JavaScript/libat.js src/static/js
-      cp /workspace/web/library/distributions/JavaScript/libat.wasm src/
-      cp /workspace/web/library/distributions/JavaScript/libat.wasm src/static/js
+      cp /workspace/web/library/distributions/JavaScript/output/libat.js src/
+      cp /workspace/web/library/distributions/JavaScript/output/libat.js src/static/js
+      cp /workspace/web/library/distributions/JavaScript/output/libat.wasm src/
+      cp /workspace/web/library/distributions/JavaScript/output/libat.wasm src/static/js
       npm install
 #    command: npm run start
