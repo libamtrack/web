@@ -9,6 +9,6 @@ tasks:
   - init: |
       cp $HOME/usr/lib/libgsl.a library/distributions/JavaScript/
       cp $HOME/usr/lib/libgslcblas.a library/distributions/JavaScript/
-#      cd $HOME/emsdk && source ./emsdk_env.sh && cd /workspace/web/library/distributions/JavaScript && GSL_INCLUDE_DIRS=$HOME/usr/include GSL_LIBRARY=$HOME/usr/lib/libgsl.a GSL_CBLAS_LIBRARY=$HOME/usr/lib/libgslcblas.a  ./compile_to_js.sh
+      cd $HOME/emsdk && source ./emsdk_env.sh && cd /workspace/web/library/distributions/JavaScript && GSL_INCLUDE_DIRS=$HOME/usr/include GSL_LIBRARY=$HOME/usr/lib/libgsl.a GSL_CBLAS_LIBRARY=$HOME/usr/lib/libgslcblas.a  ./compile_to_js.sh
 #      npm install
 #    command: npm run start
