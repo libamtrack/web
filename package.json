@@ -42,7 +42,7 @@
   "author": "Arkadiusz Dudzik, Piotr Zmilczak, Leszek Grzanka",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@babel/cli": "7.15.7",
+    "@babel/cli": "7.18.6",
     "@babel/core": "7.18.6",
     "@babel/plugin-proposal-class-properties": "7.18.6",
     "@babel/polyfill": "7.12.1",
@@ -55,7 +55,7 @@
     "clean-webpack-plugin": "4.0.0",
     "css-loader": "6.7.1",
     "file-loader": "6.2.0",
-    "gh-pages": "3.2.3",
+    "gh-pages": "4.0.0",
     "html-webpack-plugin": "5.5.0",
     "linspace": "1.0.1",
     "logspace": "1.0.1",
@@ -66,7 +66,7 @@
     "style-loader": "3.3.1",
     "webpack": "5.73.0",
     "webpack-bundle-analyzer": "4.5.0",
-    "webpack-cli": "^4.9.2",
+    "webpack-cli": "^4.10.0",
     "webpack-dev-server": "4.9.2"
   },
   "@comment dependencies": [
