@@ -58,7 +58,7 @@
     "gh-pages": "4.0.0",
     "html-webpack-plugin": "5.5.0",
     "linspace": "1.0.1",
-    "logspace": "1.0.1",
+    "logspace": "1.0.3",
     "plotly.js": "2.12.1",
     "react-bootstrap": "^1.6.4",
     "react-plotly.js": "^2.5.1",
