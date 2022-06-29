@@ -66,7 +66,7 @@
     "style-loader": "3.3.1",
     "webpack": "5.73.0",
     "webpack-bundle-analyzer": "4.5.0",
-    "webpack-cli": "^4.9.2",
+    "webpack-cli": "^4.10.0",
     "webpack-dev-server": "4.9.2"
   },
   "@comment dependencies": [
@@ -75,7 +75,7 @@
   ],
   "dependencies": {
     "@axetroy/react-download": "1.1.1",
-    "antd": "^4.18.8",
+    "antd": "^4.21.4",
     "@ant-design/compatible": "^1.1.0",
     "@ant-design/icons": "^4.7.0",
     "babel-plugin-wildcard": "^7.0.0",
