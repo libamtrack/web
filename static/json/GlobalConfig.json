@@ -1,7 +1,7 @@
 {
   "applicationTile": "Libamtrack",
   "introText": "libamtrack provides computational routines for the prediction of detector response and radiobiological efficiency in heavy charged particle beams.",
-  "footerText1": "LibamtrackWeb ©2021",
+  "footerText1": "LibamtrackWeb ©2022",
   "footerText2": "This project has received funding from the European Union's H2020 Research and Innovation Programme, under Grant Agreement No: 730983 (INSPIRE project)",
   "categories": [
     {
@@ -168,6 +168,10 @@
           "jsonConfigPath": "/PhysicsRoutines/DoseFromFluenceSingle.json"
         },
         {
+          "name": "Fluence from dose and energy",
+          "jsonConfigPath": "/PhysicsRoutines/FluenceFromDoseSingle.json"
+        },
+        {
           "name": "CSDA Energy After Slab",
           "jsonConfigPath": "/DataRange/CSDAEnergyAfterSlabSingle.json"
         },
@@ -222,7 +226,7 @@
     }
 
   ],
-  "deployDate":"Fri Sep 10 18:14:49 UTC 2021",
-  "deployBranch":"refs/tags/v0.2.0",
-  "deployCommit":"6df5f0d726b80e0907c9421835f053fdb006653c"
+  "deployDate":"Tue Oct  4 12:08:12 UTC 2022",
+  "deployBranch":"refs/tags/v0.3.0",
+  "deployCommit":"d8ca3bdada0c5562f856c3235f4d21760d7937c0"
 }

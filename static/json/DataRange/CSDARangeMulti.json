@@ -1,7 +1,7 @@
 {
     "visibleName": "CSDA Range of proton or ion",
     "functionName": "AT_CSDA_range_g_cm2_multi",
-    "description": "CSDA range using the PSTAR stopping power data. It is possible to calculate a range until final energy is reached, instead of until full particle stop.",
+    "description": "CSDA range using the PSTAR stopping power data",
     "plot": true,
     "xTitle": "Initial energy [MeV/u]",
     "yTitle": "CSDA range [g/cm^2]",
@@ -20,19 +20,6 @@
                 "type": "float",
                 "min": "0",
                 "max": "9000"
-            }
-        },
-        {
-            "type": "input",
-            "parameterName": "E_final_MeV_u",
-            "label": "Final Energy [MeV/u]",
-            "placeholder": "Final energy",
-            "asManyAsPoints": true,
-            "defaultValue": "0",
-            "validations": {
-                "type": "float",
-                "min": "0",
-                "max": "1e4"
             }
         },
         {
