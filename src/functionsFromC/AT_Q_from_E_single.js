@@ -1,8 +1,9 @@
 export default function AT_Q_from_E_single(parameters) {
-	let at_q_from_e_mev_n_single = Module.cwrap('AT_Q_from_E_MeV_n_single', 'number', ['number', 'number']);
+	let at_q_from_e_mev_n_single = Module.cwrap('AT_Q_from_E_single', 'number', ['number', 'number']);
+	let at_qeff_from_e_mev_n_single = Module.cwrap('AT_Qeff_from_E_single', 'number', ['number', 'number']);
 
 	/*********************STANDARD PARAMETER*************************/
-	if(!parameters.E_MeV_u){
+	if(!parameters.E_MeV_n){
 		 alert("MESSAGE TO DEVELOPER: NO PARAMETER E_MeV_n IN OBJECT PASSED TO THIS FUNCTIONS");
 		 return "error";
 	}
@@ -16,8 +17,9 @@ export default function AT_Q_from_E_single(parameters) {
 	let particle_no = parameters.particle_no;
 
 	/*********************CALL FUNCTION******************************/
-	let result = at_q_from_e_mev_n_single(E_MeV_n, particle_no);
+	let q = at_q_from_e_mev_n_single(E_MeV_n, particle_no);
+	let qeff = at_qeff_from_e_mev_n_single(E_MeV_n, particle_no);
 
 
-	return result;
+	return [q, qeff];
 }
