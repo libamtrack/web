@@ -160,6 +160,10 @@
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
         },
         {
+          "name": "Q and Qeff from energy",
+          "jsonConfigPath": "/PhysicsRoutines/QFromESingle.json"
+        },
+        {
           "name": "Energy from range and FWHM",
           "jsonConfigPath": "/ProtonTherapyModels/EnergyFromRangeSingle.json"
         },
