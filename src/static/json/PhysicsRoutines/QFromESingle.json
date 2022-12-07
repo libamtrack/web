@@ -3,7 +3,9 @@
   "functionName": "AT_Q_from_E_single",
   "description": "Q and Qeff",
   "plot": false,
-  "resultPrecision": 6,
+  "resultPrecision": [6,6],
+  "resultLabel": ["Q", "Qeff"],
+  "resultUnit": ["1/MeV", ""],
   "formItems": [
     {
       "type": "input",
