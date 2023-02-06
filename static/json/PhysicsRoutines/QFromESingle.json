@@ -1,0 +1,32 @@
+{
+  "visibleName": "Q and Qeff",
+  "functionName": "AT_Q_from_E_single",
+  "description": "Q and Qeff",
+  "plot": false,
+  "resultPrecision": [6,6],
+  "resultLabel": ["Q", "Qeff"],
+  "resultUnit": ["1/MeV", ""],
+  "formItems": [
+    {
+      "type": "input",
+      "parameterName": "E_MeV_n",
+      "label": "Energy [MeV/n]",
+      "placeholder": "Energy [MeV/n]",
+      "defaultValue": "10",
+      "validations": {
+        "type": "float",
+        "min": "0.000001",
+        "max": "10000000000000000"
+      }
+    },
+    {
+      "type": "select",
+      "parameterName": "particle_no",
+      "label": "Particle",
+      "values": "particles",
+      "asManyAsPoints": true,
+      "defaultValue": 1001,
+      "description": "Choose particle type"
+    }
+  ]
+}

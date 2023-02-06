@@ -160,6 +160,10 @@
           "jsonConfigPath": "/PhysicsRoutines/EffectiveChargeFromESingle.json"
         },
         {
+          "name": "Q and Qeff from energy",
+          "jsonConfigPath": "/PhysicsRoutines/QFromESingle.json"
+        },
+        {
           "name": "Energy from range and FWHM",
           "jsonConfigPath": "/ProtonTherapyModels/EnergyFromRangeSingle.json"
         },
@@ -226,7 +230,7 @@
     }
 
   ],
-  "deployDate":"Tue Oct  4 12:08:12 UTC 2022",
-  "deployBranch":"refs/tags/v0.3.0",
-  "deployCommit":"d8ca3bdada0c5562f856c3235f4d21760d7937c0"
+  "deployDate":"Mon Feb  6 18:56:50 UTC 2023",
+  "deployBranch":"refs/tags/v0.3.1",
+  "deployCommit":"523dce39cc27f3c9dabe92c44e4c259bf7c99699"
 }
