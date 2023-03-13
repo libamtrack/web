@@ -75,7 +75,7 @@
   ],
   "dependencies": {
     "@axetroy/react-download": "1.1.1",
-    "antd": "^4.24.2",
+    "antd": "^5.3.1",
     "@ant-design/compatible": "^1.1.0",
     "@ant-design/icons": "^4.8.0",
     "babel-plugin-wildcard": "^7.0.0",
