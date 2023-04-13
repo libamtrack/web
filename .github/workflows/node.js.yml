@@ -70,7 +70,7 @@ jobs:
           ls -al
           ls -al library
 
-      - uses: mymindstorm/setup-emsdk@v11
+      - uses: mymindstorm/setup-emsdk@v12
 
       - name: Cache compiled GSL
         uses: actions/cache@v3
