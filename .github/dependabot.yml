@@ -7,13 +7,14 @@ updates:
     schedule:
       interval: "weekly"
 
+  # Maintain dependencies for Submodules
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:
       interval: "daily"
 
+  # Maintain dependencies for JavaScript
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
-
