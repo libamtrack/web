@@ -59,7 +59,7 @@
     "html-webpack-plugin": "5.5.1",
     "linspace": "1.0.2",
     "logspace": "1.0.3",
-    "plotly.js": "2.21.0",
+    "plotly.js": "2.24.2",
     "react-bootstrap": "^2.7.3",
     "react-plotly.js": "^2.6.0",
     "recursive-readdir": "2.2.3",
