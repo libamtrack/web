@@ -60,7 +60,7 @@
     "linspace": "1.0.2",
     "logspace": "1.0.3",
     "plotly.js": "2.25.0",
-    "react-bootstrap": "^2.7.3",
+    "react-bootstrap": "^2.9.0",
     "react-plotly.js": "^2.6.0",
     "recursive-readdir": "2.2.3",
     "style-loader": "3.3.2",
