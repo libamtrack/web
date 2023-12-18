@@ -34,7 +34,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
             name: wasm files
             path: src
@@ -43,7 +43,7 @@ jobs:
       run: ls -R
       working-directory: src
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: wasm files
         path: src/static/js
@@ -126,7 +126,7 @@ jobs:
       - name: Install 🔧 
         run: npm install
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: wasm files
           path: src
@@ -135,7 +135,7 @@ jobs:
         run: ls -R
         working-directory: src
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: wasm files
           path: src/static/js
