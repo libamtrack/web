@@ -197,6 +197,10 @@
       "jsonConfigPath": "/dictionaries/AtomicNumbers.json"
     },
     {
+      "name": "energy_units",
+      "jsonConfigPath": "/dictionaries/EnergyUnits.json"
+    },
+    {
       "name": "materials",
       "jsonConfigPath": "/dictionaries/Materials.json"
     },

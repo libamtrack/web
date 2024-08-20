@@ -1,19 +1,23 @@
 export default function AT_CSDA_range_g_cm2_single(parameters) {
 	let at_csda_range_g_cm2_single = Module.cwrap('AT_CSDA_range_g_cm2_single', 'number', ['number', 'number', 'number', 'number']);
+    let at_e_mev_u_from_e_mev = Module.cwrap('AT_E_MeV_u_from_E_MeV', 'number', ['number', 'number']);
+    let at_atomic_weight_from_particle_no = Module.cwrap('AT_atomic_weight_from_particle_no_single', 'number', ['number']);
+
+	// we need here MeV to MeV/u
 
 	/*********************STANDARD PARAMETER*************************/
-	if(typeof parameters.E_initial_MeV_u === "undefined"){
-		 alert("MESSAGE TO DEVELOPER: NO PARAMETER E_initial_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+	if(typeof parameters.E_initial === "undefined"){
+		 alert("MESSAGE TO DEVELOPER: NO PARAMETER E_initial IN OBJECT PASSED TO THIS FUNCTIONS");
 		 return "error";
 	}
-	let E_initial_MeV_u = parameters.E_initial_MeV_u;
+	let E_initial = parameters.E_initial;
 
 	/*********************STANDARD PARAMETER*************************/
-	if(typeof parameters.E_final_MeV_u === "undefined"){
-		 alert("MESSAGE TO DEVELOPER: NO PARAMETER E_final_MeV_u IN OBJECT PASSED TO THIS FUNCTIONS");
+	if(typeof parameters.E_final === "undefined"){
+		 alert("MESSAGE TO DEVELOPER: NO PARAMETER E_final IN OBJECT PASSED TO THIS FUNCTIONS");
 		 return "error";
 	}
-	let E_final_MeV_u = parameters.E_final_MeV_u;
+	let E_final = parameters.E_final;
 
 	/*********************STANDARD PARAMETER*************************/
 	if(typeof parameters.particle_no === "undefined"){
@@ -30,7 +34,7 @@ export default function AT_CSDA_range_g_cm2_single(parameters) {
 	let material_no = parameters.material_no;
 
 	/*********************CALL FUNCTION******************************/
-	let result = at_csda_range_g_cm2_single(E_initial_MeV_u, E_final_MeV_u, particle_no, material_no);
+	let result = at_csda_range_g_cm2_single(E_initial, E_final, particle_no, material_no);
 
 
 	return result;
