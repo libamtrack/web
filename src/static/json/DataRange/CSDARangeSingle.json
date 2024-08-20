@@ -3,7 +3,7 @@
   "functionName": "AT_CSDA_range_g_cm2_single",
   "description": "CSDA range using the PSTAR stopping power data. It is possible to calculate a range until final energy is reached, instead of until full particle stop.",
   "plot": false,
-  "resultUnit": "g/cm^2",
+  "resultUnit": "mm",
   "resultPrecision": 3,
   "formItems": [
     {
