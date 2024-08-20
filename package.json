@@ -64,7 +64,7 @@
     "recursive-readdir": "2.2.3",
     "style-loader": "3.3.2",
     "webpack": "5.81.0",
-    "webpack-bundle-analyzer": "4.8.0",
+    "webpack-bundle-analyzer": "4.10.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "5.0.4",
     "acorn": "^8.12.1"
