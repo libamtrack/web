@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, List, Form, Select, Input, Button } from 'antd';
-import Download from '@axetroy/react-download';
+import { saveAs } from 'file-saver';
 
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
@@ -18,6 +18,13 @@ export default class DownloadDataModal extends React.Component {
 
     handleOptionChange = (value) => {
         this.setState({ fileFormat: value });
+    }
+
+    handleDownload = () => {
+        const { fileName, fileFormat } = this.state;
+        const { content } = this.props;
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, `${fileName}.${fileFormat}`);
     }
 
     render() {
@@ -44,12 +51,7 @@ export default class DownloadDataModal extends React.Component {
                         </InputGroup>
                     </FormItem>
                     <div align="right">
-                        <Download style={{ width: 94, height: 32 }}
-                            file={this.state.fileName + "." + this.state.fileFormat}
-                            content={this.props.content}
-                        >
-                            <Button type='primary' htmlType='submit'>Download</Button>
-                        </Download>
+                        <Button type='primary' htmlType='submit' onClick={this.handleDownload}>Download</Button>
                     </div>
                 </Form>
             </Modal>

@@ -3,13 +3,13 @@
   "functionName": "AT_CSDA_range_g_cm2_single",
   "description": "CSDA range using the PSTAR stopping power data. It is possible to calculate a range until final energy is reached, instead of until full particle stop.",
   "plot": false,
-  "resultUnit": "g/cm^2",
+  "resultUnit": "mm",
   "resultPrecision": 3,
   "formItems": [
     {
       "type": "input",
-      "parameterName": "E_initial_MeV_u",
-      "label": "Initial Energy [MeV/u]",
+      "parameterName": "E_initial",
+      "label": "Initial Energy",
       "placeholder": "Initial energy",
       "defaultValue": "100",
       "validations": {
@@ -20,8 +20,8 @@
     },
     {
       "type": "input",
-      "parameterName": "E_final_MeV_u",
-      "label": "Final Energy [MeV/u]",
+      "parameterName": "E_final",
+      "label": "Final Energy",
       "placeholder": "Final energy",
       "defaultValue": "0",
       "validations": {
@@ -38,6 +38,15 @@
       "asManyAsPoints": false,
       "defaultValue": 1001,
       "description": "Choose particle type"
+    },
+    {
+      "type": "select",
+      "parameterName": "energy_unit",
+      "label": "Energy unit",
+      "values": "energy_units",
+      "asManyAsPoints": false,
+      "defaultValue": 1,
+      "description": "Choose energy unit"
     },
     {
       "type": "select",
