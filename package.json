@@ -1,5 +1,5 @@
 {
-  "name": "LibamtrackWeb",
+  "name": "@libamtrack/web",
   "version": "0.1.0",
   "private": false,
   "description": "Libamtrack Web Gui",

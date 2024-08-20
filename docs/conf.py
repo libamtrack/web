@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'LibamtrackWeb'
-copyright = '2022, Arkadiusz Dudzik, Piotr Zmilczak, Leszek Grzanka'
+copyright = '2024, Arkadiusz Dudzik, Piotr Zmilczak, Leszek Grzanka'
 author = 'Arkadiusz Dudzik, Piotr Zmilczak, Leszek Grzanka'
 
 # The short X.Y version
