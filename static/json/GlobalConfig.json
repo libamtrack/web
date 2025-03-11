@@ -234,7 +234,7 @@
     }
 
   ],
-  "deployDate":"Tue Aug 20 15:35:27 UTC 2024",
-  "deployBranch":"refs/tags/v0.3.3",
-  "deployCommit":"53632d6631297957a9312465dcfb5097a809e5df"
+  "deployDate":"Tue Mar 11 13:05:42 UTC 2025",
+  "deployBranch":"refs/tags/v0.3.4",
+  "deployCommit":"ab5f36b49645b0d2756ffdb5c97f6456f4387eaf"
 }
